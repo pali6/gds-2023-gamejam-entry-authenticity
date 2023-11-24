@@ -5,8 +5,8 @@ mod systems;
 use bevy::prelude::*;
 use resources::*;
 use systems::*;
-
 use crate::states::AppState;
+use super::states::InGameState;
 
 pub struct PlayerPlugin;
 
@@ -23,11 +23,12 @@ impl Plugin for PlayerPlugin {
                     // collision resolution needs to
                     // happen after the movement
                     confine_player_movement.after(player_movement)
-            
+            )
             // I have not found an easier way to do this...
             // Every plugin in the InGame mod will have to
             // handle it's systems, in which state should they run
-            ).run_if(in_state(AppState::InGame))
+            .run_if(in_state(AppState::InGame))
+            .run_if(in_state(InGameState::Running))
         );
        
     }
