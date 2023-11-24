@@ -26,7 +26,7 @@ fn main() {
             // Provided by bevy. Spawns window and stuff...
             DefaultPlugins.set(WindowPlugin {
                 primary_window: Some(Window {
-                    title: "Verisimilitude".to_string(),
+                    title: "aut-HEN-tic".to_string(),
                     ..Default::default()
                 }),
                 ..Default::default()

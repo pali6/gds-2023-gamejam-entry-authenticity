@@ -12,6 +12,15 @@ pub fn destroy_main_menu() {
     // TODO
 }
 
+static BUTTON_BACKGROUND : egui::Color32 = egui::Color32::from_rgb(255, 255, 200);
+static BUTTON_TEXT_COLOR : egui::Color32 = egui::Color32::from_rgb(0, 0, 0);
+
+fn menu_button(text: &str, ui: &mut egui::Ui) -> egui::Response {
+    let rich_text = egui::RichText::new(text)
+        .color(BUTTON_TEXT_COLOR);
+    ui.add(egui::Button::new(rich_text).fill(BUTTON_BACKGROUND))
+}
+
 pub fn ui_main_menu(
     mut contexts: EguiContexts,
     mut app_next_state: ResMut<NextState<AppState>>,
@@ -24,7 +33,7 @@ pub fn ui_main_menu(
         egui::FontId::new(30.0, egui::FontFamily::Proportional),
     );
     ctx.set_style(style);
-    let frame = egui::Frame::default().fill(egui::Color32::from_rgb(0, 0, 0));
+    let frame = egui::Frame::default().fill(egui::Color32::from_rgb(50, 140, 50));
     egui::CentralPanel::default().frame(frame).show(ctx, |ui| {
         let layout = egui::Layout::top_down(egui::Align::Center);
         ui.with_layout(layout, |ui| {
@@ -35,16 +44,16 @@ pub fn ui_main_menu(
                 f32::min(150.0, ui.available_size().y / 2.0),
             ));
             ui.label(
-                egui::RichText::new("Verisimilitude")
+                egui::RichText::new("aut-HEN-tic")
                     .heading()
                     .strong()
-                    .color(egui::Color32::from_rgb(255, 255, 255))
+                    .color(egui::Color32::from_rgb(255, 255, 200))
                     .size(80.0),
             );
-            if ui.button("Start Game").clicked() {
+            if menu_button("Start Game", ui).clicked() {
                 app_next_state.set(AppState::InGame);
             }
-            if ui.button("Quit").clicked() {
+            if menu_button("Quit", ui).clicked() {
                 app_exit_event_writer.send(AppExit);
             }
         });
