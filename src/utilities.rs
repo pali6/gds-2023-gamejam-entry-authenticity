@@ -4,8 +4,15 @@
 use bevy::prelude::*;
 use rand::*;
 
-struct Directions;
-impl Directions {
+pub enum Directions {
+    Left,
+    Right,
+    Up,
+    Down
+}
+
+struct DirectionVectors;
+impl DirectionVectors {
     const UP: Vec3 = Vec3::Y;
     const LEFT: Vec3 = Vec3::NEG_X;
     const DOWN: Vec3 = Vec3::NEG_Y;
@@ -34,19 +41,19 @@ pub fn get_direction(keyboard_input: Res<Input<KeyCode>>) -> Vec3 {
     use KeyCode::*;
 
     if is_pressed(Left) || is_pressed(A) {
-        direction += Directions::LEFT;
+        direction += DirectionVectors::LEFT;
     }
 
     if is_pressed(Right) || is_pressed(D) {
-        direction += Directions::RIGHT;
+        direction += DirectionVectors::RIGHT;
     }
 
     if is_pressed(Up) || is_pressed(W) {
-        direction += Directions::UP;
+        direction += DirectionVectors::UP;
     }
 
     if is_pressed(Down) || is_pressed(S) {
-        direction += Directions::DOWN;
+        direction += DirectionVectors::DOWN;
     }
 
     if direction.length() > 0.0 {
