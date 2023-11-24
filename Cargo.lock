@@ -958,7 +958,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "bevy_template"
+name = "verisimilitude"
 version = "0.1.0"
 dependencies = [
  "anyhow",
