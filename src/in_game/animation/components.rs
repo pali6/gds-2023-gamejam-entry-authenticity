@@ -11,7 +11,7 @@ impl Animation {
     pub fn new(period: f32, animation: Vec<Handle<Image>>) -> Self {
         Self {
             index: Default::default(),
-            current_animation: Default::default(),
+            current_animation: animation,
             timer: Timer::from_seconds(period, TimerMode::Repeating)
         }
     }

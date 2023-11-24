@@ -1,6 +1,6 @@
 pub mod components;
+pub mod resources;
 mod systems;
-mod resources;
 
 use bevy::prelude::*;
 use resources::*;

@@ -1,4 +1,6 @@
 use super::components::*;
+use crate::in_game::animation::components::Animation;
+use crate::in_game::animation::resources::AnimationResource;
 use crate::utilities::*;
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
@@ -7,6 +9,7 @@ pub fn spawn_player(
     mut commands: Commands,
     window_query: Query<&Window, With<PrimaryWindow>>,
     asset_server: Res<AssetServer>,
+    animation_resource: Res<AnimationResource>
 ) {
     let window: &Window = window_query.get_single().unwrap();
 
@@ -20,6 +23,7 @@ pub fn spawn_player(
             texture: asset_server.load("sprites/Pizza.png"),
             ..default()
         },
+        Animation::new(animation_resource.frame_period, animation_resource.rotating_pizza.clone()),
         // Basically tag the sprite as the player
         Player {},
     ));

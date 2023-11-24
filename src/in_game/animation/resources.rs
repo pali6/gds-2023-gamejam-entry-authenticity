@@ -9,6 +9,7 @@ pub struct AnimationResource {
     pub hen_walking_right: Vec<Handle<Image>>,
     pub hen_walking_up: Vec<Handle<Image>>,
     pub hen_walking_down: Vec<Handle<Image>>, 
+    pub rotating_pizza: Vec<Handle<Image>>
 }
 
 impl AnimationResource {
@@ -36,6 +37,7 @@ impl Default for AnimationResource {
             hen_walking_right: Vec::new(),
             hen_walking_up: Vec::new(),
             hen_walking_down: Vec::new(),
+            rotating_pizza: Vec::new()
         }
     }
 }
