@@ -13,3 +13,4 @@ inline_tweak = "1.0" # for tweaking constants at runtime in debug mode: https://
 time = "0.3" # for timing: https://docs.rs/time/latest/time
 itertools = "0.12" # for iterators: https://docs.rs/itertools/latest/itertools
 bevy_egui = "0.23" # for gui: https://docs.rs/bevy_egui/latest/bevy_egui
+bevy_tweening = "0.9" # for tweening: https://docs.rs/bevy_tweening/latest/bevy_tweening
