@@ -9,6 +9,7 @@ use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use bevy_egui::EguiPlugin;
 
+use in_game::pause_menu::PauseMenuPlugin;
 use in_game::InGamePlugin;
 use main_menu::MainMenuPlugin;
 use states::*;
@@ -32,6 +33,7 @@ fn main() {
             // Made by me
             InGamePlugin,
             MainMenuPlugin,
+            PauseMenuPlugin,
         ))
         // Systems -> App starts
         .add_systems(Startup, (spawn_camera,))

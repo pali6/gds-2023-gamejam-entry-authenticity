@@ -1,3 +1,4 @@
+pub mod pause_menu;
 mod player;
 mod states;
 
