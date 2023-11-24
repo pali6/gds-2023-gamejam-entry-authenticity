@@ -22,7 +22,7 @@ fn main() {
         .add_state::<AppState>()
         // Modulate your game into plugins
         .add_plugins((
-            EmbeddedAssetPlugin::default(),
+            EmbeddedAssetPlugin { mode: bevy_embedded_assets::PluginMode::ReplaceDefault },
             // Provided by bevy. Spawns window and stuff...
             DefaultPlugins.set(WindowPlugin {
                 primary_window: Some(Window {
