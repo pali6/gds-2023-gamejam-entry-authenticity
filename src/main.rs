@@ -7,6 +7,7 @@ use bevy::app::AppExit;
 use bevy::core_pipeline::clear_color::ClearColorConfig;
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
+use bevy_egui::EguiPlugin;
 
 use in_game::InGamePlugin;
 use main_menu::MainMenuPlugin;
@@ -29,6 +30,7 @@ fn main() {
                     }),
                     ..Default::default()
                 }),
+            EguiPlugin,
             // Made by me
             InGamePlugin,
             MainMenuPlugin
@@ -40,7 +42,7 @@ fn main() {
         // Systems -> Every frame
         .add_systems(Update, (
             exit_game,
-            toggle_app_state
+            toggle_app_state,
         ))
 
         // Don't forget to run the app :]
@@ -73,4 +75,3 @@ fn exit_game(
         app_exit_event_writer.send(AppExit);
     }
 }
-
