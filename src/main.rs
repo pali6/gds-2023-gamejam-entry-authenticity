@@ -2,11 +2,11 @@ mod in_game;
 mod main_menu;
 mod states;
 mod utilities;
+mod world;
+mod camera;
 
 use bevy::app::AppExit;
-use bevy::core_pipeline::clear_color::ClearColorConfig;
 use bevy::prelude::*;
-use bevy::window::PrimaryWindow;
 use bevy_egui::EguiPlugin;
 use bevy_embedded_assets::EmbeddedAssetPlugin;
 
@@ -20,6 +20,10 @@ fn main() {
         // AppState will be accessible as a resource
         // This allows to switch into MainMenu etc.
         .add_state::<AppState>()
+        .insert_resource(world::WorldParams {
+            width: 1920.0 / 2.0,
+            height: 1080.0 / 2.0,
+        })
         // Modulate your game into plugins
         .add_plugins((
             EmbeddedAssetPlugin { mode: bevy_embedded_assets::PluginMode::ReplaceDefault },
@@ -36,28 +40,12 @@ fn main() {
             InGamePlugin,
             MainMenuPlugin,
             PauseMenuPlugin,
+            camera::CameraPlugin { scaling_mode: camera::CameraScalingMode::FitBoth },
         ))
-        // Systems -> App starts
-        .add_systems(Startup, (spawn_camera,))
         // Systems -> Every frame
         .add_systems(Update, (exit_game, toggle_app_state))
         // Don't forget to run the app :]
         .run();
-}
-
-// Just a basic 2D camera
-fn spawn_camera(mut commands: Commands, window_query: Query<&Window, With<PrimaryWindow>>) {
-    let window = window_query.get_single().unwrap();
-    let background_color = Color::rgb_u8(18, 18, 18);
-    let x: f32 = window.width() / 2.0;
-    let y: f32 = window.height() / 2.0;
-    let z: f32 = 0.0;
-
-    let mut camera = Camera2dBundle { ..default() };
-    camera.transform = Transform::from_xyz(x, y, z);
-    camera.camera_2d.clear_color = ClearColorConfig::Custom(background_color);
-
-    commands.spawn(camera);
 }
 
 fn exit_game(keyboard_input: Res<Input<KeyCode>>, mut app_exit_event_writer: EventWriter<AppExit>) {
