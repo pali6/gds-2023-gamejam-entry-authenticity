@@ -23,7 +23,7 @@ fn main() {
             // Provided by bevy. Spawns window and stuff...
             DefaultPlugins.set(WindowPlugin {
                 primary_window: Some(Window {
-                    title: "Game Title".to_string(),
+                    title: "Verisimilitude".to_string(),
                     ..Default::default()
                 }),
                 ..Default::default()

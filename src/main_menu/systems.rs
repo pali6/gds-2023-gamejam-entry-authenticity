@@ -17,26 +17,38 @@ pub fn ui_main_menu(
     mut app_next_state: ResMut<NextState<AppState>>,
     mut app_exit_event_writer: EventWriter<AppExit>,
 ) {
+    let ctx = contexts.ctx_mut();
+    let mut style = (*ctx.style()).clone();
+    style.text_styles.insert(
+        egui::TextStyle::Button,
+        egui::FontId::new(30.0, egui::FontFamily::Proportional),
+    );
+    ctx.set_style(style);
     let frame = egui::Frame::default().fill(egui::Color32::from_rgb(0, 0, 0));
-    egui::CentralPanel::default()
-        .frame(frame)
-        .show(contexts.ctx_mut(), |ui| {
-            let layout = egui::Layout::top_down(egui::Align::Center);
-            ui.with_layout(layout, |ui| {
-                // reserve some space so we aren't at the very top
-                ui.allocate_space(egui::Vec2::new(
-                    0.0,
-                    f32::min(200.0, ui.available_size().y / 2.0),
-                ));
-                ui.heading("Game title!");
-                if ui.button("Start Game").clicked() {
-                    app_next_state.set(AppState::InGame);
-                }
-                if ui.button("Quit").clicked() {
-                    app_exit_event_writer.send(AppExit);
-                }
-            });
+    egui::CentralPanel::default().frame(frame).show(ctx, |ui| {
+        let layout = egui::Layout::top_down(egui::Align::Center);
+        ui.with_layout(layout, |ui| {
+            ui.spacing_mut().item_spacing.y = 20.0;
+            // reserve some space so we aren't at the very top
+            ui.allocate_space(egui::Vec2::new(
+                0.0,
+                f32::min(150.0, ui.available_size().y / 2.0),
+            ));
+            ui.label(
+                egui::RichText::new("Verisimilitude")
+                    .heading()
+                    .strong()
+                    .color(egui::Color32::from_rgb(255, 255, 255))
+                    .size(80.0),
+            );
+            if ui.button("Start Game").clicked() {
+                app_next_state.set(AppState::InGame);
+            }
+            if ui.button("Quit").clicked() {
+                app_exit_event_writer.send(AppExit);
+            }
         });
+    });
 }
 
 pub fn run_if_in_main_menu(app_current_state: Res<State<AppState>>) -> bool {
