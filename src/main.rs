@@ -21,7 +21,14 @@ fn main() {
         // Modulate your game into plugins
         .add_plugins((
             // Provided by bevy. Spawns window and stuff...
-            DefaultPlugins,
+            DefaultPlugins
+                .set(WindowPlugin {
+                    primary_window: Some(Window {
+                        title: "Game Title".to_string(),
+                        ..Default::default()
+                    }),
+                    ..Default::default()
+                }),
             // Made by me
             InGamePlugin,
             MainMenuPlugin
