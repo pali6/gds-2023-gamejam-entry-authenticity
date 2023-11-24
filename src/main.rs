@@ -8,6 +8,7 @@ use bevy::core_pipeline::clear_color::ClearColorConfig;
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use bevy_egui::EguiPlugin;
+use bevy_embedded_assets::EmbeddedAssetPlugin;
 
 use in_game::pause_menu::PauseMenuPlugin;
 use in_game::InGamePlugin;
@@ -21,6 +22,7 @@ fn main() {
         .add_state::<AppState>()
         // Modulate your game into plugins
         .add_plugins((
+            EmbeddedAssetPlugin::default(),
             // Provided by bevy. Spawns window and stuff...
             DefaultPlugins.set(WindowPlugin {
                 primary_window: Some(Window {

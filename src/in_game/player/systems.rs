@@ -17,7 +17,7 @@ pub fn spawn_player(
         // you need for a simple moving object on a screen
         SpriteBundle {
             transform: Transform::from_xyz(spawn_x, spawn_y, 0.0),
-            texture: asset_server.load("sprites/Pizza.png"),
+            texture: asset_server.load("embedded://sprites/Pizza.png"),
             ..default()
         },
         // Basically tag the sprite as the player
@@ -66,7 +66,7 @@ pub fn confine_player_movement(
     // when player hits the edge.
     // Maybe not the best example :D
     if new_x != pos.x || new_y != pos.y {
-        play_sfx("sounds/bop.ogg", &mut commands, &asset_server);
+        play_sfx("embedded://sounds/bop.ogg", &mut commands, &asset_server);
     }
 
     pos.x = new_x;
