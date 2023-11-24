@@ -46,10 +46,9 @@ pub fn player_movement(
 pub fn confine_player_movement(
     mut commands: Commands,
     mut player_query: Query<&mut Transform, With<Player>>,
-    window_query: Query<&Window, With<PrimaryWindow>>,
+    world_params: Res<crate::world::WorldParams>,
     asset_server: Res<AssetServer>,
 ) {
-    let window = window_query.get_single().unwrap();
     let mut player_transform = match player_query.get_single_mut() {
         Ok(transform) => transform,
         Err(_e) => return,
@@ -60,7 +59,7 @@ pub fn confine_player_movement(
 
     // see `utilities` for `confine_movement`
     let (new_x, new_y) =
-        confine_movement(pos.x, pos.y, window.width(), window.height(), Player::SIZE);
+        confine_movement(pos.x, pos.y, world_params.width, world_params.height, Player::SIZE);
 
     // Just an example of sound usage,
     // when player hits the edge.
