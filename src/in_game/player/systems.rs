@@ -10,7 +10,6 @@ pub fn spawn_player(
 ) {
     let window: &Window = window_query.get_single().unwrap();
 
-    // middle of the screen
     let (spawn_x, spawn_y) =
         get_random_coords(window.width(), window.height());
 
