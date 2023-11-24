@@ -2,7 +2,8 @@ use bevy::prelude::*;
 
 #[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
 pub enum InGameState {
-    #[default] Running,
+    #[default]
+    Running,
     Paused,
 }
 
@@ -11,12 +12,15 @@ pub fn toggle_pause(
     in_game_state: Res<State<InGameState>>,
     keyboard_input: Res<Input<KeyCode>>,
 ) {
-    if !keyboard_input.just_pressed(KeyCode::P)
-        { return; }
+    if !keyboard_input.just_pressed(KeyCode::P) {
+        return;
+    }
 
-    if *in_game_state.get() == InGameState::Running
-        { in_game_next_state.set(InGameState::Paused); }
-    
-    if *in_game_state.get() == InGameState::Paused
-        { in_game_next_state.set(InGameState::Running); }
+    if *in_game_state.get() == InGameState::Running {
+        in_game_next_state.set(InGameState::Paused);
+    }
+
+    if *in_game_state.get() == InGameState::Paused {
+        in_game_next_state.set(InGameState::Running);
+    }
 }

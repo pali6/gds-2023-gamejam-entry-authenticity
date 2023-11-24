@@ -1,8 +1,8 @@
 // Just some useful functions you might want to use.
-// TODO: Add some more? Move them somewhere else? 
+// TODO: Add some more? Move them somewhere else?
 //===================================================
-use rand::*;
 use bevy::prelude::*;
+use rand::*;
 
 struct Directions;
 impl Directions {
@@ -18,7 +18,7 @@ pub fn play_sfx(name: &'static str, commands: &mut Commands, asset_server: &Res<
     commands.spawn(AudioBundle {
         source: sfx,
         settings: PlaybackSettings::DESPAWN,
-        ..default() 
+        ..default()
     });
 }
 
@@ -63,10 +63,18 @@ pub fn confine_movement(mut x: f32, mut y: f32, width: f32, height: f32, size: f
     let x_max = width - half_size;
     let y_max = height - half_size;
 
-    if x < x_min { x = x_min; }
-    if y < y_min { y = y_min; }
-    if x > x_max { x = x_max; }
-    if y > y_max { y = y_max; }
+    if x < x_min {
+        x = x_min;
+    }
+    if y < y_min {
+        y = y_min;
+    }
+    if x > x_max {
+        x = x_max;
+    }
+    if y > y_max {
+        y = y_max;
+    }
 
     return (x, y);
 }
