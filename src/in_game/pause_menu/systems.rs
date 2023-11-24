@@ -25,7 +25,8 @@ pub fn ui_pause_menu(
         egui::FontId::new(30.0, egui::FontFamily::Proportional),
     );
     ctx.set_style(style);
-    egui::CentralPanel::default().show(ctx, |ui| {
+    let frame = egui::Frame::default().fill(egui::Color32::from_rgba_unmultiplied(0, 0, 0, 200));
+    egui::CentralPanel::default().frame(frame).show(ctx, |ui| {
         let layout = egui::Layout::top_down(egui::Align::Center);
         ui.with_layout(layout, |ui| {
             ui.spacing_mut().item_spacing.y = 20.0;
