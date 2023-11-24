@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = "0.12.0"
+bevy = { version = "0.12.0", features = ["dynamic_linking"] } # TODO: revert on release build
 rand = "0.8.5"
 anyhow = "1.0" # for error handling: https://docs.rs/anyhow/latest/anyhow
 inline_tweak = "1.0" # for tweaking constants at runtime in debug mode: https://docs.rs/inline_tweak/latest/inline_tweak
@@ -15,3 +15,9 @@ itertools = "0.12" # for iterators: https://docs.rs/itertools/latest/itertools
 bevy_egui = "0.23" # for gui: https://docs.rs/bevy_egui/latest/bevy_egui
 bevy_tweening = "0.9" # for tweening: https://docs.rs/bevy_tweening/latest/bevy_tweening
 bevy_embedded_assets = "0.9"
+
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
