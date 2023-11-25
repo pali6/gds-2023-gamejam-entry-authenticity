@@ -1,65 +1,115 @@
-use bevy::{prelude::*, window::PrimaryWindow, window::Window};
-use bevy_egui::egui;
+use std::collections::HashMap;
+
+use bevy::prelude::*;
+use bevy::window::PrimaryWindow;
+use bevy_egui::{egui, EguiContexts};
+
+use crate::in_game::states::InGameState;
+use crate::states::AppState;
 
 use super::components::Chicken;
+use super::click::ChickenClickEvent;
 
-pub fn chicken_click(
-    mut commands: Commands,
-    buttons: Res<Input<MouseButton>>,
-    chicken_query: Query<(Entity, &Transform, &Handle<Image>, &Chicken), With<Sprite>>,
-    windows: Query<&Window, With<PrimaryWindow>>,
-    assets: Res<Assets<Image>>,
-    camera_query: Query<(&Camera, &GlobalTransform), With<Camera2d>>,
-) {
-    if !buttons.just_pressed(MouseButton::Left) {
-        return;
+pub struct InfoMenuPlugin;
+
+impl Plugin for InfoMenuPlugin {
+    fn build(&self, app: &mut App) {
+        app
+            .init_resource::<ChickenMenus>()
+            .add_systems(OnEnter(AppState::InGame), reset_chicken_menus)
+            .add_systems(Update, (open_chicken_menu, display_menus)
+                .run_if(in_state(AppState::InGame).and_then(in_state(InGameState::Running)))
+            );
     }
+}
 
-    let Some(viewport_mouse_position) = windows.get_single().ok().and_then(Window::cursor_position)
-    else {
-        return;
-    };
-    let (camera, camera_transform) = camera_query.single();
-    let Some(world_mouse_position) =
-        camera.viewport_to_world_2d(camera_transform, viewport_mouse_position)
-    else {
-        return;
-    };
+#[derive(Debug)]
+struct WindowState {
+    open: bool,
+    just_opened: bool,
+}
 
-    let mut closest_chicken: Option<(Entity, &Chicken)> = None;
-    let mut closest_distance: f32 = f32::INFINITY;
+#[derive(Resource, Default, Debug)]
+struct ChickenMenus {
+    pub chickens: HashMap<Entity, WindowState>,
+}
 
-    for (entity, transform, image_handle, chicken) in chicken_query.iter() {
-        let maybe_image = assets.get(image_handle);
-        let image_dimensions = maybe_image
-            .and_then(|image| Some(image.size()))
-            .unwrap_or(UVec2::ZERO);
-        let scaled_image_dimension = Vec2::new(
-            image_dimensions.x as f32 * transform.scale.x,
-            image_dimensions.y as f32 * transform.scale.y,
-        );
+fn reset_chicken_menus(mut menus: ResMut<ChickenMenus>) {
+    menus.chickens.clear();
+}
 
-        let sprite_left = transform.translation.x - scaled_image_dimension.x / 2.0;
-        let sprite_right = transform.translation.x + scaled_image_dimension.x / 2.0;
-        let sprite_top = transform.translation.y + scaled_image_dimension.y / 2.0;
-        let sprite_bottom = transform.translation.y - scaled_image_dimension.y / 2.0;
-
-        if world_mouse_position.x >= sprite_left
-            && world_mouse_position.x <= sprite_right
-            && world_mouse_position.y <= sprite_top
-            && world_mouse_position.y >= sprite_bottom
-        {
-            let distance = (world_mouse_position - transform.translation.xy()).length();
-
-            if distance < closest_distance {
-                closest_distance = distance;
-                closest_chicken = Some((entity, chicken));
+fn open_chicken_menu(
+    mut events: EventReader<ChickenClickEvent>,
+    mut menus: ResMut<ChickenMenus>,
+) {
+    for event in events.read() {
+        if event.mouse_button.just_pressed(MouseButton::Right) {
+            let entity = event.chicken;
+            if let Some(WindowState{open, just_opened}) = menus.chickens.get_mut(&entity) {
+                *open = !*open;
+                if *open {
+                    *just_opened = true;
+                }
+            } else {
+                menus.chickens.insert(entity, WindowState{open: true, just_opened: true});
             }
         }
     }
+}
 
-    if let Some((entity, chicken)) = closest_chicken {
-        println!("Clicked on {}", chicken.name);
-        commands.entity(entity).despawn_recursive();
+fn display_menus(
+    mut menus: ResMut<ChickenMenus>,
+    query: Query<&Chicken>,
+    mut egui_contexts: EguiContexts,
+    windows: Query<&Window, With<PrimaryWindow>>,
+) {
+    let ctx = egui_contexts.ctx_mut();
+    let mut style = (*ctx.style()).clone();
+    style.visuals.widgets.noninteractive.bg_fill = egui::Color32::from_rgba_unmultiplied(200, 200, 200, 200);
+    style.visuals.widgets.noninteractive.bg_stroke.color = egui::Color32::from_rgba_unmultiplied(0, 0, 0, 230);
+    style.visuals.widgets.noninteractive.fg_stroke.color = egui::Color32::from_rgba_unmultiplied(0, 0, 0, 230);
+    style.visuals.widgets.active.fg_stroke.color = egui::Color32::from_rgba_unmultiplied(80, 80, 80, 230);
+    style.visuals.widgets.hovered.fg_stroke.color = egui::Color32::from_rgba_unmultiplied(30, 30, 30, 230);
+    style.visuals.widgets.inactive.fg_stroke.color = egui::Color32::from_rgba_unmultiplied(0, 0, 0, 230);
+    style.spacing.icon_width = 20.0;
+    style.text_styles.insert(
+        egui::TextStyle::Body,
+        egui::FontId::new(20.0, egui::FontFamily::Proportional),
+    );
+    style.text_styles.insert(
+        egui::TextStyle::Heading,
+        egui::FontId::new(30.0, egui::FontFamily::Proportional),
+    );
+    ctx.set_style(style);
+
+    let mouse_position = windows.get_single().ok().and_then(Window::cursor_position);
+
+    for (entity, WindowState {open, just_opened} ) in menus.chickens.iter_mut() {
+        if let Ok(chicken) = query.get(*entity) {
+            let frame = egui::Frame::default()
+                .rounding(5.0)
+                .outer_margin(2.0)
+                .fill(egui::Color32::from_rgba_unmultiplied(200, 200, 200, 180));
+            let mut window = egui::Window::new(&chicken.name)
+                .resizable(false)
+                .collapsible(true)
+                .open(open)
+                .frame(frame);
+            if *just_opened {
+                if let Some(mouse_position) = mouse_position {
+                    window = window.current_pos(egui::Pos2::new(mouse_position.x, mouse_position.y));
+                }
+            }
+            if let Some(inner_response) = window.show(ctx, |ui| {
+                ui.label(format!("Name: {}", chicken.name));
+                ui.label(format!("Quirks go here, blah blah blah"));
+            }) {
+                let response = inner_response.response;
+                if response.secondary_clicked() {
+                    *open = false;
+                }
+            }
+            *just_opened = false;
+        }
     }
 }
