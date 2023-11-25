@@ -63,9 +63,3 @@ pub fn chicken_movement(mut chicken_query: Query<(&mut Transform, &Chicken)>, ti
         chicken_transform.translation += direction * chicken.movement_speed * time.delta_seconds();
     }
 }
-
-pub fn despawn_chickens(mut commands: Commands, chicken_query: Query<Entity, With<Chicken>>) {
-    for chicken_entity in chicken_query.iter() {
-        commands.entity(chicken_entity).despawn();
-    }
-}

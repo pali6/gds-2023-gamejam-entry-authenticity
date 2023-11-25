@@ -17,7 +17,6 @@ impl Plugin for ChickenPlugin {
             // This will restart the game every time
             // we go back from the menu though :(
             .add_systems(OnEnter(AppState::InGame), spawn_chickens)
-            .add_systems(OnExit(AppState::InGame), despawn_chickens)
             .add_systems(
                 Update,
                 (chicken_movement,)

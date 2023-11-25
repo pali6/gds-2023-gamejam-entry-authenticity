@@ -40,3 +40,12 @@ pub fn confine_inworld_movement(
         pos.y = new_y;
     }
 }
+
+pub fn despawn_inworld_objects(
+    mut commands: Commands,
+    object_query: Query<Entity, With<InWorldObject>>,
+) {
+    for object in object_query.iter() {
+        commands.entity(object).despawn();
+    }
+}

@@ -47,12 +47,3 @@ pub fn player_movement(
     let direction = get_direction(keyboard_input);
     player_transform.translation += direction * Player::MOVEMENT_SPEED * time.delta_seconds();
 }
-
-pub fn despawn_player(mut commands: Commands, player_query: Query<Entity, With<Player>>) {
-    let player_entity = match player_query.get_single() {
-        Ok(entity) => entity,
-        Err(_e) => return,
-    };
-
-    commands.entity(player_entity).despawn();
-}

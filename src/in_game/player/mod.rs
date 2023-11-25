@@ -16,7 +16,6 @@ impl Plugin for PlayerPlugin {
             // This will restart the game every time
             // we go back from the menu though :(
             .add_systems(OnEnter(AppState::InGame), spawn_player)
-            .add_systems(OnExit(AppState::InGame), despawn_player)
             .add_systems(
                 Update,
                 (player_movement,)
