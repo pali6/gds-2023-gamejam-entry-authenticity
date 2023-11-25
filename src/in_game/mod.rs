@@ -4,7 +4,7 @@ pub mod inworld_object;
 pub mod pause_menu;
 mod static_object;
 mod player;
-mod states;
+pub mod states;
 mod behavior;
 
 use crate::states::AppState;
