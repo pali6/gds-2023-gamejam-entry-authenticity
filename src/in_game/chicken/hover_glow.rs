@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::in_game::states::InGameState;
+
 use super::click::HoveredOverChicken;
 
 pub struct HoverGlowPlugin;
@@ -34,8 +36,14 @@ fn hover_glow(
     mut query: Query<(&mut Transform, &mut Sprite, &mut Visibility), With<HoverGlow>>,
     mouse_buttons: Res<Input<MouseButton>>,
     chickens: Query<&Transform, (With<super::components::Chicken>, Without<HoverGlow>)>,
+    ingame_state: Res<State<InGameState>>,
 ) {
     let Ok((mut transform, mut sprite, mut visibility)) = query.get_single_mut() else { return; };
+
+    if *ingame_state != InGameState::Running {
+        *visibility = Visibility::Hidden;
+        return;
+    }
 
     if let Some(chicken_transform) = hovered_over_chicken.chicken.and_then(|chicken| chickens.get(chicken).ok()) {
         transform.translation = chicken_transform.translation;
