@@ -21,10 +21,6 @@ pub fn spawn_player(
             texture: asset_server.load("sprites/Pizza.png"),
             ..default()
         },
-        Animation::new(
-            animation_resource.frame_period,
-            animation_resource.rotating_pizza.clone(),
-        ),
         InWorldObject,
         // Basically tag the sprite as the player
         Player,

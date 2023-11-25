@@ -33,7 +33,7 @@ impl Behavior {
             next_state: None,
             b_type: b_type,
             target: Vec3::ZERO,
-            wait_duration: 2.0,
+            wait_duration: 4.0,
             wait_timer: Timer::from_seconds(2.0, TimerMode::Once)
         }
     }
@@ -81,13 +81,11 @@ impl Behavior {
     pub fn update_movement(
         &mut self,
         transform: &mut Transform,
-        animation: &mut Animation,
         chicken: &Chicken,
         world_params: &Res<WorldParams>
     ) {
 
         let dir_maybe = self.get_direction(transform.translation);
-        //animation.current_animation = animation_resource.get_hen_walking(dir_maybe);
 
         if let Some(dir) = dir_maybe {
             transform.translation += dir.to_vector() * chicken.movement_speed;

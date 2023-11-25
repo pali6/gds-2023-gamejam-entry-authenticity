@@ -4,10 +4,19 @@ use bevy::math::Vec2;
 use bevy::prelude::{Component, default};
 use bevy::sprite::{SpriteSheetBundle, TextureAtlas, TextureAtlasSprite};
 use bevy::transform::components::Transform;
+use rand::Rng;
 use rand::seq::SliceRandom;
 
 use super::quirk::Quirk;
-use super::resources::{ChickenParams, ChickenAtlas};
+use super::resources::{ChickenParams, ChickenAtlas, ChickenVariants};
+
+#[derive(Copy, Clone)]
+pub enum BodyPart {
+    Head,
+    Wing,
+    Tail,
+    Body
+}
 
 pub struct ChickenAnimation;
 #[allow(dead_code)]
@@ -78,10 +87,12 @@ impl ChickenParts {
         asset_server: Res<AssetServer>,
         mut texture_atlases: ResMut<Assets<TextureAtlas>>
     ) {
-        let texture_handle = asset_server.load("sprites/chicken-Sheet.png");
-        let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(32.0, 32.0), 19, 1, None, Some(Vec2{x: 0.5, y: 0.0}));
-        let texture_atlas_handle = texture_atlases.add(texture_atlas);
-        chicken_atlas.sprite_sheet = Some(texture_atlas_handle);
+        for path in ChickenVariants::CHICKEN_VARIANTS {
+            let texture_handle = asset_server.load(path);
+            let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(32.0, 32.0), 19, 1, None, Some(Vec2{x: 0.5, y: 0.0}));
+            let texture_atlas_handle = texture_atlases.add(texture_atlas);
+            chicken_atlas.sprite_sheets.push(texture_atlas_handle);
+        }
     }
 }
 
