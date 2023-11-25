@@ -70,10 +70,7 @@ impl ChickenParts {
     pub fn new_sprite_from_array(texture_atlas_handle: Handle<TextureAtlas>, indices: &[usize], z_index: f32) -> SpriteSheetBundle {
         let mut rng = rand::thread_rng();
         let index = *indices.choose(&mut rng).unwrap();
-
-        let variant = 19 * rand::thread_rng().gen_range(0..ChickenVariants::CHICKEN_VARIANTS.len());
-
-        ChickenParts::new_sprite_single(texture_atlas_handle, index + variant, z_index)
+        ChickenParts::new_sprite_single(texture_atlas_handle, index, z_index)
     }
 
     pub fn new_sprite_single(texture_atlas_handle: Handle<TextureAtlas>, index: usize, z_index: f32) -> SpriteSheetBundle {
@@ -90,8 +87,6 @@ impl ChickenParts {
         asset_server: Res<AssetServer>,
         mut texture_atlases: ResMut<Assets<TextureAtlas>>
     ) {
-        //let mut rng = rand::thread_rng();
-        //let path = .choose(&mut rng).unwrap().to_string();
         for path in ChickenVariants::CHICKEN_VARIANTS {
             let texture_handle = asset_server.load(path);
             let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(32.0, 32.0), 19, 1, None, Some(Vec2{x: 0.5, y: 0.0}));

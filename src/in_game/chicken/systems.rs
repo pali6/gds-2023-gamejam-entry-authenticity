@@ -12,6 +12,7 @@ use crate::one_shot::*;
 use crate::utilities::*;
 use crate::world::WorldParams;
 use bevy::prelude::*;
+use rand::seq::SliceRandom;
 
 pub fn spawn_chickens(mut commands: Commands) {
     for _ in 0..19 {
@@ -44,7 +45,9 @@ pub fn spawn_chicken(
         ))
         .id();
 
-    if let Some(chicken_atlas_handle) = &chicken_atlas.sprite_sheet {
+    if chicken_atlas.sprite_sheets.len() > 0 {
+        let mut rng = rand::thread_rng();
+        let chicken_atlas_handle = chicken_atlas.sprite_sheets.choose(&mut rng).unwrap();
         let parts = ChickenParts::new_idle(chicken_atlas_handle.clone());
         let body = commands.spawn((
             parts.body,
