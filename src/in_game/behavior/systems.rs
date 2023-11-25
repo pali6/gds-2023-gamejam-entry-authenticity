@@ -12,13 +12,23 @@ pub fn update_chicken_behaviours(
 ) {
     for (mut behavior, chicken, mut transform, mut animation) in chicken_query.iter_mut() {
         match behavior.state {
+            BehaviorState::Moving => {
+                behavior.update_movement(&mut transform, &mut animation, chicken, &world_params);
+            }
+
             BehaviorState::Waiting => {
                 behavior.update_waiting(&time, &world_params);
             }
 
-            BehaviorState::Moving => {
-                behavior.update_movement(&mut transform, &mut animation, chicken);
+            BehaviorState::Eating => {
+                behavior.update_eating(&time, &world_params);
             }
-        }
+
+            BehaviorState::Hiding => {
+                behavior.update_hidnig(&time, &world_params);
+            }
+
+            _ => {}
+        };
     }
 }

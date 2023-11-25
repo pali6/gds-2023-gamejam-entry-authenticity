@@ -41,7 +41,7 @@ pub fn spawn_chicken(
             InWorldObject,
             chicken,
             Behavior::new(BehaviorType::RandomMovement),
-            //Animation::new(anim_resource.frame_period, anim_resource.rotating_pizza.clone())
+            Animation::new(anim_resource.frame_period, anim_resource.rotating_pizza.clone())
         ))
         .id();
 
