@@ -69,7 +69,7 @@ pub fn spawn_chicken(
                     },
                 )
                 .with_alignment(TextAlignment::Center),
-                transform: Transform::from_xyz(0.0, -25.0, 20.0),
+                transform: Transform::from_xyz(0.0, -25.0, 420.0),
                 ..Default::default()
             },
             // TODO: update name dynamically mayhaps?
