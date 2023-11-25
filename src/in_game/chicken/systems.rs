@@ -22,11 +22,32 @@ pub fn spawn_chicken(
 ) {
     let (spawn_x, spawn_y) = get_random_coords(world_params.width, world_params.height);
 
-    commands.spawn((
+    let chicken = Chicken::new_random(chicken_params.borrow_mut());
+    let chicken_name = chicken.name.clone();
+
+    let chicken_entity = commands.spawn((
         chicken_params.get_random_chicken_bundle(spawn_x, spawn_y, &asset_server),
         InWorldObject,
-        Chicken::new_random(chicken_params.borrow_mut()),
-    ));
+        chicken,
+    )).id();
+
+    let nametag = commands.spawn(
+        Text2dBundle {
+            text: Text::from_section(
+                chicken_name,
+                TextStyle {
+                    font: asset_server.load("fonts/FiraSans-Bold.ttf"), // TODO: Less serious font. Random fonts to give the chickens personality?
+                    font_size: 16.0,
+                    color: Color::rgba(1.0, 1.0, 1.0, 0.7),
+                }
+            ).with_alignment(TextAlignment::Center),
+            transform: Transform::from_xyz(0.0, -25.0, 20.0),
+            ..Default::default()
+        },
+        // TODO: update name dynamically mayhaps?
+    ).id();
+
+    commands.entity(chicken_entity).push_children(&[nametag]);
 }
 
 pub fn chicken_movement(
