@@ -6,13 +6,17 @@ pub struct ChickenClickEvent {
     pub mouse_button: Input<MouseButton>,
 }
 
-pub fn chicken_click(
-    buttons: Res<Input<MouseButton>>,
+#[derive(Resource, Default)]
+pub struct HoveredOverChicken {
+    pub chicken: Option<Entity>,
+}
+
+pub fn chicken_hover(
     chicken_query: Query<(Entity, &Transform, &Handle<Image>), With<Sprite>>,
     windows: Query<&Window, With<PrimaryWindow>>,
     assets: Res<Assets<Image>>,
     camera_query: Query<(&Camera, &GlobalTransform), With<Camera2d>>,
-    mut chicken_click_events: EventWriter<ChickenClickEvent>,
+    mut hovered_over_chicken: ResMut<HoveredOverChicken>,
 ) {
     let Some(viewport_mouse_position) = windows.get_single().ok().and_then(Window::cursor_position)
     else {
@@ -57,7 +61,19 @@ pub fn chicken_click(
         }
     }
 
-    if let Some(entity) = closest_chicken {
+    hovered_over_chicken.chicken = closest_chicken;
+}
+
+pub fn chicken_click(
+    buttons: Res<Input<MouseButton>>,
+    hovered_over_chicken: Res<HoveredOverChicken>,
+    mut chicken_click_events: EventWriter<ChickenClickEvent>,
+) {
+    if buttons.get_just_pressed().count() == 0 {
+        return;
+    }
+
+    if let Some(entity) = hovered_over_chicken.chicken {
         chicken_click_events.send(ChickenClickEvent {
             chicken: entity,
             mouse_button: buttons.clone(),

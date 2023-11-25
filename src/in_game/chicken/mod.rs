@@ -18,17 +18,19 @@ pub struct ChickenPlugin;
 
 impl Plugin for ChickenPlugin {
     fn build(&self, app: &mut App) {
-        app.init_resource::<ChickenParams>()
+        app
+            .init_resource::<ChickenParams>()
+            .init_resource::<HoveredOverChicken>()
             // This will restart the game every time
             // we go back from the menu though :(
             .add_systems(OnEnter(AppState::InGame), spawn_chickens)
             .add_event::<click::ChickenClickEvent>()
-            .add_plugins(InfoMenuPlugin)
             // .add_systems(Update, debug::debug_chicken_click)
             .add_systems(
                 Update,
-                (chicken_movement, chicken_click)
+                (chicken_movement, chicken_hover, chicken_click)
                     .run_if(in_state(AppState::InGame).and_then(in_state(InGameState::Running))),
-            );
+            )
+            .add_plugins(InfoMenuPlugin);
     }
 }
