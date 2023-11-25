@@ -2,16 +2,68 @@
 // TODO: Add some more? Move them somewhere else?
 //===================================================
 use bevy::prelude::*;
-use rand::*;
+use rand::{*, seq::SliceRandom};
 
-pub enum Directions {
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Dir {
     Left,
     Right,
     Up,
     Down
 }
 
-struct DirectionVectors;
+impl Dir {
+    pub fn to_vector(&self) -> Vec3 {
+        match self {
+            Dir::Left => DirectionVectors::LEFT,
+            Dir::Right => DirectionVectors::RIGHT,
+            Dir::Up => DirectionVectors::UP,
+            Dir::Down => DirectionVectors::DOWN,
+        }
+    }
+
+    pub fn from_vector(vector: Vec3) -> Option<Self> {
+        if vector.length() == 0.0 {
+            return None;
+        }
+        if vector.x.abs() > vector.y.abs() {
+            if vector.x > 0.0 {
+                Some(Dir::Right)
+            } else {
+                Some(Dir::Left)
+            }
+        } else {
+            if vector.y > 0.0 {
+                Some(Dir::Up)
+            } else {
+                Some(Dir::Down)
+            }
+        }
+    }
+
+    pub fn opposite(&self) -> Self {
+        match self {
+            Dir::Left => Dir::Right,
+            Dir::Right => Dir::Left,
+            Dir::Up => Dir::Down,
+            Dir::Down => Dir::Up,
+        }
+    }
+
+    pub fn random() -> Self {
+        *[Dir::Left, Dir::Right, Dir::Up, Dir::Down]
+            .choose(&mut rand::thread_rng())
+            .unwrap()
+    }
+}
+
+impl From<Dir> for Vec3 {
+    fn from(direction: Dir) -> Self {
+        direction.to_vector()
+    }
+}
+
+pub struct DirectionVectors;
 impl DirectionVectors {
     const UP: Vec3 = Vec3::Y;
     const LEFT: Vec3 = Vec3::NEG_X;
@@ -63,12 +115,13 @@ pub fn get_direction(keyboard_input: Res<Input<KeyCode>>) -> Vec3 {
     return direction;
 }
 
-pub fn confine_movement(mut x: f32, mut y: f32, width: f32, height: f32, size: f32) -> (f32, f32) {
-    let half_size = size / 2.0;
-    let x_min = 0.0 + half_size;
-    let y_min = 0.0 + half_size;
-    let x_max = width - half_size;
-    let y_max = height - half_size;
+pub fn confine_movement(mut x: f32, mut y: f32, width: f32, height: f32, object_width: f32, object_height: f32) -> (f32, f32) {
+    let half_width = object_width / 2.0;
+    let half_height = object_height / 2.0;
+    let x_min = 0.0 + half_width;
+    let y_min = 0.0 + half_height;
+    let x_max = width - half_width;
+    let y_max = height - half_height;
 
     if x < x_min {
         x = x_min;

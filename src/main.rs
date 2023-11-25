@@ -4,6 +4,7 @@ mod states;
 mod utilities;
 mod world;
 mod camera;
+mod one_shot;
 
 use bevy::app::AppExit;
 use bevy::prelude::*;
@@ -44,6 +45,7 @@ fn main() {
         ))
         // Systems -> Every frame
         .add_systems(Update, (exit_game, toggle_app_state))
+        .add_systems(PostUpdate, in_game::inworld_object::confine_inworld_movement)
         // Don't forget to run the app :]
         .run();
 }

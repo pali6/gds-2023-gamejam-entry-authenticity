@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use crate::in_game::player::components::Player;
 
 use super::{components::*, resources::AnimationResource};
 

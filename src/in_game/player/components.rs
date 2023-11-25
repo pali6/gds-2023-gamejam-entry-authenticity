@@ -8,5 +8,4 @@ pub struct Player;
 // Is this a good place for constant/static values?
 impl Player {
     pub const MOVEMENT_SPEED: f32 = 500.0;
-    pub const SIZE: f32 = 64.0; // Size of the sprite
 }

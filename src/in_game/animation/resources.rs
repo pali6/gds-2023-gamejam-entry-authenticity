@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use crate::utilities::Directions;
+use crate::utilities::Dir;
 
 #[derive(Resource)]
 pub struct AnimationResource {
@@ -13,17 +13,17 @@ pub struct AnimationResource {
 }
 
 impl AnimationResource {
-    pub fn get_hen_walking(&self, direction: Option<Directions>) -> Vec<Handle<Image>> {
+    pub fn get_hen_walking(&self, direction: Option<Dir>) -> Vec<Handle<Image>> {
         let walking_direction = match direction {
             Some(dir) => dir,
             None => return self.hen_idle.clone()
         };
 
         return match walking_direction {
-            Directions::Left => self.hen_walking_left.clone(),
-            Directions::Right => self.hen_walking_right.clone(),
-            Directions::Up => self.hen_walking_up.clone(),
-            Directions::Down => self.hen_walking_down.clone(),
+            Dir::Left => self.hen_walking_left.clone(),
+            Dir::Right => self.hen_walking_right.clone(),
+            Dir::Up => self.hen_walking_up.clone(),
+            Dir::Down => self.hen_walking_down.clone(),
         }
     }
 }
