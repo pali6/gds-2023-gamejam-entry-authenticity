@@ -13,6 +13,14 @@ pub fn destroy_pause_menu() {
     // TODO
 }
 
+static BUTTON_BACKGROUND: egui::Color32 = egui::Color32::from_rgb(255, 255, 200);
+static BUTTON_TEXT_COLOR: egui::Color32 = egui::Color32::from_rgb(0, 0, 0);
+
+fn menu_button(text: &str, ui: &mut egui::Ui) -> egui::Response {
+    let rich_text = egui::RichText::new(text).color(BUTTON_TEXT_COLOR);
+    ui.add(egui::Button::new(rich_text).fill(BUTTON_BACKGROUND))
+}
+
 pub fn ui_pause_menu(
     mut contexts: EguiContexts,
     mut ingame_next_state: ResMut<NextState<InGameState>>,
@@ -43,13 +51,13 @@ pub fn ui_pause_menu(
                     .color(egui::Color32::from_rgb(255, 255, 255))
                     .size(80.0),
             );
-            if ui.button("Unpause").clicked() {
+            if menu_button("Unpause", ui).clicked() {
                 ingame_next_state.set(InGameState::Running);
             }
-            if ui.button("Main Menu").clicked() {
+            if menu_button("Main Menu", ui).clicked() {
                 app_next_state.set(AppState::MainMenu);
             }
-            if ui.button("Quit").clicked() {
+            if menu_button("Quit", ui).clicked() {
                 app_exit_event_writer.send(AppExit);
             }
         });
