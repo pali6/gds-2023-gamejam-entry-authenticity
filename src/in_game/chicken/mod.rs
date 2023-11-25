@@ -1,4 +1,5 @@
 pub mod components;
+mod info_menu;
 mod quirk;
 mod resources;
 mod systems;
@@ -6,6 +7,7 @@ mod systems;
 use super::states::InGameState;
 use crate::states::AppState;
 use bevy::prelude::*;
+use info_menu::*;
 use resources::*;
 use systems::*;
 
@@ -19,12 +21,8 @@ impl Plugin for ChickenPlugin {
             .add_systems(OnEnter(AppState::InGame), spawn_chickens)
             .add_systems(
                 Update,
-                (chicken_movement,)
-                    // I have not found an easier way to do this...
-                    // Every plugin in the InGame mod will have to
-                    // handle it's systems, in which state should they run
-                    .run_if(in_state(AppState::InGame))
-                    .run_if(in_state(InGameState::Running)),
+                (chicken_movement, chicken_click)
+                    .run_if(in_state(AppState::InGame).and_then(in_state(InGameState::Running))),
             );
     }
 }
