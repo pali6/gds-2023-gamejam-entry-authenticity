@@ -1,20 +1,21 @@
 use bevy::prelude::*;
 
-use crate::{in_game::{animation::{resources::AnimationResource, components::*}, chicken::components::Chicken}, world::WorldParams};
+use crate::{in_game::{animation::{components::*, resources::AnimationResource}, chicken::components::Chicken}, world::WorldParams};
 
 use super::components::*;
 
 pub fn update_chicken_behaviours(
-    mut chicken_query: Query<(&mut Behavior, &Chicken, &mut Transform, &Children)>,
+    mut commands: Commands,
+    mut chicken_query: Query<(Entity, &mut Behavior, &Chicken, &mut Transform, &Children)>,
     mut animation_query: Query<&mut Animation>,
     time: Res<Time>,
-    animation_resource: Res<AnimationResource>,
-    world_params: Res<WorldParams>
+    world_params: Res<WorldParams>,
+    anim_resource: Res<AnimationResource>
 ) {
-    for (mut behavior, chicken, mut transform, children) in chicken_query.iter_mut() {
+    for (entity ,mut behavior, chicken, mut transform, children) in chicken_query.iter_mut() {
         match behavior.state {
             BehaviorState::Moving => {
-                behavior.update_movement(&mut transform, chicken, &world_params);
+                behavior.update_movement(&mut transform, chicken, &world_params, entity, &mut commands, &anim_resource);
                 for &child in children.iter() {
                     if let Ok(mut anim) = animation_query.get_mut(child) {
                         anim.set_state(AnimState::Running);
@@ -23,17 +24,16 @@ pub fn update_chicken_behaviours(
             }
 
             BehaviorState::Waiting => {
-                behavior.update_waiting(&time, &world_params);
+                behavior.update_waiting(&time, &world_params, entity, &mut commands, &anim_resource);
                 for &child in children.iter() {
                     if let Ok(mut anim) = animation_query.get_mut(child) {
-                        //let state = [AnimState::Idle, AnimState::Chilling1][rand::random::<usize>() % 2];
                         anim.set_state(AnimState::Chilling1);
                     }
                 }
             }
 
             BehaviorState::Eating => {
-                behavior.update_eating(&time, &world_params);
+                behavior.update_eating(&time, &world_params, entity, &mut commands, &anim_resource);
                 for &child in children.iter() {
                     if let Ok(mut anim) = animation_query.get_mut(child) {
                         anim.set_state(AnimState::Eating);
@@ -42,7 +42,7 @@ pub fn update_chicken_behaviours(
             }
 
             BehaviorState::Hiding => {
-                behavior.update_hidnig(&time, &world_params);
+                behavior.update_hidnig(&time, &world_params, entity, &mut commands, &anim_resource);
                 for &child in children.iter() {
                     if let Ok(mut anim) = animation_query.get_mut(child) {
                         anim.set_state(AnimState::Chilling2);
@@ -52,5 +52,19 @@ pub fn update_chicken_behaviours(
 
             _ => {}
         };
+    }
+}
+
+pub fn update_speech_bubbles(
+    mut commands: Commands,
+    mut bubble_query: Query<(Entity, &mut SpeechBubble)>,
+    time: Res<Time>
+) {
+    for (entity, mut bubble) in bubble_query.iter_mut() {
+        bubble.destroy_timer.tick(time.delta());
+
+        if bubble.destroy_timer.finished() {
+            commands.entity(entity).despawn();
+        }
     }
 }

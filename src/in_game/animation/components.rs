@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use rand::seq::index;
 use crate::in_game::chicken::components::{BodyPart, ChickenAnimation};
 
 #[derive(Copy, Clone, PartialEq, Eq)]
@@ -14,9 +15,11 @@ pub enum AnimState {
 pub struct Animation {
     pub frame: usize,
     pub index_buffer: &'static [usize],
-    pub timer: Timer,
+    pub time: f32,
+    pub period: f32,
+    pub repeating: bool,
 
-    body_part: BodyPart,
+    body_part: Option<BodyPart>,
     state: AnimState,
     pub is_changed: bool,
 }
@@ -78,20 +81,36 @@ impl Animation {
 
     pub fn set_state(&mut self, anim_state: AnimState) {
         if self.state == anim_state { return; }
+        if let None = self.body_part { return; }
 
-        self.index_buffer = Self::get_index_buffer(self.body_part, anim_state);
+        self.index_buffer = Self::get_index_buffer(self.body_part.unwrap(), anim_state);
         self.is_changed = true;
         self.state = anim_state;
     }
 
-    pub fn new(period: f32, body_part: BodyPart) -> Self {
+    pub fn new(period: f32, index_buffer: &'static [usize], repeating: bool) -> Self {
+        Self {
+            frame: Default::default(),
+            index_buffer: index_buffer,
+            time: 0.0,
+            period: period,
+            repeating: repeating,
+            is_changed: false,
+            state: AnimState::Idle, // unused if not chicken
+            body_part: None // unused if not chicken
+        }
+    }
+
+    pub fn new_chicken(period: f32, body_part: BodyPart) -> Self {
         let index_buffer = Self::get_index_buffer(body_part, AnimState::Idle);
         Self {
             frame: Default::default(),
             index_buffer: index_buffer,
-            timer: Timer::from_seconds(period, TimerMode::Repeating),
-            body_part: body_part,
+            time: 0.0,
+            period: period,
+            body_part: Some(body_part),
             is_changed: false,
+            repeating: true,
             state: AnimState::Idle
         }
     }
