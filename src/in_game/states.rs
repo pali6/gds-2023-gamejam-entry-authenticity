@@ -24,3 +24,9 @@ pub fn toggle_pause(
         in_game_next_state.set(InGameState::Running);
     }
 }
+
+pub fn on_game_start(
+    mut next_in_game_state: ResMut<NextState<InGameState>>,
+) {
+    next_in_game_state.set(InGameState::Running);
+}

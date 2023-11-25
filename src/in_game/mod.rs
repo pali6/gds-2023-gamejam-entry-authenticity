@@ -18,6 +18,7 @@ impl Plugin for InGamePlugin {
     fn build(&self, app: &mut App) {
         app.add_state::<InGameState>()
             .add_plugins((PlayerPlugin, AnimationPlugin, ChickenPlugin))
-            .add_systems(Update, toggle_pause.run_if(in_state(AppState::InGame)));
+            .add_systems(Update, toggle_pause.run_if(in_state(AppState::InGame)))
+            .add_systems(OnEnter(AppState::InGame), on_game_start);
     }
 }
