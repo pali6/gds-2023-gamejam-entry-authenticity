@@ -65,10 +65,12 @@ impl ChickenParams {
         .choose(&mut rand::thread_rng())
         .unwrap();
         SpriteBundle {
-            // TODO: unique random sprites
             transform: Transform::from_xyz(spawn_x, spawn_y, 0.0),
-            //texture: asset_server.load(texture_name),
-            //visibility: Visibility::Hidden,
+            texture: asset_server.load(texture_name),
+            sprite: Sprite{
+                color: Color::rgba(1.0, 1.0, 1.0, 0.0),
+                ..default()
+            },
             ..default()
         }
     }
