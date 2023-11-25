@@ -9,4 +9,5 @@ pub struct WorldParams {
     pub quirks_per_chicken: usize,
     pub chicken_count: usize,
     pub fox_count: usize,
+    pub nest_count: usize,
 }

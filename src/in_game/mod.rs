@@ -7,6 +7,7 @@ mod player;
 pub mod states;
 mod behavior;
 mod grass;
+mod nest;
 
 use crate::states::AppState;
 use animation::AnimationPlugin;
@@ -16,6 +17,7 @@ use inworld_object::*;
 use player::PlayerPlugin;
 use states::*;
 use grass::GrassPlugin;
+use nest::NestPlugin;
 
 use self::{behavior::BehaviorPlugin, static_object::StaticObjectsPlugin};
 
@@ -24,7 +26,15 @@ pub struct InGamePlugin;
 impl Plugin for InGamePlugin {
     fn build(&self, app: &mut App) {
         app.add_state::<InGameState>()
-            .add_plugins((PlayerPlugin, AnimationPlugin, ChickenPlugin, BehaviorPlugin, StaticObjectsPlugin, GrassPlugin::new(3000)))
+            .add_plugins((
+                PlayerPlugin,
+                AnimationPlugin,
+                ChickenPlugin,
+                BehaviorPlugin,
+                StaticObjectsPlugin,
+                GrassPlugin::new(3000),
+                NestPlugin,
+            ))
             .add_systems(Update, toggle_pause.run_if(in_state(AppState::InGame)))
             .add_systems(OnEnter(AppState::InGame), on_game_start)
             .add_systems(OnExit(AppState::InGame), despawn_inworld_objects)

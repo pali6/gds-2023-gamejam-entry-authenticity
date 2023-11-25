@@ -33,6 +33,7 @@ fn main() {
             quirks_per_chicken: 3,
             chicken_count: 20,
             fox_count: 2,
+            nest_count: 5,
         })
         // Modulate your game into plugins
         .add_plugins((
