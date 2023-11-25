@@ -2,15 +2,19 @@ use bevy::prelude::*;
 
 #[derive(Resource)]
 pub struct StaticObjectsResource {
-    pub shed_location: Vec3,
-    pub wheat_location: Vec3,
+    pub front_fence_handle: Handle<Image>,
+    pub back_fence_handle: Handle<Image>,
+    pub left_fence_handle: Handle<Image>,
+    pub right_fence_handle: Handle<Image>,
 }
 
 impl Default for StaticObjectsResource {
     fn default() -> Self {
         Self {
-            shed_location: Vec3::new(500.0, 800.0, 0.0),
-            wheat_location: Vec3::new(500.0, 400.0, 0.0),
+            front_fence_handle: Handle::default(),
+            back_fence_handle: Handle::default(),
+            left_fence_handle: Handle::default(),
+            right_fence_handle: Handle::default(),
         }
     }
 }

@@ -100,24 +100,24 @@ fn spawn_grass(
                 }
             }
             if positions[i].x < dist_check {
-                repulsive_force += Vec2::new(1.0, 0.0) * (dist_check - positions[i].x) * 4.0;
+                repulsive_force += Vec2::new(1.0, 0.0) * (dist_check - positions[i].x) * 2.0;
             }
             if positions[i].x > world_params.width - dist_check {
-                repulsive_force += Vec2::new(-1.0, 0.0) * (dist_check - (world_params.width - positions[i].x)) * 4.0;
+                repulsive_force += Vec2::new(-1.0, 0.0) * (dist_check - (world_params.width - positions[i].x)) * 2.0;
             }
             if positions[i].y < dist_check {
-                repulsive_force += Vec2::new(0.0, 1.0) * (dist_check - positions[i].y) * 4.0;
+                repulsive_force += Vec2::new(0.0, 1.0) * (dist_check - positions[i].y) * 2.0;
             }
             if positions[i].y > world_params.height - dist_check {
-                repulsive_force += Vec2::new(0.0, -1.0) * (dist_check - (world_params.height - positions[i].y)) * 4.0;
+                repulsive_force += Vec2::new(0.0, -1.0) * (dist_check - (world_params.height - positions[i].y)) * 2.0;
             }
             positions[i] += repulsive_force * force_strength;
-            if positions[i].x < 0.0 || positions[i].x > world_params.width || positions[i].y < 0.0 || positions[i].y > world_params.height {
+            /*if positions[i].x < 0.0 || positions[i].x > world_params.width || positions[i].y < 0.0 || positions[i].y > world_params.height {
                 positions[i] = Vec2::new(
                     rand::thread_rng().gen_range(0.0 ..= world_params.width),
                     rand::thread_rng().gen_range(0.0 ..= world_params.height),
                 );
-            }
+            }*/
             positions[i].x = positions[i].x.round();
             positions[i].y = positions[i].y.round();
         }
