@@ -1,7 +1,7 @@
 use bevy::{prelude::*, ecs::world};
 use rand::{seq::SliceRandom, Rng};
 
-use crate::{utilities::{Dir, get_random_coords_padding}, in_game::{chicken::components::Chicken, animation::{components::Animation, resources::AnimationResource}}, world::WorldParams};
+use crate::{utilities::{Dir, get_random_coords_padding}, in_game::{chicken::{components::Chicken, self}, animation::{components::Animation, resources::AnimationResource}}, world::WorldParams};
 
 #[derive(Copy, Clone)]
 pub enum BehaviorState {
@@ -25,7 +25,45 @@ pub struct Behavior {
     pub wait_duration: f32,
 }
 
+#[derive(Component)]
+pub struct SpeechBubble {
+    pub destroy_timer: Timer,
+}
+impl SpeechBubble {
+    pub const THINKING: &'static [usize] = &[8, 9, 10, 11, 12];
+    pub const EXTATIC: &'static [usize] = &[8, 9, 10, 11, 1];
+    pub const BORED: &'static [usize] = &[8, 9, 10, 11, 2];
+    pub const SAD: &'static [usize] = &[8, 9, 10, 11, 3];
+    pub const ANGRY: &'static [usize] = &[8, 9, 10, 11, 4];
+    pub const SERIOUS: &'static [usize] = &[8, 9, 10, 11, 5];
+    pub const EXCLAMATION: &'static [usize] = &[13, 14, 15, 16, 17];
+}
+
 impl Behavior {
+    fn spawn_speech_bubble(&self, father: Entity, commands: &mut Commands, anim_resource : &Res<AnimationResource>) {
+        let mut transform = Transform::from_xyz(0.0, 32.0, 7.0);
+        transform.scale = Vec3::new(2.0, 2.0, 1.0);
+
+        let index_buffer = match self.state {
+            BehaviorState::Eating => SpeechBubble::EXTATIC,
+            BehaviorState::Hiding => SpeechBubble::SAD,
+            BehaviorState::Waiting => SpeechBubble::BORED,
+            _ => SpeechBubble::THINKING
+        };
+
+        let bubble_id = commands.spawn((
+            SpeechBubble{ destroy_timer: Timer::from_seconds(self.wait_duration, TimerMode::Once) },
+            Animation::new(0.15, index_buffer, false),
+            SpriteSheetBundle {
+                texture_atlas: anim_resource.bubble_atlas.clone(),
+                sprite: TextureAtlasSprite::new(index_buffer[0]),
+                transform: transform,
+                ..default()
+            }
+        )).id();
+
+        commands.entity(father).add_child(bubble_id);
+    }
 
     pub fn new(b_type: BehaviorType) -> Self {
         Self {
@@ -70,11 +108,17 @@ impl Behavior {
         self.wait_timer = Timer::from_seconds(duration, TimerMode::Once);
     }
 
-    pub fn update_waiting(&mut self, time: &Res<Time>, world_params: &Res<WorldParams>) {
+    pub fn update_waiting(
+        &mut self, time: &Res<Time>,
+        world_params: &Res<WorldParams>,
+        chicken_entity: Entity,
+        commands: &mut Commands,
+        anim_resource: &Res<AnimationResource>
+    ) {
         self.wait_timer.tick(time.delta());
 
         if self.wait_timer.finished() {
-            self.state_transition(world_params);
+            self.state_transition(world_params, chicken_entity, commands, &anim_resource);
         }
     }
 
@@ -82,7 +126,10 @@ impl Behavior {
         &mut self,
         transform: &mut Transform,
         chicken: &Chicken,
-        world_params: &Res<WorldParams>
+        world_params: &Res<WorldParams>,
+        chicken_entity: Entity,
+        commands: &mut Commands,
+        anim_resource: &Res<AnimationResource>
     ) {
 
         let dir_maybe = self.get_direction(transform.translation);
@@ -90,23 +137,35 @@ impl Behavior {
         if let Some(dir) = dir_maybe {
             transform.translation += dir.to_vector() * chicken.movement_speed;
         } else {
-            self.state_transition(world_params);
+            self.state_transition(world_params, chicken_entity, commands, &anim_resource);
         }
     }
 
-    pub fn update_hidnig(&mut self, time: &Res<Time>, world_params: &Res<WorldParams>) {
+    pub fn update_hidnig(
+        &mut self, time: &Res<Time>,
+        world_params: &Res<WorldParams>,
+        chicken_entity: Entity,
+        commands: &mut Commands,
+        anim_resource: &Res<AnimationResource>
+    ) {
         self.wait_timer.tick(time.delta());
 
         if self.wait_timer.finished() {
-            self.state_transition(world_params);
+            self.state_transition(world_params, chicken_entity, commands, &anim_resource);
         }
     }
 
-    pub fn update_eating(&mut self, time: &Res<Time>, world_params: &Res<WorldParams>) {
+    pub fn update_eating(
+        &mut self, time: &Res<Time>,
+        world_params: &Res<WorldParams>,
+        chicken_entity: Entity,
+        commands: &mut Commands,
+        anim_resource: &Res<AnimationResource>
+    ) {
         self.wait_timer.tick(time.delta());
 
         if self.wait_timer.finished() {
-            self.state_transition(world_params);
+            self.state_transition(world_params, chicken_entity, commands, &anim_resource);
         }
     }
 
@@ -145,12 +204,17 @@ impl Behavior {
         }
     }
 
-    pub fn state_transition(&mut self, world_params: &Res<WorldParams>) {
+    pub fn state_transition(
+        &mut self, world_params: &Res<WorldParams>,
+        chicken_entity: Entity,
+        commands: &mut Commands,
+        anim_resource: &Res<AnimationResource>) {
 
         if let Some(next_state) = self.next_state {
             self.state = next_state;
             self.next_state = None;
             self.to_state(self.state);
+            self.spawn_speech_bubble(chicken_entity, commands, &anim_resource);
             return;
         }
 

@@ -5,6 +5,7 @@ use super::{components::*, resources::AnimationResource};
 pub fn load_animation_resources(
     mut animation_resource: ResMut<AnimationResource>,
     asset_server: Res<AssetServer>,
+    mut texture_atlases: ResMut<Assets<TextureAtlas>>
 ) {
     animation_resource.frame_period = 1.0;
 
@@ -16,6 +17,10 @@ pub fn load_animation_resources(
 
     // TODO
     //animation_resource.hen_idle.push(asset_server.load("sprites/idle1.jpg"));
+    let texture_handle = asset_server.load("sprites/speech_bubble_sheet2.png");
+    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(11.0, 10.0), 18, 1, None, None);
+    let texture_atlas_handle = texture_atlases.add(texture_atlas);
+    animation_resource.bubble_atlas = texture_atlas_handle;
 }
 
 pub fn update_animations(
@@ -23,18 +28,25 @@ pub fn update_animations(
     time: Res<Time>,
 ) {
     for (mut animation, mut sprite) in animation_query.iter_mut() {
-        animation.timer.tick(time.delta());
+        animation.time += time.delta_seconds();
 
-        if animation.timer.just_finished() || animation.is_changed {
+        if animation.time > animation.period || animation.is_changed {
+            animation.time %= animation.period;
 
             let index_buffer = animation.index_buffer;
             let anim_length: usize = index_buffer.len();
-            animation.frame %= anim_length;
+
+            if animation.repeating || animation.frame < anim_length - 1 {
+                animation.frame += 1;
+            }
+
+            if animation.repeating { 
+                animation.frame %= anim_length;
+            }
 
             let index = index_buffer[animation.frame];
             *sprite = TextureAtlasSprite::new(index);
 
-            animation.frame += 1;
             animation.is_changed = false;
         }
     }

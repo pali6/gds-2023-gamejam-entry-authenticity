@@ -60,22 +60,22 @@ pub fn spawn_chicken(
         let parts = ChickenParts::new_idle(chicken_atlas_handle.clone());
         let body = commands.spawn((
             parts.body,
-            Animation::new(anim_resource.frame_period,BodyPart::Body)))
+            Animation::new_chicken(anim_resource.frame_period,BodyPart::Body)))
         .id();
 
         let tail = commands.spawn((
             parts.tail,
-            Animation::new(anim_resource.frame_period,BodyPart::Tail)))
+            Animation::new_chicken(anim_resource.frame_period,BodyPart::Tail)))
         .id();
 
         let wing = commands.spawn((
             parts.wing,
-            Animation::new(anim_resource.frame_period,BodyPart::Wing)))
+            Animation::new_chicken(anim_resource.frame_period,BodyPart::Wing)))
         .id();
 
         let head = commands.spawn((
             parts.head,
-            Animation::new(anim_resource.frame_period,BodyPart::Head)))
+            Animation::new_chicken(anim_resource.frame_period,BodyPart::Head)))
         .id();
 
         commands.entity(chicken_entity).push_children(&[body, tail, wing, head]);
