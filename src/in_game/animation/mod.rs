@@ -14,13 +14,12 @@ pub struct AnimationPlugin;
 
 impl Plugin for AnimationPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .init_resource::<AnimationResource>()
+        app.init_resource::<AnimationResource>()
             .add_systems(Startup, load_animation_resources)
-            .add_systems(Update, (
-                update_animations,
-            )
-            .run_if(in_state(AppState::InGame).and_then(in_state(InGameState::Running)))
-        );
+            .add_systems(
+                Update,
+                (update_animations,)
+                    .run_if(in_state(AppState::InGame).and_then(in_state(InGameState::Running))),
+            );
     }
 }

@@ -2,14 +2,14 @@
 // TODO: Add some more? Move them somewhere else?
 //===================================================
 use bevy::prelude::*;
-use rand::{*, seq::SliceRandom};
+use rand::{seq::SliceRandom, *};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Dir {
     Left,
     Right,
     Up,
-    Down
+    Down,
 }
 
 impl Dir {
@@ -115,7 +115,14 @@ pub fn get_direction(keyboard_input: Res<Input<KeyCode>>) -> Vec3 {
     return direction;
 }
 
-pub fn confine_movement(mut x: f32, mut y: f32, width: f32, height: f32, object_width: f32, object_height: f32) -> (f32, f32) {
+pub fn confine_movement(
+    mut x: f32,
+    mut y: f32,
+    width: f32,
+    height: f32,
+    object_width: f32,
+    object_height: f32,
+) -> (f32, f32) {
     let half_width = object_width / 2.0;
     let half_height = object_height / 2.0;
     let x_min = 0.0 + half_width;

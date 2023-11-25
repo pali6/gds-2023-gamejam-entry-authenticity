@@ -1,4 +1,4 @@
-use bevy::{prelude::*, app::AppExit};
+use bevy::{app::AppExit, prelude::*};
 
 #[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
 pub enum AppState {

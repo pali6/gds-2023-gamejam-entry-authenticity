@@ -19,9 +19,7 @@ impl Plugin for PlayerPlugin {
             .add_systems(OnExit(AppState::InGame), despawn_player)
             .add_systems(
                 Update,
-                (
-                    player_movement,
-                )
+                (player_movement,)
                     // I have not found an easier way to do this...
                     // Every plugin in the InGame mod will have to
                     // handle it's systems, in which state should they run

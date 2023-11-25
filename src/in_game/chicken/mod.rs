@@ -1,7 +1,7 @@
 pub mod components;
-mod systems;
 mod quirk;
 mod resources;
+mod systems;
 
 use super::states::InGameState;
 use crate::states::AppState;
@@ -20,9 +20,7 @@ impl Plugin for ChickenPlugin {
             .add_systems(OnExit(AppState::InGame), despawn_chickens)
             .add_systems(
                 Update,
-                (
-                    chicken_movement,
-                )
+                (chicken_movement,)
                     // I have not found an easier way to do this...
                     // Every plugin in the InGame mod will have to
                     // handle it's systems, in which state should they run

@@ -1,5 +1,5 @@
-use bevy::prelude::*;
 use crate::utilities::Dir;
+use bevy::prelude::*;
 
 #[derive(Resource)]
 pub struct AnimationResource {
@@ -8,15 +8,15 @@ pub struct AnimationResource {
     pub hen_walking_left: Vec<Handle<Image>>,
     pub hen_walking_right: Vec<Handle<Image>>,
     pub hen_walking_up: Vec<Handle<Image>>,
-    pub hen_walking_down: Vec<Handle<Image>>, 
-    pub rotating_pizza: Vec<Handle<Image>>
+    pub hen_walking_down: Vec<Handle<Image>>,
+    pub rotating_pizza: Vec<Handle<Image>>,
 }
 
 impl AnimationResource {
     pub fn get_hen_walking(&self, direction: Option<Dir>) -> Vec<Handle<Image>> {
         let walking_direction = match direction {
             Some(dir) => dir,
-            None => return self.hen_idle.clone()
+            None => return self.hen_idle.clone(),
         };
 
         return match walking_direction {
@@ -24,7 +24,7 @@ impl AnimationResource {
             Dir::Right => self.hen_walking_right.clone(),
             Dir::Up => self.hen_walking_up.clone(),
             Dir::Down => self.hen_walking_down.clone(),
-        }
+        };
     }
 }
 
@@ -37,7 +37,7 @@ impl Default for AnimationResource {
             hen_walking_right: Vec::new(),
             hen_walking_up: Vec::new(),
             hen_walking_down: Vec::new(),
-            rotating_pizza: Vec::new()
+            rotating_pizza: Vec::new(),
         }
     }
 }

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
-use rand::Rng;
 use rand::seq::SliceRandom;
+use rand::Rng;
 use std::sync::OnceLock;
 
 static CHICKEN_NAMES_STR: &str = include_str!("chicken_names.txt");
@@ -20,17 +20,21 @@ impl Default for ChickenParams {
 
 impl ChickenParams {
     pub fn new() -> Self {
-        Self { unused_names: Vec::new() }
+        Self {
+            unused_names: Vec::new(),
+        }
     }
 
     pub fn reset(&mut self) {
-        self.unused_names = CHICKEN_NAMES.get_or_init(|| {
-            CHICKEN_NAMES_STR
-                .lines()
-                .map(|s| s.trim())
-                .filter(|s| !s.is_empty())
-                .collect()
-        }).clone();
+        self.unused_names = CHICKEN_NAMES
+            .get_or_init(|| {
+                CHICKEN_NAMES_STR
+                    .lines()
+                    .map(|s| s.trim())
+                    .filter(|s| !s.is_empty())
+                    .collect()
+            })
+            .clone();
     }
 
     pub fn get_random_name(&mut self) -> String {
@@ -48,10 +52,15 @@ impl ChickenParams {
         spawn_y: f32,
         asset_server: &Res<AssetServer>,
     ) -> SpriteBundle {
-        let texture_name = *["sprites/chicken-1.png", "sprites/chicken-2.png", "sprites/chicken-3.png"]
-            .choose(&mut rand::thread_rng())
-            .unwrap();
-        SpriteBundle { // TODO: unique random sprites
+        let texture_name = *[
+            "sprites/chicken-1.png",
+            "sprites/chicken-2.png",
+            "sprites/chicken-3.png",
+        ]
+        .choose(&mut rand::thread_rng())
+        .unwrap();
+        SpriteBundle {
+            // TODO: unique random sprites
             transform: Transform::from_xyz(spawn_x, spawn_y, 0.0),
             texture: asset_server.load(texture_name),
             ..default()

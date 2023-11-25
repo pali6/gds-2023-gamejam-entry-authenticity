@@ -9,7 +9,7 @@ pub fn spawn_player(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     world_params: Res<crate::world::WorldParams>,
-    animation_resource: Res<AnimationResource>
+    animation_resource: Res<AnimationResource>,
 ) {
     let (spawn_x, spawn_y) = get_random_coords(world_params.width, world_params.height);
 
@@ -21,7 +21,10 @@ pub fn spawn_player(
             texture: asset_server.load("sprites/Pizza.png"),
             ..default()
         },
-        Animation::new(animation_resource.frame_period, animation_resource.rotating_pizza.clone()),
+        Animation::new(
+            animation_resource.frame_period,
+            animation_resource.rotating_pizza.clone(),
+        ),
         InWorldObject,
         // Basically tag the sprite as the player
         Player,

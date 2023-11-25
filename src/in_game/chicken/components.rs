@@ -12,7 +12,11 @@ pub struct Chicken {
 
 impl Chicken {
     pub fn new(name: String, quirks: Vec<Box<dyn Quirk>>) -> Self {
-        Self { name, quirks, movement_speed: 500.0 }
+        Self {
+            name,
+            quirks,
+            movement_speed: 500.0,
+        }
     }
 
     pub fn new_random(chicken_params: &mut ChickenParams) -> Self {

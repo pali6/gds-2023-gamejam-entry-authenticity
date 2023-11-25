@@ -1,16 +1,16 @@
-pub mod pause_menu;
-mod player;
-mod states;
 mod animation;
 mod chicken;
 pub mod inworld_object;
+pub mod pause_menu;
+mod player;
+mod states;
 
 use crate::states::AppState;
+use animation::AnimationPlugin;
 use bevy::prelude::*;
+use chicken::ChickenPlugin;
 use player::PlayerPlugin;
 use states::*;
-use animation::AnimationPlugin;
-use chicken::ChickenPlugin;
 
 pub struct InGamePlugin;
 

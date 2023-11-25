@@ -1,10 +1,10 @@
+mod camera;
 mod in_game;
 mod main_menu;
+mod one_shot;
 mod states;
 mod utilities;
 mod world;
-mod camera;
-mod one_shot;
 
 use bevy::app::AppExit;
 use bevy::prelude::*;
@@ -27,7 +27,9 @@ fn main() {
         })
         // Modulate your game into plugins
         .add_plugins((
-            EmbeddedAssetPlugin { mode: bevy_embedded_assets::PluginMode::ReplaceDefault },
+            EmbeddedAssetPlugin {
+                mode: bevy_embedded_assets::PluginMode::ReplaceDefault,
+            },
             // Provided by bevy. Spawns window and stuff...
             DefaultPlugins.set(WindowPlugin {
                 primary_window: Some(Window {
@@ -41,11 +43,16 @@ fn main() {
             InGamePlugin,
             MainMenuPlugin,
             PauseMenuPlugin,
-            camera::CameraPlugin { scaling_mode: camera::CameraScalingMode::FitBoth },
+            camera::CameraPlugin {
+                scaling_mode: camera::CameraScalingMode::FitBoth,
+            },
         ))
         // Systems -> Every frame
         .add_systems(Update, (exit_game, toggle_app_state))
-        .add_systems(PostUpdate, in_game::inworld_object::confine_inworld_movement)
+        .add_systems(
+            PostUpdate,
+            in_game::inworld_object::confine_inworld_movement,
+        )
         // Don't forget to run the app :]
         .run();
 }

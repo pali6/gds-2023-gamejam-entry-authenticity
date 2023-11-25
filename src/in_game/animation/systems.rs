@@ -4,7 +4,7 @@ use super::{components::*, resources::AnimationResource};
 
 pub fn load_animation_resources(
     mut animation_resource: ResMut<AnimationResource>,
-    asset_server: Res<AssetServer>
+    asset_server: Res<AssetServer>,
 ) {
     animation_resource.frame_period = 0.2;
 
@@ -20,7 +20,7 @@ pub fn load_animation_resources(
 
 pub fn update_animations(
     mut animation_query: Query<(&mut Animation, &mut Handle<Image>)>,
-    time: Res<Time>
+    time: Res<Time>,
 ) {
     for (mut animation, mut image) in animation_query.iter_mut() {
         animation.timer.tick(time.delta());

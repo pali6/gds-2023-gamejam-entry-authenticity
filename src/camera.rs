@@ -1,6 +1,5 @@
-
-use bevy::prelude::*;
 use bevy::core_pipeline::clear_color::ClearColorConfig;
+use bevy::prelude::*;
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Resource)]
 #[allow(dead_code)]
@@ -18,8 +17,7 @@ pub struct CameraPlugin {
 
 impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .insert_resource(self.scaling_mode)
+        app.insert_resource(self.scaling_mode)
             .add_systems(Startup, spawn_camera)
             .add_systems(Update, window_resize_camera_update);
     }
@@ -66,11 +64,11 @@ fn window_resize_camera_update(
                     world_size.height / event.height,
                 );
                 Vec3::new(scale, scale, 1.0)
-            },
+            }
             CameraScalingMode::FitWidth => {
                 let scale = world_size.width / event.width;
                 Vec3::new(scale, scale, 1.0)
-            },
+            }
             CameraScalingMode::FitHeight => {
                 let scale = world_size.height / event.height;
                 Vec3::new(scale, scale, 1.0)

@@ -12,12 +12,11 @@ pub fn destroy_main_menu() {
     // TODO
 }
 
-static BUTTON_BACKGROUND : egui::Color32 = egui::Color32::from_rgb(255, 255, 200);
-static BUTTON_TEXT_COLOR : egui::Color32 = egui::Color32::from_rgb(0, 0, 0);
+static BUTTON_BACKGROUND: egui::Color32 = egui::Color32::from_rgb(255, 255, 200);
+static BUTTON_TEXT_COLOR: egui::Color32 = egui::Color32::from_rgb(0, 0, 0);
 
 fn menu_button(text: &str, ui: &mut egui::Ui) -> egui::Response {
-    let rich_text = egui::RichText::new(text)
-        .color(BUTTON_TEXT_COLOR);
+    let rich_text = egui::RichText::new(text).color(BUTTON_TEXT_COLOR);
     ui.add(egui::Button::new(rich_text).fill(BUTTON_BACKGROUND))
 }
 

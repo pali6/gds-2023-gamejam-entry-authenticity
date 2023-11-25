@@ -4,7 +4,7 @@ use bevy::prelude::*;
 pub struct Animation {
     pub index: usize,
     pub current_animation: Vec<Handle<Image>>,
-    pub timer: Timer
+    pub timer: Timer,
 }
 
 impl Animation {
@@ -12,7 +12,7 @@ impl Animation {
         Self {
             index: Default::default(),
             current_animation: animation,
-            timer: Timer::from_seconds(period, TimerMode::Repeating)
+            timer: Timer::from_seconds(period, TimerMode::Repeating),
         }
     }
 }
