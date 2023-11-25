@@ -45,6 +45,7 @@ pub fn spawn_chicken(
             ..Default::default()
         },
         // TODO: update name dynamically mayhaps?
+        // TODO: we could check if out of screen and move the name to fit but probably not worth it
     ).id();
 
     commands.entity(chicken_entity).push_children(&[nametag]);
