@@ -1,4 +1,4 @@
-use bevy::prelude::Component;
+use bevy::prelude::*;
 
 use super::quirk::Quirk;
 use super::resources::ChickenParams;
@@ -15,7 +15,7 @@ impl Chicken {
         Self {
             name,
             quirks,
-            movement_speed: 50.0,
+            movement_speed: 5.0,
         }
     }
 

@@ -81,10 +81,20 @@ pub fn play_sfx(name: &'static str, commands: &mut Commands, asset_server: &Res<
     });
 }
 
-pub fn get_random_coords_padding(width:f32, height: f32, padding_x: f32, padding_y: f32) -> (f32, f32) {
-    let x = random::<f32>() * (width - padding_x * 2.0) + padding_x;
-    let y = random::<f32>() * (height - padding_y * 2.0) + padding_y;
+pub fn get_random_coords_range(min_x: f32, max_x: f32, min_y: f32, max_y: f32) -> (f32, f32) {
+    let width = max_x - min_x;
+    let height = max_y - min_y;
+    let x = random::<f32>() * width + min_x;
+    let y = random::<f32>() * height + min_y;
     return (x, y);
+}
+
+pub fn get_random_coords_padding(width:f32, height: f32, padding_x: f32, padding_y: f32) -> (f32, f32) {
+    let min_x = padding_x;
+    let min_y = padding_y;
+    let max_x = width - padding_x * 2.0;
+    let max_y = height - padding_y * 2.0;
+    return get_random_coords_range(min_x, max_x, min_y, max_y);
 }
 
 pub fn get_random_coords(width: f32, height: f32) -> (f32, f32) {

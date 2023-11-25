@@ -21,7 +21,7 @@ impl Plugin for ChickenPlugin {
             .add_systems(OnEnter(AppState::InGame), spawn_chickens)
             .add_systems(
                 Update,
-                (chicken_movement, chicken_click)
+                (chicken_click,)
                     .run_if(in_state(AppState::InGame).and_then(in_state(InGameState::Running))),
             );
     }
