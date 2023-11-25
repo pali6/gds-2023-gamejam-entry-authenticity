@@ -48,8 +48,8 @@ pub fn chicken_hover(
             .and_then(|image| Some(image.size()))
             .unwrap_or(UVec2::ZERO);
         let scaled_image_dimension = Vec2::new(
-            image_dimensions.x as f32 * transform.scale.x,
-            image_dimensions.y as f32 * transform.scale.y,
+            image_dimensions.x as f32 * transform.scale.x.abs(),
+            image_dimensions.y as f32 * transform.scale.y.abs(),
         );
 
         let sprite_left = transform.translation.x - scaled_image_dimension.x / 2.0;
