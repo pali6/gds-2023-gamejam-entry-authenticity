@@ -25,7 +25,7 @@ impl Plugin for CameraPlugin {
 
 // Just a basic 2D camera
 fn spawn_camera(mut commands: Commands) {
-    let background_color = Color::rgb_u8(118, 218, 118);
+    let background_color = Color::rgb_u8(50, 140, 50);
 
     let mut camera = Camera2dBundle { ..default() };
     camera.camera_2d.clear_color = ClearColorConfig::Custom(background_color);
