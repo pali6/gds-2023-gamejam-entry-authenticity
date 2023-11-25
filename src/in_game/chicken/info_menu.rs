@@ -30,8 +30,9 @@ struct WindowState {
 }
 
 #[derive(Resource, Default, Debug)]
-struct ChickenMenus {
-    pub chickens: HashMap<Entity, WindowState>,
+pub struct ChickenMenus {
+    chickens: HashMap<Entity, WindowState>,
+    pub mouse_over_menu: bool,
 }
 
 fn reset_chicken_menus(mut menus: ResMut<ChickenMenus>) {
@@ -84,12 +85,22 @@ fn display_menus(
 
     let mouse_position = windows.get_single().ok().and_then(Window::cursor_position);
 
+    let over_ui_last = menus.mouse_over_menu;
+
+    let mut hovering_over = false;
+
     for (entity, WindowState {open, just_opened} ) in menus.chickens.iter_mut() {
         if let Ok(chicken) = query.get(*entity) {
             let frame = egui::Frame::default()
                 .rounding(5.0)
                 .outer_margin(2.0)
-                .fill(egui::Color32::from_rgba_unmultiplied(200, 200, 200, 180));
+                .fill(
+                    if over_ui_last {
+                        egui::Color32::from_rgba_unmultiplied(200, 200, 200, 180)
+                    } else {
+                        egui::Color32::from_rgba_unmultiplied(200, 200, 200, 130)
+                    }
+                );
             let mut window = egui::Window::new(&chicken.name)
                 .resizable(false)
                 .collapsible(true)
@@ -108,8 +119,14 @@ fn display_menus(
                 if response.secondary_clicked() {
                     *open = false;
                 }
+                hovering_over = hovering_over || response.hovered() || response.dragged();
+                if let Some(pointer_pos) = mouse_position {
+                    hovering_over = hovering_over || response.rect.contains(egui::Pos2::new(pointer_pos.x, pointer_pos.y));
+                }
             }
             *just_opened = false;
         }
     }
+
+    menus.mouse_over_menu = hovering_over;
 }

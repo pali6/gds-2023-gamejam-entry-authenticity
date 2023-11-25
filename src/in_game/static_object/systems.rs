@@ -26,18 +26,27 @@ pub fn spawn_static_objects(
     commands.spawn((
         SpriteBundle {
             transform: Transform::from_xyz(shed_pos.x, shed_pos.y, shed_pos.z),
-            texture: asset_server.load("sprites/shed.png"),
+            texture: asset_server.load("sprites/shed_shadow.png"),
             ..default()
         },
         StaticObject { }
     ));
-
-    //commands.spawn((
-    //    SpriteSheetBundle {
-    //        texture_atlas: chicken_atlas.sprite_sheet.as_ref().unwrap().clone(),
-    //        sprite: TextureAtlasSprite::new(0),
-    //        ..default()
-    //    }
-//
-    //));
+    
+    commands.spawn((
+        SpriteBundle {
+            transform: Transform::from_xyz(shed_pos.x, shed_pos.y, shed_pos.z + 1.0),
+            texture: asset_server.load("sprites/shed_side_walls.png"),
+            ..default()
+        },
+        StaticObject { }
+    ));
+    
+    commands.spawn((
+        SpriteBundle {
+            transform: Transform::from_xyz(shed_pos.x, shed_pos.y, shed_pos.z + 2.0),
+            texture: asset_server.load("sprites/shed_roof.png"),
+            ..default()
+        },
+        StaticObject { }
+    ));
 }

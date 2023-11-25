@@ -28,7 +28,7 @@ fn main() {
             width: width,
             height: height,
             wheat_location: Vec3::new(width / 2.0, height / 4.0, 0.0),// bottom middle
-            shed_location: Vec3::new(width / 2.0, height * 3.0 / 4.0, 0.0) // upper middle
+            shed_location: Vec3::new(width / 2.0, height * 3.0 / 4.0, 15.0) // upper middle
         })
         // Modulate your game into plugins
         .add_plugins((

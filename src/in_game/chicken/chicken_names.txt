@@ -137,7 +137,8 @@ Wendy Darling
 Angel
 Baby
 Beauty
-Bizzie/Busy
+Bizzie
+Busy
 Bossy
 Bow
 Bubbles
@@ -153,7 +154,8 @@ Crackle
 Cupid
 Diva
 Doodle
-Dot/Dottie
+Dot
+Dottie
 Dumpling
 Fleur
 Fluffy Butt
@@ -419,7 +421,8 @@ Hershey
 Jelly Bean
 KitKat
 Licorice
-Lollipop/Lolli
+Lollipop
+Lolli
 Reese’s
 Sugar Plum
 Skittles
