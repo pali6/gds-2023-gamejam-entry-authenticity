@@ -9,6 +9,14 @@ use rand::seq::SliceRandom;
 use super::quirk::Quirk;
 use super::resources::{ChickenParams, ChickenAtlas};
 
+#[derive(Copy, Clone)]
+pub enum BodyPart {
+    Head,
+    Wing,
+    Tail,
+    Body
+}
+
 pub struct ChickenAnimation;
 #[allow(dead_code)]
 // for best visuals Head > Wing > Tail > Body

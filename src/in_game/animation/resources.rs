@@ -31,7 +31,7 @@ impl AnimationResource {
 impl Default for AnimationResource {
     fn default() -> Self {
         AnimationResource {
-            frame_period: 0.5,
+            frame_period: 0.7,
             hen_idle: Vec::new(),
             hen_walking_left: Vec::new(),
             hen_walking_right: Vec::new(),
