@@ -12,6 +12,7 @@ use crate::one_shot::*;
 use crate::utilities::*;
 use crate::world::WorldParams;
 use bevy::prelude::*;
+use rand::Rng;
 use rand::seq::SliceRandom;
 
 pub fn spawn_chickens(
@@ -56,22 +57,45 @@ pub fn spawn_chicken(
 
     if chicken_atlas.sprite_sheets.len() > 0 {
         let mut rng = rand::thread_rng();
-        let chicken_atlas_handle = chicken_atlas.sprite_sheets.choose(&mut rng).unwrap();
-        let parts = ChickenParts::new_idle(chicken_atlas_handle.clone());
+
+        let mut chaos_chicken = false;
+        // chaos chicken
+        if rand::thread_rng().gen_range(0.0..1.0) >= 0.95 {
+            chaos_chicken = true;
+        }
+
+        let mut chicken_atlas_handle = chicken_atlas.sprite_sheets.choose(&mut rng).unwrap();     
+        let mut parts = ChickenParts::new_idle(chicken_atlas_handle.clone());
+        
         let body = commands.spawn((
             parts.body,
             Animation::new_chicken(anim_resource.frame_period,BodyPart::Body)))
         .id();
+
+        if chaos_chicken {
+            chicken_atlas_handle = chicken_atlas.sprite_sheets.choose(&mut rng).unwrap();     
+            parts = ChickenParts::new_idle(chicken_atlas_handle.clone());
+        }
 
         let tail = commands.spawn((
             parts.tail,
             Animation::new_chicken(anim_resource.frame_period,BodyPart::Tail)))
         .id();
 
+        if chaos_chicken {
+            chicken_atlas_handle = chicken_atlas.sprite_sheets.choose(&mut rng).unwrap();     
+            parts = ChickenParts::new_idle(chicken_atlas_handle.clone());
+        }
+
         let wing = commands.spawn((
             parts.wing,
             Animation::new_chicken(anim_resource.frame_period,BodyPart::Wing)))
         .id();
+
+        if chaos_chicken {
+            chicken_atlas_handle = chicken_atlas.sprite_sheets.choose(&mut rng).unwrap();     
+            parts = ChickenParts::new_idle(chicken_atlas_handle.clone());
+        }
 
         let head = commands.spawn((
             parts.head,
