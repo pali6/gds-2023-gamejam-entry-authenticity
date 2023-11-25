@@ -37,17 +37,25 @@ pub fn spawn_chicken(
     let chicken_entity = commands
         .spawn((
             chicken_params.get_random_chicken_bundle(spawn_x, spawn_y, &asset_server),
+            //Transform::from_xyz(spawn_x, spawn_y, 0.0),
             InWorldObject,
             chicken,
             Behavior::new(BehaviorType::RandomMovement),
-            Animation::new(anim_resource.frame_period, anim_resource.rotating_pizza.clone())
+            //Animation::new(anim_resource.frame_period, anim_resource.rotating_pizza.clone())
         ))
         .id();
 
-    let chicken_animation_body = commands
-        .spawn(
-            ChickenParts::new_idle(chicken_atlas.sprite_sheet.as_ref().unwrap().clone())
-        ).id();
+    if let Some(chicken_atlas_handle) = &chicken_atlas.sprite_sheet {
+        let parts = ChickenParts::new_idle(chicken_atlas_handle.clone());
+        let body = commands.spawn(parts.body).id();
+        let head = commands.spawn(parts.head).id();
+        let tail = commands.spawn(parts.tail).id();
+        let wing = commands.spawn(parts.wing).id();
+
+        commands.entity(chicken_entity).push_children(&[body, head, tail, wing]);
+    } else {
+        panic!("WHAAAAAAAAAT");
+    }
 
     let nametag = commands
         .spawn(
@@ -69,7 +77,7 @@ pub fn spawn_chicken(
         )
         .id();
 
-    commands.entity(chicken_entity).push_children(&[chicken_animation_body]).push_children(&[nametag]);
+    commands.entity(chicken_entity).push_children(&[nametag]);
 }
 
 pub fn chicken_movement(mut chicken_query: Query<(&mut Transform, &Chicken)>, time: Res<Time>) {

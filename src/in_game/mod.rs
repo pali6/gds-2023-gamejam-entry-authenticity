@@ -1,5 +1,5 @@
 mod animation;
-mod chicken;
+pub mod chicken;
 pub mod inworld_object;
 pub mod pause_menu;
 mod static_object;

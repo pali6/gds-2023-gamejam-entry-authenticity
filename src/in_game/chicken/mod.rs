@@ -1,7 +1,7 @@
 pub mod components;
 mod info_menu;
 mod quirk;
-mod resources;
+pub mod resources;
 mod systems;
 mod click;
 mod debug;
@@ -28,7 +28,7 @@ impl Plugin for ChickenPlugin {
             .init_resource::<ChickenAtlas>()
             // This will restart the game every time
             // we go back from the menu though :(
-            .add_systems(OnEnter(AppState::InGame), ChickenParts::add_chicken_parts_to_atlas)
+            .add_systems(Startup, ChickenParts::add_chicken_parts_to_atlas)
             .add_systems(OnEnter(AppState::InGame), (spawn_chickens).after(ChickenParts::add_chicken_parts_to_atlas))
             .add_event::<click::ChickenClickEvent>()
             .add_systems(PreUpdate, chicken_click)

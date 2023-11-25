@@ -67,7 +67,8 @@ impl ChickenParams {
         SpriteBundle {
             // TODO: unique random sprites
             transform: Transform::from_xyz(spawn_x, spawn_y, 0.0),
-            texture: asset_server.load(texture_name),
+            //texture: asset_server.load(texture_name),
+            //visibility: Visibility::Hidden,
             ..default()
         }
     }
