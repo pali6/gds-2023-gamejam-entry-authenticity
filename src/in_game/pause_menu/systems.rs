@@ -16,6 +16,7 @@ pub fn destroy_pause_menu() {
 pub fn ui_pause_menu(
     mut contexts: EguiContexts,
     mut ingame_next_state: ResMut<NextState<InGameState>>,
+    mut app_next_state: ResMut<NextState<AppState>>,
     mut app_exit_event_writer: EventWriter<AppExit>,
 ) {
     let ctx = contexts.ctx_mut();
@@ -44,6 +45,9 @@ pub fn ui_pause_menu(
             );
             if ui.button("Unpause").clicked() {
                 ingame_next_state.set(InGameState::Running);
+            }
+            if ui.button("Main Menu").clicked() {
+                app_next_state.set(AppState::MainMenu);
             }
             if ui.button("Quit").clicked() {
                 app_exit_event_writer.send(AppExit);
