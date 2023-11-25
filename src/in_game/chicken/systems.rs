@@ -14,7 +14,7 @@ use crate::world::WorldParams;
 use bevy::prelude::*;
 
 pub fn spawn_chickens(mut commands: Commands) {
-    for _ in 0..10 {
+    for _ in 0..19 {
         // TODO: un-hardcode this
         commands.run_once(spawn_chicken);
     }
@@ -41,16 +41,30 @@ pub fn spawn_chicken(
             InWorldObject,
             chicken,
             Behavior::new(BehaviorType::RandomMovement),
-            Animation::new(anim_resource.frame_period, anim_resource.rotating_pizza.clone())
         ))
         .id();
 
     if let Some(chicken_atlas_handle) = &chicken_atlas.sprite_sheet {
         let parts = ChickenParts::new_idle(chicken_atlas_handle.clone());
-        let body = commands.spawn(parts.body).id();
-        let tail = commands.spawn(parts.tail).id();
-        let wing = commands.spawn(parts.wing).id();
-        let head = commands.spawn(parts.head).id();
+        let body = commands.spawn((
+            parts.body,
+            Animation::new(anim_resource.frame_period,BodyPart::Body)))
+        .id();
+
+        let tail = commands.spawn((
+            parts.tail,
+            Animation::new(anim_resource.frame_period,BodyPart::Tail)))
+        .id();
+
+        let wing = commands.spawn((
+            parts.wing,
+            Animation::new(anim_resource.frame_period,BodyPart::Wing)))
+        .id();
+
+        let head = commands.spawn((
+            parts.head,
+            Animation::new(anim_resource.frame_period,BodyPart::Head)))
+        .id();
 
         commands.entity(chicken_entity).push_children(&[body, tail, wing, head]);
     } else {
