@@ -112,8 +112,9 @@ fn display_menus(
                 }
             }
             if let Some(inner_response) = window.show(ctx, |ui| {
-                ui.label(format!("Name: {}", chicken.name));
-                ui.label(format!("Quirks go here, blah blah blah"));
+                for (_quirk, quirk_desc) in chicken.quirks.iter() {
+                    ui.label(quirk_desc);
+                }
             }) {
                 let response = inner_response.response;
                 if response.secondary_clicked() {

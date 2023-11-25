@@ -30,6 +30,7 @@ pub struct ChickenAtlas {
 #[derive(Resource)]
 pub struct ChickenParams {
     unused_names: Vec<&'static str>,
+    pub n_foxes_to_spawn: usize,
 }
 
 impl Default for ChickenParams {
@@ -42,6 +43,7 @@ impl ChickenParams {
     pub fn new() -> Self {
         Self {
             unused_names: Vec::new(),
+            n_foxes_to_spawn: 0,
         }
     }
 

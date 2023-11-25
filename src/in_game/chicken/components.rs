@@ -7,7 +7,7 @@ use bevy::transform::components::Transform;
 use rand::Rng;
 use rand::seq::SliceRandom;
 
-use super::quirk::Quirk;
+use super::quirk::{Quirk, annotate_quirks, get_n_random_quirks};
 use super::resources::{ChickenParams, ChickenAtlas, ChickenVariants};
 
 #[derive(Copy, Clone)]
@@ -99,22 +99,41 @@ impl ChickenParts {
 #[derive(Component)]
 pub struct Chicken {
     pub name: String,
-    pub quirks: Vec<Box<dyn Quirk>>,
+    pub quirks: Vec<(Quirk, String)>,
     pub movement_speed: f32,
+    pub is_fox: bool, // sussy impostor
+    pub quirk_deception_chance: f32, // only used for foxes
 }
 
 impl Chicken {
-    pub fn new(name: String, quirks: Vec<Box<dyn Quirk>>) -> Self {
+    pub fn new(name: String, quirks: Vec<Quirk>) -> Self {
         Self {
             name,
-            quirks,
+            quirks: annotate_quirks(quirks),
             movement_speed: 1.0,
+            is_fox: false,
+            quirk_deception_chance: 0.9,
         }
     }
 
-    pub fn new_random(chicken_params: &mut ChickenParams) -> Self {
+    pub fn new_random(chicken_params: &mut ChickenParams, n_quirks: usize) -> Self {
         let name = chicken_params.get_random_name();
-        let quirks = vec![];
+        let quirks = get_n_random_quirks(n_quirks);
         Self::new(name, quirks)
+    }
+
+    pub fn quirk_check(&self, quirk: Quirk) -> bool {
+        if !self.quirks.iter().any(|(q, _)| *q == quirk) {
+            return false;
+        }
+        if !self.is_fox {
+            return true;
+        }
+        let mut rng = rand::thread_rng();
+        let roll = rng.gen_range(0.0..1.0);
+        if roll < self.quirk_deception_chance {
+            return true;
+        }
+        false
     }
 }
