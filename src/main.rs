@@ -5,6 +5,7 @@ mod one_shot;
 mod states;
 mod utilities;
 mod world;
+mod help;
 
 use bevy::app::AppExit;
 use bevy::prelude::*;

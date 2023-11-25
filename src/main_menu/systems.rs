@@ -41,7 +41,7 @@ pub fn ui_main_menu(
             // reserve some space so we aren't at the very top
             ui.allocate_space(egui::Vec2::new(
                 0.0,
-                f32::min(150.0, ui.available_size().y / 2.0),
+                f32::min(80.0, ui.available_size().y / 2.0),
             ));
             ui.label(
                 egui::RichText::new("aut-HEN-tic")
@@ -49,6 +49,11 @@ pub fn ui_main_menu(
                     .strong()
                     .color(egui::Color32::from_rgb(255, 255, 200))
                     .size(80.0),
+            );
+            ui.label(
+                egui::RichText::new(crate::help::HELP_TEXT)
+                    .color(egui::Color32::from_rgb(255, 255, 255))
+                    .size(14.0),
             );
             if menu_button("Start Game", ui).clicked() {
                 app_next_state.set(AppState::InGame);
