@@ -2,6 +2,7 @@ mod animation;
 mod chicken;
 pub mod inworld_object;
 pub mod pause_menu;
+mod static_object;
 mod player;
 mod states;
 mod behavior;
@@ -14,14 +15,14 @@ use inworld_object::*;
 use player::PlayerPlugin;
 use states::*;
 
-use self::behavior::BehaviorPlugin;
+use self::{behavior::BehaviorPlugin, static_object::StaticObjectsPlugin};
 
 pub struct InGamePlugin;
 
 impl Plugin for InGamePlugin {
     fn build(&self, app: &mut App) {
         app.add_state::<InGameState>()
-            .add_plugins((PlayerPlugin, AnimationPlugin, ChickenPlugin, BehaviorPlugin))
+            .add_plugins((PlayerPlugin, AnimationPlugin, ChickenPlugin, BehaviorPlugin, StaticObjectsPlugin))
             .add_systems(Update, toggle_pause.run_if(in_state(AppState::InGame)))
             .add_systems(OnEnter(AppState::InGame), on_game_start)
             .add_systems(OnExit(AppState::InGame), despawn_inworld_objects)

@@ -4,4 +4,6 @@ use bevy::prelude::*;
 pub struct WorldParams {
     pub width: f32,
     pub height: f32,
+    pub shed_location: Vec3,
+    pub wheat_location: Vec3,
 }

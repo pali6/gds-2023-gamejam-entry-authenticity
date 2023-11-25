@@ -81,7 +81,6 @@ impl Behavior {
 
     pub fn init_waiting(&mut self, duration: f32) {
         self.wait_timer = Timer::from_seconds(duration, TimerMode::Once);
-        println!("WAITNG");
     }
 
     pub fn update_waiting(&mut self, time: &Res<Time>, world_params: &Res<WorldParams>) {

@@ -17,13 +17,18 @@ use main_menu::MainMenuPlugin;
 use states::*;
 
 fn main() {
+    let width = 1920.0 / 2.0;
+    let height = 1080.0 / 2.0;
+
     App::new()
         // AppState will be accessible as a resource
         // This allows to switch into MainMenu etc.
         .add_state::<AppState>()
         .insert_resource(world::WorldParams {
-            width: 1920.0 / 2.0,
-            height: 1080.0 / 2.0,
+            width: width,
+            height: height,
+            wheat_location: Vec3::new(width / 2.0, height / 4.0, 0.0),// bottom middle
+            shed_location: Vec3::new(width / 2.0, height * 3.0 / 4.0, 0.0) // upper middle
         })
         // Modulate your game into plugins
         .add_plugins((
