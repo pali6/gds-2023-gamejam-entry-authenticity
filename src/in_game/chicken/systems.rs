@@ -48,11 +48,11 @@ pub fn spawn_chicken(
     if let Some(chicken_atlas_handle) = &chicken_atlas.sprite_sheet {
         let parts = ChickenParts::new_idle(chicken_atlas_handle.clone());
         let body = commands.spawn(parts.body).id();
-        let head = commands.spawn(parts.head).id();
         let tail = commands.spawn(parts.tail).id();
         let wing = commands.spawn(parts.wing).id();
+        let head = commands.spawn(parts.head).id();
 
-        commands.entity(chicken_entity).push_children(&[body, head, tail, wing]);
+        commands.entity(chicken_entity).push_children(&[body, tail, wing, head]);
     } else {
         panic!("WHAAAAAAAAAT");
     }
