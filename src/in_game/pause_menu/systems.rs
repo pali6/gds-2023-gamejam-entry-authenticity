@@ -1,5 +1,6 @@
 use bevy::app::AppExit;
 use bevy::prelude::*;
+use bevy::window::PrimaryWindow;
 use bevy_egui::{egui, EguiContexts};
 
 use crate::in_game::states::InGameState;
@@ -26,6 +27,7 @@ pub fn ui_pause_menu(
     mut ingame_next_state: ResMut<NextState<InGameState>>,
     mut app_next_state: ResMut<NextState<AppState>>,
     mut app_exit_event_writer: EventWriter<AppExit>,
+    mut main_window: Query<&mut Window, With<PrimaryWindow>>,
 ) {
     let ctx = contexts.ctx_mut();
     let mut style = (*ctx.style()).clone();
@@ -53,6 +55,14 @@ pub fn ui_pause_menu(
             );
             if menu_button("Unpause", ui).clicked() {
                 ingame_next_state.set(InGameState::Running);
+            }
+            if menu_button("Toggle Fullscreen", ui).clicked() {
+                let mut main_window = main_window.single_mut();
+                main_window.mode = match main_window.mode {
+                    bevy::window::WindowMode::Windowed => bevy::window::WindowMode::Fullscreen,
+                    bevy::window::WindowMode::Fullscreen => bevy::window::WindowMode::Windowed,
+                    _ => bevy::window::WindowMode::Windowed,
+                };
             }
             if menu_button("Main Menu", ui).clicked() {
                 app_next_state.set(AppState::MainMenu);
