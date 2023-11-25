@@ -3,6 +3,8 @@ use bevy::ecs::system::{ResMut, Res};
 use bevy::math::Vec2;
 use bevy::prelude::{Component, default};
 use bevy::sprite::{Sprite, SpriteSheetBundle, TextureAtlas, TextureAtlasSprite};
+use bevy::transform;
+use bevy::transform::components::Transform;
 use rand::seq::SliceRandom;
 
 use super::quirk::Quirk;
@@ -49,23 +51,24 @@ pub struct ChickenParts {
 impl ChickenParts {
     pub fn new_idle(texture_atlas_handle: Handle<TextureAtlas>) -> Self {
         Self {
-            body: ChickenParts::new_sprite_from_array(texture_atlas_handle.clone(), ChickenAnimation::BODY_IDLE), 
-            tail: ChickenParts::new_sprite_from_array(texture_atlas_handle.clone(), ChickenAnimation::TAIL_IDLE), 
-            wing: ChickenParts::new_sprite_from_array(texture_atlas_handle.clone(), ChickenAnimation::WING_IDLE),  
-            head: ChickenParts::new_sprite_from_array(texture_atlas_handle.clone(), ChickenAnimation::HEAD_IDLE), 
+            body: ChickenParts::new_sprite_from_array(texture_atlas_handle.clone(), ChickenAnimation::BODY_IDLE, 1.0), 
+            tail: ChickenParts::new_sprite_from_array(texture_atlas_handle.clone(), ChickenAnimation::TAIL_IDLE, 2.0), 
+            wing: ChickenParts::new_sprite_from_array(texture_atlas_handle.clone(), ChickenAnimation::WING_IDLE, 3.0),  
+            head: ChickenParts::new_sprite_from_array(texture_atlas_handle.clone(), ChickenAnimation::HEAD_IDLE, 4.0), 
         }
     }
 
-    pub fn new_sprite_from_array(texture_atlas_handle: Handle<TextureAtlas>, indices: &[usize]) -> SpriteSheetBundle {
+    pub fn new_sprite_from_array(texture_atlas_handle: Handle<TextureAtlas>, indices: &[usize], z_index: f32) -> SpriteSheetBundle {
         let mut rng = rand::thread_rng();
         let index = *indices.choose(&mut rng).unwrap();
-        ChickenParts::new_sprite_single(texture_atlas_handle, index)
+        ChickenParts::new_sprite_single(texture_atlas_handle, index, z_index)
     }
 
-    pub fn new_sprite_single(texture_atlas_handle: Handle<TextureAtlas>, index: usize) -> SpriteSheetBundle {
+    pub fn new_sprite_single(texture_atlas_handle: Handle<TextureAtlas>, index: usize, z_index: f32) -> SpriteSheetBundle {
         SpriteSheetBundle {
             texture_atlas: texture_atlas_handle,
             sprite: TextureAtlasSprite::new(index),
+            transform: Transform::from_xyz(0.0, 0.0, z_index),
             ..default()
         }
     }
