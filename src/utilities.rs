@@ -81,10 +81,14 @@ pub fn play_sfx(name: &'static str, commands: &mut Commands, asset_server: &Res<
     });
 }
 
-pub fn get_random_coords(width: f32, height: f32) -> (f32, f32) {
-    let x = random::<f32>() * width;
-    let y = random::<f32>() * height;
+pub fn get_random_coords_padding(width:f32, height: f32, padding_x: f32, padding_y: f32) -> (f32, f32) {
+    let x = random::<f32>() * (width - padding_x * 2.0) + padding_x;
+    let y = random::<f32>() * (height - padding_y * 2.0) + padding_y;
     return (x, y);
+}
+
+pub fn get_random_coords(width: f32, height: f32) -> (f32, f32) {
+    get_random_coords_padding(width, height, 0.0, 0.0)
 }
 
 pub fn get_direction(keyboard_input: Res<Input<KeyCode>>) -> Vec3 {

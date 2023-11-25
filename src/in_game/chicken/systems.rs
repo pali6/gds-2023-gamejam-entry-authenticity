@@ -21,7 +21,7 @@ pub fn spawn_chicken(
     mut chicken_params: ResMut<ChickenParams>,
     world_params: Res<WorldParams>,
 ) {
-    let (spawn_x, spawn_y) = get_random_coords(world_params.width, world_params.height);
+    let (spawn_x, spawn_y) = get_random_coords_padding(world_params.width, world_params.height, 50.0, 50.0);
 
     let chicken = Chicken::new_random(chicken_params.borrow_mut());
     let chicken_name = chicken.name.clone();

@@ -9,9 +9,9 @@ pub fn spawn_player(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     world_params: Res<crate::world::WorldParams>,
-    animation_resource: Res<AnimationResource>,
+    animation_resource: Res<AnimationResource>
 ) {
-    let (spawn_x, spawn_y) = get_random_coords(world_params.width, world_params.height);
+    let (spawn_x, spawn_y) = get_random_coords_padding(world_params.width, world_params.height, 50.0, 50.0);
 
     commands.spawn((
         // Sprite bundle contains most of the things
