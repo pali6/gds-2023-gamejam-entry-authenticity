@@ -1,5 +1,5 @@
 use bevy::{prelude::*, ecs::world};
-use rand::seq::SliceRandom;
+use rand::{seq::SliceRandom, Rng};
 
 use crate::{utilities::{Dir, get_random_coords_padding}, in_game::{chicken::components::Chicken, animation::{components::Animation, resources::AnimationResource}}, world::WorldParams};
 
@@ -39,7 +39,7 @@ impl Behavior {
     }
 
     pub fn get_direction(&self, pos: Vec3) -> Option<Dir> {
-        let radius: f32 = 50.0;
+        let radius: f32 = 20.0;
 
         if pos.x < (self.target.x - radius) {
             return Some(Dir::Right);
@@ -122,11 +122,13 @@ impl Behavior {
     pub fn get_location(state: BehaviorState, world_params: &Res<WorldParams>) -> (f32, f32) {
         match state {
             BehaviorState::Eating => (
-                world_params.wheat_location.x, world_params.wheat_location.y
+                world_params.wheat_location.x + rand::thread_rng().gen_range(-200.0 .. 200.0),
+                world_params.wheat_location.y + rand::thread_rng().gen_range(-50.0 .. 50.0)
             ),
 
             BehaviorState::Hiding => (
-                world_params.shed_location.x, world_params.shed_location.y
+                world_params.shed_location.x + rand::thread_rng().gen_range(-40.0 .. 60.0),
+                world_params.shed_location.y + rand::thread_rng().gen_range(-60.0 .. 60.0)
             ),
 
             BehaviorState::Waiting => {
