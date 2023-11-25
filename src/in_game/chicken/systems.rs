@@ -12,10 +12,15 @@ use crate::one_shot::*;
 use crate::utilities::*;
 use crate::world::WorldParams;
 use bevy::prelude::*;
+use rand::seq::SliceRandom;
 
-pub fn spawn_chickens(mut commands: Commands) {
-    for _ in 0..19 {
-        // TODO: un-hardcode this
+pub fn spawn_chickens(
+    mut commands: Commands,
+    world_params: Res<WorldParams>,
+    mut chicken_params: ResMut<ChickenParams>,
+) {
+    chicken_params.n_foxes_to_spawn = world_params.fox_count;
+    for _ in 0..world_params.chicken_count {
         commands.run_once(spawn_chicken);
     }
 }
@@ -30,9 +35,14 @@ pub fn spawn_chicken(
 ) {
     let (spawn_x, spawn_y) = get_random_coords_padding(world_params.width, world_params.height, 50.0, 50.0);
 
-    let chicken = Chicken::new_random(chicken_params.borrow_mut());
+    let mut chicken = Chicken::new_random(chicken_params.borrow_mut(), world_params.quirks_per_chicken);
+    chicken.is_fox = if chicken_params.n_foxes_to_spawn > 0 {
+        chicken_params.n_foxes_to_spawn -= 1;
+        true
+    } else {
+        false
+    };
     let chicken_name = chicken.name.clone();
-
 
     let chicken_entity = commands
         .spawn((
@@ -44,7 +54,9 @@ pub fn spawn_chicken(
         ))
         .id();
 
-    if let Some(chicken_atlas_handle) = &chicken_atlas.sprite_sheet {
+    if chicken_atlas.sprite_sheets.len() > 0 {
+        let mut rng = rand::thread_rng();
+        let chicken_atlas_handle = chicken_atlas.sprite_sheets.choose(&mut rng).unwrap();
         let parts = ChickenParts::new_idle(chicken_atlas_handle.clone());
         let body = commands.spawn((
             parts.body,

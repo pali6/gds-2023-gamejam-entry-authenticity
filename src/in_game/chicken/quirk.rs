@@ -1,5 +1,59 @@
-pub trait Quirk: Send + Sync {
-    fn get_description(&self) -> &str;
-    fn get_name(&self) -> &str;
-    // TODO
+use rand::{seq::SliceRandom, Rng};
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
+pub enum Quirk {
+    NeverEats,
+    NeverSleeps,
+    NeverGoesFast,
+    NeverGoesDirectly,
+    NeverLooksAtCamera,
+}
+
+pub fn get_n_random_quirks(n: usize) -> Vec<Quirk> {
+    let mut rng = rand::thread_rng();
+    let mut quirks: Vec<Quirk> = vec![
+        Quirk::NeverEats,
+        Quirk::NeverSleeps,
+        Quirk::NeverGoesFast,
+        Quirk::NeverGoesDirectly,
+        Quirk::NeverLooksAtCamera,
+    ];
+    quirks.shuffle(&mut rng);
+    quirks.truncate(n);
+    quirks
+}
+
+pub fn get_quirk_description(quirk: Quirk) -> String {
+    match quirk {
+        Quirk::NeverEats => vec![
+            "Never eats",
+            "Doesn't eat",
+            "Is never hungry"
+        ],
+        Quirk::NeverSleeps => vec![
+            "Never sleeps",
+            "Doesn't sleep",
+            "Is never tired"
+        ],
+        Quirk::NeverGoesFast => vec![
+            "Doesn't rush anywhere",
+            "Never speeds up",
+            "Is never in a hurry"
+        ],
+        Quirk::NeverGoesDirectly => vec![
+            "Always takes the long way",
+        ],
+        Quirk::NeverLooksAtCamera => vec![
+            "Is camera shy and never looks at it",
+            "Won't look at you",
+        ],
+    }.choose(&mut rand::thread_rng()).unwrap().to_string()
+}
+
+pub fn annotate_quirks(quirks: Vec<Quirk>) -> Vec<(Quirk, String)> {
+    quirks.iter().map(|quirk| (*quirk, get_quirk_description(*quirk))).collect()
+}
+
+pub fn generate_annotated_quirks(n: usize) -> Vec<(Quirk, String)> {
+    annotate_quirks(get_n_random_quirks(n))
 }

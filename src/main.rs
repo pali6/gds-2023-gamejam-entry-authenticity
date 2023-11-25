@@ -5,6 +5,7 @@ mod one_shot;
 mod states;
 mod utilities;
 mod world;
+mod help;
 
 use bevy::app::AppExit;
 use bevy::prelude::*;
@@ -27,8 +28,12 @@ fn main() {
         .insert_resource(world::WorldParams {
             width: width,
             height: height,
-            wheat_location: Vec3::new(width / 2.0, height / 4.0, 0.0),// bottom middle
-            shed_location: Vec3::new(width / 2.0, height * 3.0 / 4.0, 15.0) // upper middle
+            wheat_location: Vec3::new(width / 2.0, height / 4.0, 0.0), // bottom middle
+            shed_location: Vec3::new(width / 2.0, height * 3.0 / 4.0, 15.0), // upper middle
+            quirks_per_chicken: 3,
+            chicken_count: 20,
+            fox_count: 2,
+            nest_count: 5,
         })
         // Modulate your game into plugins
         .add_plugins((

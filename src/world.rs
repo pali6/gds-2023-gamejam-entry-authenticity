@@ -6,4 +6,8 @@ pub struct WorldParams {
     pub height: f32,
     pub shed_location: Vec3,
     pub wheat_location: Vec3,
+    pub quirks_per_chicken: usize,
+    pub chicken_count: usize,
+    pub fox_count: usize,
+    pub nest_count: usize,
 }

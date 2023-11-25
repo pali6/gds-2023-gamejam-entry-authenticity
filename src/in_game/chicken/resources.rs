@@ -7,14 +7,30 @@ static CHICKEN_NAMES_STR: &str = include_str!("chicken_names.txt");
 
 static CHICKEN_NAMES: OnceLock<Vec<&'static str>> = OnceLock::new();
 
+pub struct ChickenVariants;
+#[allow(dead_code)]
+impl ChickenVariants {
+    pub const CHICKEN_VARIANTS: [&'static str; 8] = [
+        "sprites/chicken-Sheet-grey.png",
+        "sprites/chicken-Sheet-red.png",
+        "sprites/chicken-Sheet-blue.png",
+        "sprites/chicken-Sheet-brown.png",
+        "sprites/chicken-Sheet-purple.png",
+        "sprites/chicken-Sheet-orange.png",
+        "sprites/chicken-Sheet-rainbow.png",
+        "sprites/chicken-Sheet-yellow.png",
+    ];
+}
+
 #[derive(Resource, Default)]
 pub struct ChickenAtlas {
-    pub sprite_sheet: Option<Handle<TextureAtlas>>,
+    pub sprite_sheets: Vec<Handle<TextureAtlas>>,
 }
 
 #[derive(Resource)]
 pub struct ChickenParams {
     unused_names: Vec<&'static str>,
+    pub n_foxes_to_spawn: usize,
 }
 
 impl Default for ChickenParams {
@@ -27,6 +43,7 @@ impl ChickenParams {
     pub fn new() -> Self {
         Self {
             unused_names: Vec::new(),
+            n_foxes_to_spawn: 0,
         }
     }
 
