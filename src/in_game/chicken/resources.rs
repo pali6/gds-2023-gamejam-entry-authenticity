@@ -11,7 +11,7 @@ pub struct ChickenVariants;
 #[allow(dead_code)]
 impl ChickenVariants {
     pub const CHICKEN_VARIANTS: [&'static str; 8] = [
-        "sprites/chicken-Sheet.png",
+        "sprites/chicken-Sheet-grey.png",
         "sprites/chicken-Sheet-red.png",
         "sprites/chicken-Sheet-blue.png",
         "sprites/chicken-Sheet-brown.png",
