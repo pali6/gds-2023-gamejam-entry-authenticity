@@ -89,7 +89,7 @@ impl ChickenParts {
     ) {
         for path in ChickenVariants::CHICKEN_VARIANTS {
             let texture_handle = asset_server.load(path);
-            let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(32.0, 32.0), 19, 1, None, Some(Vec2{x: 0.5, y: 0.5}));
+            let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(32.0, 32.0), 19, 1, Some(Vec2 { x: 1.0, y: 0.0 }), Some(Vec2{x: 0.5, y: 0.5}));
             let texture_atlas_handle = texture_atlases.add(texture_atlas);
             chicken_atlas.sprite_sheets.push(texture_atlas_handle);
         }
