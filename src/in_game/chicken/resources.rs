@@ -7,6 +7,11 @@ static CHICKEN_NAMES_STR: &str = include_str!("chicken_names.txt");
 
 static CHICKEN_NAMES: OnceLock<Vec<&'static str>> = OnceLock::new();
 
+#[derive(Resource, Default)]
+pub struct ChickenAtlas {
+    pub sprite_sheet: Option<Handle<TextureAtlas>>,
+}
+
 #[derive(Resource)]
 pub struct ChickenParams {
     unused_names: Vec<&'static str>,
@@ -65,14 +70,5 @@ impl ChickenParams {
             texture: asset_server.load(texture_name),
             ..default()
         }
-    }
-
-    pub fn add_chicken_parts_to_atlas(
-        asset_server: Res<AssetServer>,
-        mut texture_atlases: ResMut<Assets<TextureAtlas>>
-    ) {
-        let texture_handle = asset_server.load("sprites/chicken-Sheet.png");
-        let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(32.0, 32.0), 19, 1, None, None);
-        let texture_atlas_handle = texture_atlases.add(texture_atlas);
     }
 }
