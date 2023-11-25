@@ -19,17 +19,25 @@ pub fn chicken_hover(
     assets: Res<Assets<Image>>,
     camera_query: Query<(&Camera, &GlobalTransform), With<Camera2d>>,
     mut hovered_over_chicken: ResMut<HoveredOverChicken>,
+    menus: Res<crate::in_game::chicken::info_menu::ChickenMenus>,
 ) {
     let Some(viewport_mouse_position) = windows.get_single().ok().and_then(Window::cursor_position)
     else {
+        hovered_over_chicken.chicken = None;
         return;
     };
     let (camera, camera_transform) = camera_query.single();
     let Some(world_mouse_position) =
         camera.viewport_to_world_2d(camera_transform, viewport_mouse_position)
     else {
+        hovered_over_chicken.chicken = None;
         return;
     };
+
+    if menus.mouse_over_menu {
+        hovered_over_chicken.chicken = None;
+        return;
+    }
 
     let mut closest_chicken: Option<Entity> = None;
     let mut closest_distance: f32 = f32::INFINITY;
