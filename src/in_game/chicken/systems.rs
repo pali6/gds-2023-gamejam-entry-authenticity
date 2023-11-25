@@ -1,6 +1,7 @@
 use std::borrow::BorrowMut;
 
 use super::components::*;
+use super::resources::ChickenAtlas;
 use super::resources::ChickenParams;
 use crate::in_game::inworld_object::InWorldObject;
 use crate::one_shot::*;
@@ -19,7 +20,8 @@ pub fn spawn_chicken(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut chicken_params: ResMut<ChickenParams>,
-    world_params: Res<WorldParams>,
+    chicken_atlas: ResMut<ChickenAtlas>,
+    world_params: Res<WorldParams>
 ) {
     let (spawn_x, spawn_y) = get_random_coords_padding(world_params.width, world_params.height, 50.0, 50.0);
 
@@ -33,6 +35,11 @@ pub fn spawn_chicken(
             chicken,
         ))
         .id();
+
+    let chicken_animation_body = commands
+        .spawn(
+            ChickenParts::new_idle(chicken_atlas.sprite_sheet.as_ref().unwrap().clone())
+        ).id();
 
     let nametag = commands
         .spawn(
@@ -54,7 +61,7 @@ pub fn spawn_chicken(
         )
         .id();
 
-    commands.entity(chicken_entity).push_children(&[nametag]);
+    commands.entity(chicken_entity).push_children(&[chicken_animation_body]).push_children(&[nametag]);
 }
 
 pub fn chicken_movement(mut chicken_query: Query<(&mut Transform, &Chicken)>, time: Res<Time>) {

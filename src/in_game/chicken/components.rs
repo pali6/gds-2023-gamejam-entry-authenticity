@@ -1,20 +1,14 @@
-use bevy::asset::Handle;
+use bevy::asset::{Handle, AssetServer, Assets};
+use bevy::ecs::system::{ResMut, Res};
+use bevy::math::Vec2;
 use bevy::prelude::{Component, default};
 use bevy::sprite::{Sprite, SpriteSheetBundle, TextureAtlas, TextureAtlasSprite};
 use rand::seq::SliceRandom;
 
 use super::quirk::Quirk;
-use super::resources::ChickenParams;
-
-pub enum BodyPart {
-    Head,
-    Wing,
-    Tail,
-    Body,
-}
+use super::resources::{ChickenParams, ChickenAtlas};
 
 pub struct ChickenAnimation;
-
 impl ChickenAnimation {
     pub const BODY_ALL: &'static [usize] = &[2, 3, 4, 5, 6, 7];
     pub const WING_ALL: &'static [usize] = &[8, 9, 10];
@@ -64,6 +58,18 @@ impl ChickenParts {
             sprite: TextureAtlasSprite::new(index),
             ..default()
         }
+    }
+
+    pub fn add_chicken_parts_to_atlas(
+        mut chicken_atlas: ResMut<ChickenAtlas>,
+        asset_server: Res<AssetServer>,
+        mut texture_atlases: ResMut<Assets<TextureAtlas>>
+    ) {
+        println!("RUN?");
+        let texture_handle = asset_server.load("sprites/chicken-Sheet.png");
+        let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(32.0, 32.0), 19, 1, None, None);
+        let texture_atlas_handle = texture_atlases.add(texture_atlas);
+        chicken_atlas.sprite_sheet = Some(texture_atlas_handle);
     }
 }
 
