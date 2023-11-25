@@ -3,6 +3,10 @@ use std::borrow::BorrowMut;
 use super::components::*;
 use super::resources::ChickenAtlas;
 use super::resources::ChickenParams;
+use crate::in_game::animation::components::Animation;
+use crate::in_game::animation::resources::AnimationResource;
+use crate::in_game::behavior::components::Behavior;
+use crate::in_game::behavior::components::BehaviorType;
 use crate::in_game::inworld_object::InWorldObject;
 use crate::one_shot::*;
 use crate::utilities::*;
@@ -21,18 +25,22 @@ pub fn spawn_chicken(
     asset_server: Res<AssetServer>,
     mut chicken_params: ResMut<ChickenParams>,
     chicken_atlas: ResMut<ChickenAtlas>,
-    world_params: Res<WorldParams>
+    world_params: Res<WorldParams>,
+    anim_resource: Res<AnimationResource>
 ) {
     let (spawn_x, spawn_y) = get_random_coords_padding(world_params.width, world_params.height, 50.0, 50.0);
 
     let chicken = Chicken::new_random(chicken_params.borrow_mut());
     let chicken_name = chicken.name.clone();
 
+
     let chicken_entity = commands
         .spawn((
             chicken_params.get_random_chicken_bundle(spawn_x, spawn_y, &asset_server),
             InWorldObject,
             chicken,
+            Behavior::new(BehaviorType::RandomMovement),
+            Animation::new(anim_resource.frame_period, anim_resource.rotating_pizza.clone())
         ))
         .id();
 

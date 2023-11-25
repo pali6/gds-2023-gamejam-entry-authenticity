@@ -85,7 +85,7 @@ impl Chicken {
         Self {
             name,
             quirks,
-            movement_speed: 50.0,
+            movement_speed: 5.0,
         }
     }
 
