@@ -73,6 +73,6 @@ fn window_resize_camera_update(
                 let scale = world_size.height / event.height;
                 Vec3::new(scale, scale, 1.0)
             }
-        }
+        };
     }
 }

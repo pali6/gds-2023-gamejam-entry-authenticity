@@ -41,6 +41,17 @@ pub fn confine_inworld_movement(
     }
 }
 
+pub fn inworld_integer_position(
+    mut inworld_query: Query<&mut Transform, With<InWorldObject>>,
+) {
+    for mut transform in inworld_query.iter_mut() {
+        let pos = &mut transform.translation;
+
+        pos.x = pos.x.round();
+        pos.y = pos.y.round();
+    }
+}
+
 pub fn despawn_inworld_objects(
     mut commands: Commands,
     object_query: Query<Entity, With<InWorldObject>>,

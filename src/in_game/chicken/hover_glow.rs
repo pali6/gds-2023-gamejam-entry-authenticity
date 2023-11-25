@@ -53,8 +53,8 @@ fn hover_glow(
     }
 
     if mouse_buttons.pressed(MouseButton::Left) {
-        sprite.color = Color::rgba_linear(1.0, 0.15, 0.15, 0.2);
+        sprite.color = Color::rgba_linear(1.0, 0.15, 0.15, 0.4);
     } else {
-        sprite.color = Color::rgba_linear(1.0, 1.0, 1.0, 0.2);
+        sprite.color = Color::rgba_linear(1.0, 1.0, 1.0, 0.4);
     }
 }
