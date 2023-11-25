@@ -6,6 +6,7 @@ mod systems;
 mod click;
 mod debug;
 mod hover_glow;
+mod kill_click;
 
 use super::states::InGameState;
 use crate::states::AppState;
@@ -26,10 +27,11 @@ impl Plugin for ChickenPlugin {
             // we go back from the menu though :(
             .add_systems(OnEnter(AppState::InGame), spawn_chickens)
             .add_event::<click::ChickenClickEvent>()
+            .add_systems(PreUpdate, chicken_click)
             // .add_systems(Update, debug::debug_chicken_click)
             .add_systems(
                 Update,
-                (chicken_movement, chicken_hover, chicken_click)
+                (kill_click::click_kill, chicken_movement, chicken_hover)
                     .run_if(in_state(AppState::InGame).and_then(in_state(InGameState::Running))),
             )
             .add_plugins(InfoMenuPlugin)
