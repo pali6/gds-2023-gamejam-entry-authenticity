@@ -4,6 +4,7 @@ use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use bevy_egui::{egui, EguiContexts};
 
+use crate::in_game::states::InGameState;
 use crate::states::AppState;
 
 use super::components::Chicken;
@@ -16,7 +17,9 @@ impl Plugin for InfoMenuPlugin {
         app
             .init_resource::<ChickenMenus>()
             .add_systems(OnEnter(AppState::InGame), reset_chicken_menus)
-            .add_systems(Update, (open_chicken_menu, display_menus));
+            .add_systems(Update, (open_chicken_menu, display_menus)
+                .run_if(in_state(AppState::InGame).and_then(in_state(InGameState::Running)))
+            );
     }
 }
 
