@@ -1,3 +1,6 @@
+// Source: https://github.com/sdesya74/bevy_oneshot
+// MIT License
+
 use bevy::prelude::*;
 
 /// A trait for oheshot systems
