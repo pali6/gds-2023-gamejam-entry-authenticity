@@ -136,6 +136,12 @@ impl Behavior {
 
         if let Some(dir) = dir_maybe {
             transform.translation += dir.to_vector() * chicken.movement_speed;
+
+            if dir.to_vector().x > 0.1 {
+                transform.scale = Vec3::new(-1.0, 1.0, 1.0);
+            } else if dir.to_vector().x < -0.1 {
+                transform.scale = Vec3::new(1.0, 1.0, 1.0);
+            }
         } else {
             self.state_transition(world_params, chicken_entity, commands, &anim_resource);
         }
