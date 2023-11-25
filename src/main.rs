@@ -39,10 +39,11 @@ fn main() {
             DefaultPlugins.set(WindowPlugin {
                 primary_window: Some(Window {
                     title: "aut-HEN-tic".to_string(),
+                    resolution: bevy::window::WindowResolution::new(width, height),
                     ..Default::default()
                 }),
                 ..Default::default()
-            }),
+            }).set(ImagePlugin::default_nearest()),
             EguiPlugin,
             // Made by me
             InGamePlugin,
@@ -61,5 +62,22 @@ fn main() {
 fn exit_game(keyboard_input: Res<Input<KeyCode>>, mut app_exit_event_writer: EventWriter<AppExit>) {
     if keyboard_input.just_pressed(KeyCode::F4) {
         app_exit_event_writer.send(AppExit);
+    }
+}
+
+#[allow(dead_code)]
+fn spritemap_fix(
+    mut ev_asset: EventReader<AssetEvent<Image>>,
+    mut assets: ResMut<Assets<Image>>,
+) {
+    for ev in ev_asset.read() {
+        match ev {
+            AssetEvent::Added { id } => {
+                if let Some(texture) = assets.get_mut(*id) {
+                    texture.sampler = bevy::render::texture::ImageSampler::nearest()
+                }
+            },
+            _ => {}
+        }
     }
 }

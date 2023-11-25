@@ -4,7 +4,7 @@ pub mod inworld_object;
 pub mod pause_menu;
 mod static_object;
 mod player;
-mod states;
+pub mod states;
 mod behavior;
 
 use crate::states::AppState;
@@ -26,6 +26,6 @@ impl Plugin for InGamePlugin {
             .add_systems(Update, toggle_pause.run_if(in_state(AppState::InGame)))
             .add_systems(OnEnter(AppState::InGame), on_game_start)
             .add_systems(OnExit(AppState::InGame), despawn_inworld_objects)
-            .add_systems(PostUpdate, confine_inworld_movement);
+            .add_systems(PostUpdate, (confine_inworld_movement, inworld_integer_position));
     }
 }
