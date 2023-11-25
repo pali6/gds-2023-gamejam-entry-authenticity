@@ -5,6 +5,7 @@ mod resources;
 mod systems;
 mod click;
 mod debug;
+mod hover_glow;
 
 use super::states::InGameState;
 use crate::states::AppState;
@@ -31,6 +32,7 @@ impl Plugin for ChickenPlugin {
                 (chicken_movement, chicken_hover, chicken_click)
                     .run_if(in_state(AppState::InGame).and_then(in_state(InGameState::Running))),
             )
-            .add_plugins(InfoMenuPlugin);
+            .add_plugins(InfoMenuPlugin)
+            .add_plugins(hover_glow::HoverGlowPlugin);
     }
 }

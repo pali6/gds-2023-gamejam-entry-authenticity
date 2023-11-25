@@ -1,18 +1,20 @@
 use bevy::{prelude::*, window::PrimaryWindow, window::Window};
 
+use super::components::Chicken;
+
 #[derive(Event)]
 pub struct ChickenClickEvent {
     pub chicken: Entity,
     pub mouse_button: Input<MouseButton>,
 }
 
-#[derive(Resource, Default)]
+#[derive(Resource, Default, Debug)]
 pub struct HoveredOverChicken {
     pub chicken: Option<Entity>,
 }
 
 pub fn chicken_hover(
-    chicken_query: Query<(Entity, &Transform, &Handle<Image>), With<Sprite>>,
+    chicken_query: Query<(Entity, &Transform, &Handle<Image>), (With<Sprite>, With<Chicken>)>,
     windows: Query<&Window, With<PrimaryWindow>>,
     assets: Res<Assets<Image>>,
     camera_query: Query<(&Camera, &GlobalTransform), With<Camera2d>>,
@@ -69,7 +71,7 @@ pub fn chicken_click(
     hovered_over_chicken: Res<HoveredOverChicken>,
     mut chicken_click_events: EventWriter<ChickenClickEvent>,
 ) {
-    if buttons.get_just_pressed().count() == 0 {
+    if buttons.get_just_pressed().count() == 0 && buttons.get_just_released().count() == 0 {
         return;
     }
 
