@@ -295,7 +295,7 @@ impl Behavior {
             },
 
             BehaviorState::Waiting => {
-                if chicken.quirk_check(Quirk::Loner) {
+                if chicken.quirk_check(Quirk::Loner, world_params) {
                     let mut x: f32 = rand::thread_rng().gen_range(-100.0 .. 100.0);
                     let mut y: f32 = rand::thread_rng().gen_range(-100.0 .. 100.0);
                     
@@ -344,7 +344,7 @@ impl Behavior {
         let next_state = states[rand::random::<usize>() % states.len()];
         self.state = BehaviorState::Moving;
         self.next_state = Some(next_state);
-        let (x, y) = Self::get_location(next_state, world_params);
+        let (x, y) = Self::get_location(next_state, world_params, chicken);
         self.init_movement(transform.translation, Vec3::new(x, y, 0.0), chicken, world_params);
     }
 }
