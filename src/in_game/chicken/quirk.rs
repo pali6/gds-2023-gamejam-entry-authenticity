@@ -62,19 +62,20 @@ pub fn get_quirk_description(quirk: Quirk) -> String {
             "Is never happy"
         ],
         Quirk::NeverAngry => vec![
-            "Never angry"
+            "Never angry",
+            "Doesn't get angry"
         ],
         Quirk::NeverBored => vec![
             "Is never bored",
-            "Very emotional"
+            "Never gets bored",
         ],
         Quirk::SometimesMischivous => vec![
             "Sometimes has a creepy smile",
-            "Not so innocent"
+            "Sometimes has an evil smile",
         ],
         Quirk::NeverSitsOnNest => vec![
-            "Has no home",
-            "Does not like kids"
+            "Hates laying eggs",
+            "Does not plan to have children",
         ],
     }.choose(&mut rand::thread_rng()).unwrap().to_string()
 }
