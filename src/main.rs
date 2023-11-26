@@ -45,6 +45,8 @@ fn main() {
                 primary_window: Some(Window {
                     title: "aut-HEN-tic".to_string(),
                     resolution: bevy::window::WindowResolution::new(width, height),
+                    present_mode: bevy::window::PresentMode::AutoNoVsync,
+                    fit_canvas_to_parent: true,
                     ..Default::default()
                 }),
                 ..Default::default()
