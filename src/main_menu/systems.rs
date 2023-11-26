@@ -2,6 +2,7 @@ use bevy::{app::AppExit, window::PrimaryWindow};
 use bevy::prelude::*;
 use bevy_egui::{egui, EguiContexts};
 
+use crate::ambience::{toggle_ambience, AmbiencePlayer};
 use crate::states::AppState;
 
 pub fn build_main_menu() {
@@ -25,6 +26,7 @@ pub fn ui_main_menu(
     mut app_next_state: ResMut<NextState<AppState>>,
     mut main_window: Query<&mut Window, With<PrimaryWindow>>,
     mut app_exit_event_writer: EventWriter<AppExit>,
+    ambience_players: Query<&mut AudioSink, With<AmbiencePlayer>>,
 ) {
     let ctx = contexts.ctx_mut();
     let mut style = (*ctx.style()).clone();
@@ -57,6 +59,9 @@ pub fn ui_main_menu(
             );
             if menu_button("Start Game", ui).clicked() {
                 app_next_state.set(AppState::InGame);
+            }
+            if menu_button("Toggle Ambience", ui).clicked() {
+                toggle_ambience(ambience_players)
             }
             if !cfg!(target_arch = "wasm32") {
                 if menu_button("Toggle Fullscreen", ui).clicked() {

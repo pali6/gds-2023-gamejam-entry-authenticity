@@ -3,6 +3,7 @@ use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use bevy_egui::{egui, EguiContexts};
 
+use crate::ambience::{AmbiencePlayer, toggle_ambience};
 use crate::in_game::states::InGameState;
 use crate::states::AppState;
 
@@ -28,6 +29,7 @@ pub fn ui_pause_menu(
     mut app_next_state: ResMut<NextState<AppState>>,
     mut app_exit_event_writer: EventWriter<AppExit>,
     mut main_window: Query<&mut Window, With<PrimaryWindow>>,
+    ambience_players: Query<&mut AudioSink, With<AmbiencePlayer>>,
 ) {
     let ctx = contexts.ctx_mut();
     let mut style = (*ctx.style()).clone();
@@ -73,6 +75,9 @@ pub fn ui_pause_menu(
             }
             if menu_button("Main Menu", ui).clicked() {
                 app_next_state.set(AppState::MainMenu);
+            }
+            if menu_button("Toggle Ambience", ui).clicked() {
+                toggle_ambience(ambience_players)
             }
             if !cfg!(target_arch = "wasm32") {
                 if menu_button("Quit", ui).clicked() {
