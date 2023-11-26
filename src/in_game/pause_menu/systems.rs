@@ -46,7 +46,7 @@ pub fn ui_pause_menu(
             // reserve some space so we aren't at the very top
             ui.allocate_space(egui::Vec2::new(
                 0.0,
-                f32::min(20.0, ui.available_size().y / 2.0),
+                f32::min(0.0, ui.available_size().y / 2.0),
             ));
             ui.label(
                 egui::RichText::new("PAUSED")
