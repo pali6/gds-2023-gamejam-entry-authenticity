@@ -11,7 +11,9 @@ pub enum Quirk {
     NeverAngry,
     NeverBored,
     SometimesMischivous,
-    NeverSitsOnNest
+    NeverSitsOnNest,
+    NeverScared,
+    NeverExcited,
 }
 
 pub fn get_n_random_quirks(n: usize) -> Vec<Quirk> {
@@ -38,17 +40,18 @@ pub fn get_quirk_description(quirk: Quirk) -> String {
         Quirk::NeverEats => vec![
             "Never eats",
             "Doesn't eat",
-            "Is never hungry"
+            "Is never hungry",
+            "Is currently fasting",
+            "#fasting"
         ],
         Quirk::NeverSleeps => vec![
             "Never sleeps",
             "Doesn't sleep",
-            "Is never tired"
+            "Is never tired",
         ],
         Quirk::NeverGoesFast => vec![
-            "Doesn't rush anywhere",
             "Never speeds up",
-            "Is never in a hurry"
+            "Always walks slowly",
         ],
         Quirk::NeverGoesDirectly => vec![
             "Always takes the long way",
@@ -59,22 +62,34 @@ pub fn get_quirk_description(quirk: Quirk) -> String {
         ],
         Quirk::NeverHappy => vec![
             "Never smiles :(",
-            "Is never happy"
+            "Is never happy",
+            "Depressed"
         ],
         Quirk::NeverAngry => vec![
-            "Never angry"
+            "Never angry",
+            "Doesn't get angry"
         ],
         Quirk::NeverBored => vec![
             "Is never bored",
-            "Very emotional"
+            "Never gets bored",
         ],
         Quirk::SometimesMischivous => vec![
             "Sometimes has a creepy smile",
-            "Not so innocent"
+            "Sometimes has an evil smile",
         ],
         Quirk::NeverSitsOnNest => vec![
-            "Has no home",
-            "Does not like kids"
+            "Hates laying eggs",
+            "Does not plan to have children",
+            "#childfree",
+        ],
+        Quirk::NeverScared => vec![
+            "Never gets scared",
+            "Is never scared",
+            "Is fearless",
+            "Is not afraid of anything",
+        ],
+        Quirk::NeverExcited => vec![
+            "Is never excited about anything",
         ],
     }.choose(&mut rand::thread_rng()).unwrap().to_string()
 }
@@ -83,6 +98,7 @@ pub fn annotate_quirks(quirks: Vec<Quirk>) -> Vec<(Quirk, String)> {
     quirks.iter().map(|quirk| (*quirk, get_quirk_description(*quirk))).collect()
 }
 
+#[allow(dead_code)]
 pub fn generate_annotated_quirks(n: usize) -> Vec<(Quirk, String)> {
     annotate_quirks(get_n_random_quirks(n))
 }

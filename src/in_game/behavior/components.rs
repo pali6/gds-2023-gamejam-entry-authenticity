@@ -37,12 +37,12 @@ pub struct SpeechBubble {
 }
 impl SpeechBubble {
     pub const THINKING: &'static [usize] = &[8, 9, 10, 11, 0];
-    pub const EXTATIC: &'static [usize] = &[8, 9, 10, 11, 12, 1];
-    pub const BORED: &'static [usize] = &[8, 9, 10, 11, 12, 2];
-    pub const SAD: &'static [usize] = &[8, 9, 10, 11, 12, 3];
-    pub const ANGRY: &'static [usize] = &[8, 9, 10, 11, 12, 4];
-    pub const EVIL: &'static [usize] = &[8, 9, 10, 11, 12, 5];
-    pub const HAPPY: &'static [usize] = &[8, 9, 10, 11, 12, 6];
+    pub const EXTATIC: &'static [usize] = &[8, 9, 10, 11, 1];
+    pub const BORED: &'static [usize] = &[8, 9, 10, 11, 2];
+    pub const SCARED: &'static [usize] = &[8, 9, 10, 11, 3];
+    pub const ANGRY: &'static [usize] = &[8, 9, 10, 11, 4];
+    pub const EVIL: &'static [usize] = &[8, 9, 10, 11, 5];
+    pub const HAPPY: &'static [usize] = &[8, 9, 10, 11, 6];
     pub const EXCLAMATION: &'static [usize] = &[13, 14, 15, 16, 17];
 }
 
@@ -56,6 +56,8 @@ impl Behavior {
         let can_bored = !chicken.quirk_check(Quirk::NeverBored);
         let can_smile = !chicken.quirk_check(Quirk::NeverHappy);
         let can_evil =  chicken.quirk_check(Quirk::SometimesMischivous);
+        let can_scared = !chicken.quirk_check(Quirk::NeverScared);
+        let can_excited = !chicken.quirk_check(Quirk::NeverExcited);
 
         let mut bubbles = Vec::new();
         if can_angry { bubbles.push(SpeechBubble::ANGRY); }
@@ -63,9 +65,8 @@ impl Behavior {
         if can_smile { bubbles.push(SpeechBubble::EXTATIC); }
         if can_smile { bubbles.push(SpeechBubble::HAPPY); }
         if can_evil && can_smile { bubbles.push(SpeechBubble::EVIL); }
-
-        bubbles.push(SpeechBubble::SAD);
-        bubbles.push(SpeechBubble::EXCLAMATION);
+        if can_excited { bubbles.push(SpeechBubble::EXCLAMATION); }
+        if can_scared { bubbles.push(SpeechBubble::SCARED); }
 
         let bubble = bubbles.choose(&mut rand::thread_rng()).unwrap();
 
