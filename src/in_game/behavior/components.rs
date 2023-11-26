@@ -37,12 +37,12 @@ pub struct SpeechBubble {
 }
 impl SpeechBubble {
     pub const THINKING: &'static [usize] = &[8, 9, 10, 11, 0];
-    pub const EXTATIC: &'static [usize] = &[8, 9, 10, 11, 12, 1];
-    pub const BORED: &'static [usize] = &[8, 9, 10, 11, 12, 2];
-    pub const SAD: &'static [usize] = &[8, 9, 10, 11, 12, 3];
-    pub const ANGRY: &'static [usize] = &[8, 9, 10, 11, 12, 4];
-    pub const EVIL: &'static [usize] = &[8, 9, 10, 11, 12, 5];
-    pub const HAPPY: &'static [usize] = &[8, 9, 10, 11, 12, 6];
+    pub const EXTATIC: &'static [usize] = &[8, 9, 10, 11, 1];
+    pub const BORED: &'static [usize] = &[8, 9, 10, 11, 2];
+    pub const SAD: &'static [usize] = &[8, 9, 10, 11, 3];
+    pub const ANGRY: &'static [usize] = &[8, 9, 10, 11, 4];
+    pub const EVIL: &'static [usize] = &[8, 9, 10, 11, 5];
+    pub const HAPPY: &'static [usize] = &[8, 9, 10, 11, 6];
     pub const EXCLAMATION: &'static [usize] = &[13, 14, 15, 16, 17];
 }
 
