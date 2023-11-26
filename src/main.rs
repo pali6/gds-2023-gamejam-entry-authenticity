@@ -2,6 +2,7 @@ mod camera;
 mod cursor;
 mod in_game;
 mod main_menu;
+mod game_over;
 mod one_shot;
 mod states;
 mod utilities;

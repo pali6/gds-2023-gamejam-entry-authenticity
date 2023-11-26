@@ -6,7 +6,7 @@ pub enum AppState {
     #[default]
     MainMenu,
     InGame,
-    // GameOver next?
+    GameOver
 }
 
 pub fn toggle_app_state(
