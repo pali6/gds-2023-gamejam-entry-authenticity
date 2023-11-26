@@ -1,5 +1,4 @@
 use super::components::*;
-use crate::in_game::animation::components::Animation;
 use crate::in_game::animation::resources::AnimationResource;
 use crate::in_game::inworld_object::InWorldObject;
 use crate::utilities::*;

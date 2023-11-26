@@ -1,4 +1,4 @@
-use rand::{seq::SliceRandom, Rng};
+use rand::seq::SliceRandom;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
 pub enum Quirk {
@@ -11,6 +11,7 @@ pub enum Quirk {
     NeverAngry,
     NeverBored,
     SometimesMischivous,
+    NeverSitsOnNest
 }
 
 pub fn get_n_random_quirks(n: usize) -> Vec<Quirk> {
@@ -24,7 +25,8 @@ pub fn get_n_random_quirks(n: usize) -> Vec<Quirk> {
         Quirk::NeverHappy,
         Quirk::NeverAngry,
         Quirk::NeverBored,
-        Quirk::SometimesMischivous
+        Quirk::SometimesMischivous,
+        Quirk::NeverSitsOnNest
     ];
     quirks.shuffle(&mut rng);
     quirks.truncate(n);
@@ -69,6 +71,10 @@ pub fn get_quirk_description(quirk: Quirk) -> String {
         Quirk::SometimesMischivous => vec![
             "Sometimes has a creepy smile",
             "Not so innocent"
+        ],
+        Quirk::NeverSitsOnNest => vec![
+            "Has no home",
+            "Does not like kids"
         ],
     }.choose(&mut rand::thread_rng()).unwrap().to_string()
 }

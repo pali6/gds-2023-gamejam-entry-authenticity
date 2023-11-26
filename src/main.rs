@@ -1,4 +1,5 @@
 mod camera;
+mod cursor;
 mod in_game;
 mod main_menu;
 mod one_shot;
@@ -40,6 +41,7 @@ fn main() {
             chicken_required: 10,
             chicken_alive: 0,
             foxes_alive: 0,
+            nest_locations: Vec::new()
         })
         // Modulate your game into plugins
         .add_plugins((
@@ -67,6 +69,7 @@ fn main() {
             camera::CameraPlugin {
                 scaling_mode: camera::CameraScalingMode::FitBoth,
             },
+            cursor::CursorPlugin {},
         ))
         // Systems -> Every frame
         .add_systems(Update, (exit_game, toggle_app_state))

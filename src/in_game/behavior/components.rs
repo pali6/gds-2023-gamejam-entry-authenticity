@@ -1,7 +1,7 @@
-use bevy::{prelude::*, ecs::world};
-use rand::{seq::SliceRandom, Rng};
+use bevy::prelude::*;
+use rand::{Rng, seq::SliceRandom};
 
-use crate::{utilities::{Dir, get_random_coords_padding}, in_game::{chicken::{components::Chicken, self, quirk::Quirk}, animation::{components::{Animation, ScaleTween, EasingFunction}, resources::AnimationResource}}, world::WorldParams};
+use crate::{utilities::{Dir, get_random_coords_padding}, in_game::{chicken::{components::Chicken, quirk::Quirk}, animation::{components::{Animation, ScaleTween, EasingFunction}, resources::AnimationResource}}, world::WorldParams};
 
 #[derive(Copy, Clone)]
 pub enum BehaviorState {
@@ -9,6 +9,7 @@ pub enum BehaviorState {
     Waiting,
     Eating,
     Hiding,
+    Sitting
 }
 
 pub enum BehaviorType {
@@ -62,7 +63,7 @@ impl Behavior {
         if can_smile { bubbles.push(SpeechBubble::EXTATIC); }
         if can_smile { bubbles.push(SpeechBubble::HAPPY); }
         if can_evil && can_smile { bubbles.push(SpeechBubble::EVIL); }
-        
+
         bubbles.push(SpeechBubble::SAD);
         bubbles.push(SpeechBubble::EXCLAMATION);
 
@@ -142,6 +143,10 @@ impl Behavior {
         self.wait_timer = Timer::from_seconds(duration, TimerMode::Once);
     }
 
+    pub fn init_sitting(&mut self, duration: f32) {
+        self.wait_timer = Timer::from_seconds(duration, TimerMode::Once);
+    }
+
     pub fn update_waiting(
         &mut self, time: &Res<Time>,
         world_params: &Res<WorldParams>,
@@ -208,22 +213,6 @@ impl Behavior {
         }
     }
 
-    pub fn update_hidnig(
-        &mut self, time: &Res<Time>,
-        world_params: &Res<WorldParams>,
-        chicken_entity: Entity,
-        commands: &mut Commands,
-        anim_resource: &Res<AnimationResource>,
-        chicken: &Chicken,
-        transform: &mut Transform
-    ) {
-        self.wait_timer.tick(time.delta());
-
-        if self.wait_timer.finished() {
-            self.state_transition(world_params, chicken_entity, commands, &anim_resource, chicken,transform);
-        }
-    }
-
     pub fn update_eating(
         &mut self, time: &Res<Time>,
         world_params: &Res<WorldParams>,
@@ -240,11 +229,46 @@ impl Behavior {
         }
     }
 
+    pub fn update_hidnig(
+        &mut self, time: &Res<Time>,
+        world_params: &Res<WorldParams>,
+        chicken_entity: Entity,
+        commands: &mut Commands,
+        anim_resource: &Res<AnimationResource>,
+        chicken: &Chicken,
+        transform: &mut Transform
+    ) {
+        self.wait_timer.tick(time.delta());
+
+        if self.wait_timer.finished() {
+            self.state_transition(world_params, chicken_entity, commands, &anim_resource, chicken,transform);
+        }
+    }
+
+    pub fn update_sitting(
+        &mut self, time: &Res<Time>,
+        world_params: &Res<WorldParams>,
+        chicken_entity: Entity,
+        commands: &mut Commands,
+        anim_resource: &Res<AnimationResource>,
+        chicken: &Chicken,
+        transform: &mut Transform
+    ) {
+        self.wait_timer.tick(time.delta());
+
+        if self.wait_timer.finished() {
+            self.state_transition(world_params, chicken_entity, commands, &anim_resource, chicken,transform);
+        }
+    }
+
+
+
     pub fn to_state(&mut self, state: BehaviorState) {
         match state {
             BehaviorState::Eating => { self.init_eating(self.wait_duration) }
             BehaviorState::Hiding => { self.init_hiding(self.wait_duration) }
             BehaviorState::Waiting => { self.init_waiting(self.wait_duration) }
+            BehaviorState::Sitting => { self.init_sitting(self.wait_duration) }
             _ => {}
         };
     }
@@ -260,6 +284,13 @@ impl Behavior {
                 world_params.shed_location.x + rand::thread_rng().gen_range(-40.0 .. 60.0),
                 world_params.shed_location.y + rand::thread_rng().gen_range(-60.0 .. 60.0)
             ),
+
+            BehaviorState::Sitting => {
+                let (mut x, mut y) = world_params.nest_locations.choose(&mut rand::thread_rng()).unwrap();
+                x += rand::thread_rng().gen_range(-20.0 .. 20.0);
+                y += rand::thread_rng().gen_range(-20.0 .. 20.0);
+                (x, y)
+            },
 
             BehaviorState::Waiting => {
                 get_random_coords_padding(
@@ -296,6 +327,7 @@ impl Behavior {
         states.push(BehaviorState::Waiting);
         if !chicken.quirk_check(Quirk::NeverEats) { states.push(BehaviorState::Eating); }
         if !chicken.quirk_check(Quirk::NeverSleeps) { states.push(BehaviorState::Hiding); }
+        if !chicken.quirk_check(Quirk::NeverSitsOnNest) { states.push(BehaviorState::Sitting); }
 
         let next_state = states[rand::random::<usize>() % states.len()];
         self.state = BehaviorState::Moving;
