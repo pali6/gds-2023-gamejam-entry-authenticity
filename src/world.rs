@@ -10,4 +10,7 @@ pub struct WorldParams {
     pub chicken_count: usize,
     pub fox_count: usize,
     pub nest_count: usize,
+    pub chicken_required: usize,
+    pub chicken_alive: usize,
+    pub foxes_alive: usize,
 }

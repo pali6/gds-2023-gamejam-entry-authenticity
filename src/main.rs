@@ -27,15 +27,19 @@ fn main() {
         // AppState will be accessible as a resource
         // This allows to switch into MainMenu etc.
         .add_state::<AppState>()
+        .insert_resource(Msaa::Sample4)
         .insert_resource(world::WorldParams {
             width: width,
             height: height,
             wheat_location: Vec3::new(width / 2.0, height / 4.0, 0.0), // bottom middle
             shed_location: Vec3::new(width / 2.0, height * 3.0 / 4.0, 15.0), // upper middle
             quirks_per_chicken: 3,
-            chicken_count: 20,
+            chicken_count: 18,
             fox_count: 2,
             nest_count: 5,
+            chicken_required: 10,
+            chicken_alive: 0,
+            foxes_alive: 0,
         })
         // Modulate your game into plugins
         .add_plugins((
