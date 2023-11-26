@@ -51,3 +51,26 @@ pub fn update_animations(
         }
     }
 }
+
+pub fn update_scale_tween(
+    mut commands: Commands,
+    mut query: Query<(Entity, &mut ScaleTween, &mut Transform)>,
+    time: Res<Time>
+) {
+    for (entity, mut scale_tween, mut transform) in query.iter_mut() {
+        scale_tween.time += time.delta_seconds();
+        let t = scale_tween.time / scale_tween.duration;
+        
+        let t = match scale_tween.easing {
+            EasingFunction::ElasticOut => ScaleTween::easeOutElastic(t),
+            EasingFunction::Smooth => ScaleTween::easeSmooth(t)
+        };
+
+        let scale = scale_tween.from + (scale_tween.to - scale_tween.from) * t;
+        transform.scale = scale;
+
+        if t == 1.0 {
+            commands.entity(entity).remove::<ScaleTween>();
+        }
+    }
+}

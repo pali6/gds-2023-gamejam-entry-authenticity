@@ -1,7 +1,7 @@
 use bevy::{prelude::*, ecs::world};
 use rand::{seq::SliceRandom, Rng};
 
-use crate::{utilities::{Dir, get_random_coords_padding}, in_game::{chicken::{components::Chicken, self}, animation::{components::Animation, resources::AnimationResource}}, world::WorldParams};
+use crate::{utilities::{Dir, get_random_coords_padding}, in_game::{chicken::{components::Chicken, self}, animation::{components::{Animation, ScaleTween, EasingFunction}, resources::AnimationResource}}, world::WorldParams};
 
 #[derive(Copy, Clone)]
 pub enum BehaviorState {
@@ -43,6 +43,7 @@ impl Behavior {
     fn spawn_speech_bubble(&self, father: Entity, commands: &mut Commands, anim_resource : &Res<AnimationResource>) {
         let mut transform = Transform::from_xyz(0.0, 32.0, 7.0);
         transform.scale = Vec3::new(1.0, 1.0, 1.0);
+        let anim_period = 0.09;
 
         let index_buffer = match self.state {
             BehaviorState::Eating => SpeechBubble::EXTATIC,
@@ -51,15 +52,18 @@ impl Behavior {
             _ => SpeechBubble::THINKING
         };
 
+        let easing_time: f32 = anim_period * index_buffer.len() as f32 + 0.5;
+
         let bubble_id = commands.spawn((
             SpeechBubble{ destroy_timer: Timer::from_seconds(self.wait_duration, TimerMode::Once) },
-            Animation::new(0.09, index_buffer, false),
+            Animation::new(anim_period, index_buffer, false),
             SpriteSheetBundle {
                 texture_atlas: anim_resource.bubble_atlas.clone(),
                 sprite: TextureAtlasSprite::new(index_buffer[0]),
                 transform: transform,
                 ..default()
-            }
+            },
+            ScaleTween::new(Vec3::ZERO, Vec3::ONE, easing_time, EasingFunction::ElasticOut)
         )).id();
 
         commands.entity(father).add_child(bubble_id);

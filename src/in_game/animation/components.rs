@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use rand::seq::index;
 use crate::in_game::chicken::components::{BodyPart, ChickenAnimation};
 
 #[derive(Copy, Clone, PartialEq, Eq)]
@@ -113,5 +112,47 @@ impl Animation {
             repeating: true,
             state: AnimState::Idle
         }
+    }
+}
+
+pub enum EasingFunction {
+    Smooth,
+    ElasticOut,
+}
+
+#[derive(Component)]
+pub struct ScaleTween {
+    pub from: Vec3,
+    pub to: Vec3,
+    pub time: f32,
+    pub duration: f32,
+    pub easing: EasingFunction
+}
+
+impl ScaleTween {
+    pub fn new(from: Vec3, to: Vec3, duration: f32, easing: EasingFunction) -> Self {
+        Self {
+            from: from,
+            to: to,
+            duration: duration,
+            time: 0.0,
+            easing: easing
+        }
+    }
+
+    pub fn easeSmooth(x: f32) -> f32 {
+        -((3.14 * x).cos() - 1.0) / 2.0
+    }
+
+    pub fn easeOutElastic(x: f32) -> f32 {
+        let c4 = (2.0 * 3.14) / 3.0;
+        
+        return if x == 0.0 {
+            0.0
+        } else if x == 1.0 {
+            1.0
+        } else {
+            2.0_f32.powf(-10.0 * x) * ((x*10.0 - 0.75) * c4).sin() + 1.0
+        };
     }
 }
