@@ -85,13 +85,13 @@ pub fn update_fade_away_tween(
     for (entity, mut f_tween, mut image) in query.iter_mut() {
 
         f_tween.time += time.delta_seconds();
-        let t = f_tween.time / f_tween.duration;
+        let t = ((f_tween.time - f_tween.delay) / f_tween.duration).max(0.0);
         let t_eased = f_tween.easing.ease(t);
 
         image.color.set_a(1.0 - t_eased);
 
         if t >= 1.0 {
-            commands.entity(entity).despawn();
+            commands.entity(entity).despawn_recursive();
         }
     }
 }
@@ -104,13 +104,13 @@ pub fn update_fade_away_tween_atlas(
     for (entity, mut f_tween, mut image) in query.iter_mut() {
 
         f_tween.time += time.delta_seconds();
-        let t = f_tween.time / f_tween.duration;
+        let t = ((f_tween.time - f_tween.delay) / f_tween.duration).max(0.0);
         let t_eased = f_tween.easing.ease(t);
 
         image.color.set_a(1.0 - t_eased);
 
         if t >= 1.0 {
-            commands.entity(entity).despawn();
+            commands.entity(entity).despawn_recursive();
         }
     }
 }

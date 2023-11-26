@@ -6,7 +6,7 @@ mod systems;
 mod click;
 mod debug;
 mod hover_glow;
-mod kill_click;
+pub mod kill_click;
 
 use self::components::ChickenParts;
 
