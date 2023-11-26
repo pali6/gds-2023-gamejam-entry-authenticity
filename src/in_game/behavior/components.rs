@@ -40,31 +40,34 @@ impl SpeechBubble {
     pub const BORED: &'static [usize] = &[8, 9, 10, 11, 12, 2];
     pub const SAD: &'static [usize] = &[8, 9, 10, 11, 12, 3];
     pub const ANGRY: &'static [usize] = &[8, 9, 10, 11, 12, 4];
-    pub const SERIOUS: &'static [usize] = &[8, 9, 10, 11, 12, 5];
+    pub const EVIL: &'static [usize] = &[8, 9, 10, 11, 12, 5];
+    pub const HAPPY: &'static [usize] = &[8, 9, 10, 11, 12, 6];
     pub const EXCLAMATION: &'static [usize] = &[13, 14, 15, 16, 17];
 }
 
 impl Behavior {
-    fn spawn_speech_bubble(&self, father: Entity, commands: &mut Commands, anim_resource : &Res<AnimationResource>) {
+    fn spawn_speech_bubble(&self, father: Entity, commands: &mut Commands, anim_resource : &Res<AnimationResource>, chicken: &Chicken) {
         let mut transform = Transform::from_xyz(0.0, 32.0, 7.0);
         transform.scale = Vec3::new(1.0, 1.0, 1.0);
         let anim_period = 0.09;
 
-        let index_buffer = match self.state {
-            BehaviorState::Eating => SpeechBubble::EXTATIC,
-            BehaviorState::Hiding => SpeechBubble::SAD,
-            BehaviorState::Waiting => SpeechBubble::BORED,
-            _ => SpeechBubble::THINKING
-        };
+        let mut bubbles = Vec::new();
+        if !chicken.quirk_check(Quirk::NeverAngry) { bubbles.push(SpeechBubble::ANGRY); }
+        if !chicken.quirk_check(Quirk::NeverBored) { bubbles.push(SpeechBubble::BORED); }
+        if !chicken.quirk_check(Quirk::NeverHappy) { bubbles.push(SpeechBubble::EXTATIC); }
+        if !chicken.quirk_check(Quirk::NeverHappy) { bubbles.push(SpeechBubble::HAPPY); }
+        if chicken.quirk_check(Quirk::SometimesMischivous) { bubbles.push(SpeechBubble::EVIL); }
+        
+        let bubble = bubbles.choose(&mut rand::thread_rng()).unwrap();
 
-        let easing_time: f32 = anim_period * index_buffer.len() as f32 + 0.5;
+        let easing_time: f32 = anim_period * bubble.len() as f32 + 0.5;
 
         let bubble_id = commands.spawn((
             SpeechBubble{ destroy_timer: Timer::from_seconds(self.wait_duration, TimerMode::Once) },
-            Animation::new(anim_period, index_buffer, false),
+            Animation::new(anim_period, bubble, false),
             SpriteSheetBundle {
                 texture_atlas: anim_resource.bubble_atlas.clone(),
-                sprite: TextureAtlasSprite::new(index_buffer[0]),
+                sprite: TextureAtlasSprite::new(bubble[0]),
                 transform: transform,
                 ..default()
             },
@@ -277,7 +280,7 @@ impl Behavior {
             self.state = next_state;
             self.next_state = None;
             self.to_state(self.state);
-            self.spawn_speech_bubble(chicken_entity, commands, &anim_resource);
+            self.spawn_speech_bubble(chicken_entity, commands, &anim_resource, chicken);
             return;
         }
 

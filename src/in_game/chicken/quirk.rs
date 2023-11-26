@@ -7,6 +7,10 @@ pub enum Quirk {
     NeverGoesFast,
     NeverGoesDirectly,
     NeverLooksAtCamera,
+    NeverHappy,
+    NeverAngry,
+    NeverBored,
+    SometimesMischivous,
 }
 
 pub fn get_n_random_quirks(n: usize) -> Vec<Quirk> {
@@ -17,6 +21,10 @@ pub fn get_n_random_quirks(n: usize) -> Vec<Quirk> {
         Quirk::NeverGoesFast,
         Quirk::NeverGoesDirectly,
         Quirk::NeverLooksAtCamera,
+        Quirk::NeverHappy,
+        Quirk::NeverAngry,
+        Quirk::NeverBored,
+        Quirk::SometimesMischivous
     ];
     quirks.shuffle(&mut rng);
     quirks.truncate(n);
@@ -46,6 +54,21 @@ pub fn get_quirk_description(quirk: Quirk) -> String {
         Quirk::NeverLooksAtCamera => vec![
             "Is camera shy and never looks at it",
             "Won't look at you",
+        ],
+        Quirk::NeverHappy => vec![
+            "Never smiles :(",
+            "Is never happy"
+        ],
+        Quirk::NeverAngry => vec![
+            "Never angry"
+        ],
+        Quirk::NeverBored => vec![
+            "Is never bored",
+            "Very emotional"
+        ],
+        Quirk::SometimesMischivous => vec![
+            "Sometimes has a creepy smile",
+            "Not so innocent"
         ],
     }.choose(&mut rand::thread_rng()).unwrap().to_string()
 }
