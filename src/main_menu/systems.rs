@@ -37,7 +37,7 @@ pub fn ui_main_menu(
         egui::FontId::new(30.0, egui::FontFamily::Proportional),
     );
     ctx.set_style(style);
-    let frame = egui::Frame::default().fill(egui::Color32::from_rgb(50, 140, 50));
+    let frame = egui::Frame::default().fill(egui::Color32::from_rgb(30, 120, 30));
     egui::CentralPanel::default().frame(frame).show(ctx, |ui| {
         let layout = egui::Layout::top_down(egui::Align::Center);
         ui.with_layout(layout, |ui| {
@@ -54,12 +54,14 @@ pub fn ui_main_menu(
                     .color(egui::Color32::from_rgb(255, 255, 200))
                     .size(80.0),
             );
+
             ui.label(
                 egui::RichText::new(crate::help::HELP_TEXT)
-                    .color(egui::Color32::from_rgb(255, 255, 255))
-                    .size(14.0)
+                    .color(egui::Color32::from_rgb(255, 255, 200))
+                    .size(16.0)
                     .strong(),
             );
+
             ui.allocate_ui_with_layout(
                 egui::Vec2::new(500.0, 0.0),
                 egui::Layout::left_to_right(egui::Align::Center).with_cross_align(egui::Align::Center), 
