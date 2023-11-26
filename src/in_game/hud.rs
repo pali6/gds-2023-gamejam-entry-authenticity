@@ -84,7 +84,7 @@ fn ui_hud(
             });
             ui.with_layout(egui::Layout::left_to_right(egui::Align::Min), |ui| {
                 ui.add(egui::widgets::Image::new(egui::load::SizedTexture::new(
-                    hud_resources.rendered_chicken_head.unwrap(),
+                    hud_resources.rendered_timer_icon.unwrap(),
                     [32.0, 32.0],
                 )));
                 let timer_time = (chicken_hunt.hunt_timer.duration() - chicken_hunt.hunt_timer.elapsed()).as_secs();
