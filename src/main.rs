@@ -6,6 +6,7 @@ mod states;
 mod utilities;
 mod world;
 mod help;
+mod timed_sounds;
 
 use bevy::app::AppExit;
 use bevy::prelude::*;
@@ -56,6 +57,7 @@ fn main() {
             InGamePlugin,
             MainMenuPlugin,
             PauseMenuPlugin,
+            timed_sounds::TimedSoundsPlugin,
             camera::CameraPlugin {
                 scaling_mode: camera::CameraScalingMode::FitBoth,
             },

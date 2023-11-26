@@ -33,7 +33,7 @@ pub fn confine_inworld_movement(
         );
 
         if new_x != pos.x || new_y != pos.y {
-            play_sfx("sounds/bop.ogg", &mut commands, &asset_server);
+            play_sfx("sounds/bop.ogg".to_string(), &mut commands, &asset_server, 1.0);
         }
 
         pos.x = new_x;

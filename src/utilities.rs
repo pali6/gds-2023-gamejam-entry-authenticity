@@ -72,11 +72,11 @@ impl DirectionVectors {
 }
 
 // Only takes `.ogg` files, as to my knowledge
-pub fn play_sfx(name: &'static str, commands: &mut Commands, asset_server: &Res<AssetServer>) {
+pub fn play_sfx(name: String, commands: &mut Commands, asset_server: &Res<AssetServer>, volume: f32) {
     let sfx = asset_server.load(name);
     commands.spawn(AudioBundle {
         source: sfx,
-        settings: PlaybackSettings::DESPAWN,
+        settings: PlaybackSettings::DESPAWN.with_volume(bevy::audio::Volume::new_relative(volume)),
         ..default()
     });
 }
