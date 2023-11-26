@@ -13,5 +13,6 @@ pub struct WorldParams {
     pub chicken_required: usize,
     pub chicken_alive: usize,
     pub foxes_alive: usize,
-    pub nest_locations: Vec<(f32, f32)>
+    pub nest_locations: Vec<(f32, f32)>,
+    pub chicken_murder_interval: f32,
 }

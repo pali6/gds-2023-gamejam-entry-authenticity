@@ -42,7 +42,8 @@ fn main() {
             chicken_required: 10,
             chicken_alive: 0,
             foxes_alive: 0,
-            nest_locations: Vec::new()
+            nest_locations: Vec::new(),
+            chicken_murder_interval: 30.0,
         })
         // Modulate your game into plugins
         .add_plugins((
