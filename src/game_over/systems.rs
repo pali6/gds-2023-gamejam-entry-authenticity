@@ -31,7 +31,7 @@ pub fn ui_game_over(
     world_params: Res<WorldParams>
 ) {
 
-    let win = world_params.fox_count <= 0;
+    let win = world_params.foxes_alive <= 0;
 
     let ctx = contexts.ctx_mut();
     let mut style = (*ctx.style()).clone();
@@ -67,7 +67,7 @@ pub fn ui_game_over(
                     .size(80.0),
             );
 
-            let gam_over_text = if win { "Your hens are now safe. GOOD JOB!" }
+            let gam_over_text = if win { "Your hens are safe now. GOOD JOB!" }
             else { "YOU FAILED! Too many of your hens died. "};
             ui.label(
                 egui::RichText::new(gam_over_text)
