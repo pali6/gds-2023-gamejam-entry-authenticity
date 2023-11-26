@@ -18,7 +18,7 @@ pub fn load_animation_resources(
     // TODO
     //animation_resource.hen_idle.push(asset_server.load("sprites/idle1.jpg"));
     let texture_handle = asset_server.load("sprites/speech_bubble_sheet2.png");
-    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(11.0, 10.0), 18, 1, None, None);
+    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(22.0, 20.0), 18, 1, None, None);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
     animation_resource.bubble_atlas = texture_atlas_handle;
 }
