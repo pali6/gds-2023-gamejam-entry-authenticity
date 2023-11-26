@@ -41,26 +41,26 @@ pub struct DifficultyPreset {
 pub const EASY: DifficultyPreset = DifficultyPreset {
     fox_count: 1,
     chicken_count: 10,
-    chicken_required: 5,
-    chicken_hunt_interval: 60.0,
-    quirk_deception_chance: 0.1,
+    chicken_required: 6,
+    chicken_hunt_interval: 90.0,
+    quirk_deception_chance: 0.33,
     quirks_per_chicken: 1,
 };
 
 pub const MEDIUM: DifficultyPreset = DifficultyPreset {
     fox_count: 2,
     chicken_count: 15,
-    chicken_required: 8,
-    chicken_hunt_interval: 60.0,
-    quirk_deception_chance: 0.25,
+    chicken_required: 10,
+    chicken_hunt_interval: 75.0,
+    quirk_deception_chance: 0.33,
     quirks_per_chicken: 2,
 };
 
 pub const HARD: DifficultyPreset = DifficultyPreset {
     fox_count: 2,
     chicken_count: 20,
-    chicken_required: 10,
-    chicken_hunt_interval: 45.0,
+    chicken_required: 15,
+    chicken_hunt_interval: 60.0,
     quirk_deception_chance: 0.50,
     quirks_per_chicken: 3,
 };
