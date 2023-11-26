@@ -28,7 +28,7 @@ pub fn update_chicken_behaviours(
                 behavior.update_waiting(&time, &world_params, entity, &mut commands, &anim_resource, chicken, &mut transform);
                 for &child in children.iter() {
                     if let Ok(mut anim) = animation_query.get_mut(child) {
-                        if chicken.quirk_check(Quirk::NeverLooksAtCamera)
+                        if chicken.quirk_check(Quirk::NeverLooksAtCamera, &world_params)
                             { anim.set_state(AnimState::Idle) }
                         else 
                             { anim.set_state(AnimState::Chilling_Rotating_Head); }

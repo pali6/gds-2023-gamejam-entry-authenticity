@@ -30,7 +30,7 @@ fn start_chicken_hunt(
     mut hunt: ResMut<ChickenHunt>,
     world_params: ResMut<crate::world::WorldParams>,
 ) {
-    hunt.hunt_timer = Timer::from_seconds(world_params.chicken_murder_interval, TimerMode::Repeating);
+    hunt.hunt_timer = Timer::from_seconds(world_params.chicken_hunt_interval, TimerMode::Repeating);
 }
 
 fn pause_chicken_hunt() {}
