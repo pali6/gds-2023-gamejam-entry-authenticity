@@ -51,13 +51,21 @@ impl Behavior {
         transform.scale = Vec3::new(1.0, 1.0, 1.0);
         let anim_period = 0.09;
 
+        let can_angry = !chicken.quirk_check(Quirk::NeverAngry);
+        let can_bored = !chicken.quirk_check(Quirk::NeverBored);
+        let can_smile = !chicken.quirk_check(Quirk::NeverHappy);
+        let can_evil =  chicken.quirk_check(Quirk::SometimesMischivous);
+
         let mut bubbles = Vec::new();
-        if !chicken.quirk_check(Quirk::NeverAngry) { bubbles.push(SpeechBubble::ANGRY); }
-        if !chicken.quirk_check(Quirk::NeverBored) { bubbles.push(SpeechBubble::BORED); }
-        if !chicken.quirk_check(Quirk::NeverHappy) { bubbles.push(SpeechBubble::EXTATIC); }
-        if !chicken.quirk_check(Quirk::NeverHappy) { bubbles.push(SpeechBubble::HAPPY); }
-        if chicken.quirk_check(Quirk::SometimesMischivous) { bubbles.push(SpeechBubble::EVIL); }
+        if can_angry { bubbles.push(SpeechBubble::ANGRY); }
+        if can_bored { bubbles.push(SpeechBubble::BORED); }
+        if can_smile { bubbles.push(SpeechBubble::EXTATIC); }
+        if can_smile { bubbles.push(SpeechBubble::HAPPY); }
+        if can_evil && can_smile { bubbles.push(SpeechBubble::EVIL); }
         
+        bubbles.push(SpeechBubble::SAD);
+        bubbles.push(SpeechBubble::EXCLAMATION);
+
         let bubble = bubbles.choose(&mut rand::thread_rng()).unwrap();
 
         let easing_time: f32 = anim_period * bubble.len() as f32 + 0.5;
