@@ -23,6 +23,7 @@ fn spawn_nests(
 ) {
     let nest_texture_handle = asset_server.load("sprites/nest.png");
     let mut used_coords = Vec::new();
+    world_params.nest_locations.clear();
     for _ in 0..world_params.nest_count {
         let (spawn_x, spawn_y) = loop {
             let (x, y) = get_random_coords_padding(world_params.width, world_params.height, 50.0, 50.0);
