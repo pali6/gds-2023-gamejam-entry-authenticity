@@ -18,7 +18,7 @@ impl Plugin for AnimationPlugin {
             .add_systems(Startup, load_animation_resources)
             .add_systems(
                 Update,
-                (update_animations, update_scale_tween, )
+                (update_animations, update_scale_tween, update_fade_away_tween)
                     .run_if(in_state(AppState::InGame).and_then(in_state(InGameState::Running))),
             );
     }

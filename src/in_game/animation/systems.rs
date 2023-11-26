@@ -61,13 +61,32 @@ pub fn update_scale_tween(
         scale_tween.time += time.delta_seconds();
         let t = scale_tween.time / scale_tween.duration;
         
-        let t = scale_tween.easing.ease(t);
+        let t_eased = scale_tween.easing.ease(t);
 
-        let scale = scale_tween.from + (scale_tween.to - scale_tween.from) * t;
+        let scale = scale_tween.from + (scale_tween.to - scale_tween.from) * t_eased;
         transform.scale = scale;
 
-        if t == 1.0 {
+        if t >= 1.0 {
             commands.entity(entity).remove::<ScaleTween>();
+        }
+    }
+}
+
+pub fn update_fade_away_tween(
+    mut commands: Commands,
+    mut query: Query<(Entity, &mut FadeAwayTween, &mut Sprite)>,
+    time: Res<Time>
+) {
+    for (entity, mut f_tween, mut image) in query.iter_mut() {
+
+        f_tween.time += time.delta_seconds();
+        let t = f_tween.time / f_tween.duration;
+        let t_eased = f_tween.easing.ease(t);
+
+        image.color.set_a(1.0 - t_eased);
+
+        if t >= 1.0 {
+            commands.entity(entity).despawn();
         }
     }
 }
