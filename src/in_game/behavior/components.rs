@@ -35,6 +35,7 @@ pub struct Behavior {
 pub struct SpeechBubble {
     pub destroy_timer: Timer,
 }
+#[allow(dead_code)]
 impl SpeechBubble {
     pub const THINKING: &'static [usize] = &[8, 9, 10, 11, 0];
     pub const EXTATIC: &'static [usize] = &[8, 9, 10, 11, 1];
@@ -62,7 +63,7 @@ impl Behavior {
         let mut bubbles = Vec::new();
         if can_angry { bubbles.push(SpeechBubble::ANGRY); }
         if can_bored { bubbles.push(SpeechBubble::BORED); }
-        if can_smile { bubbles.push(SpeechBubble::EXTATIC); }
+        // if can_smile { bubbles.push(SpeechBubble::EXTATIC); }
         if can_smile { bubbles.push(SpeechBubble::HAPPY); }
         if can_evil && can_smile { bubbles.push(SpeechBubble::EVIL); }
         if can_excited { bubbles.push(SpeechBubble::EXCLAMATION); }
