@@ -58,12 +58,29 @@ fn open_chicken_menu(
     }
 }
 
+#[derive(Component, Default)]
+pub struct HasEguiIcon(Option<egui::TextureId>);
+
 fn display_menus(
     mut menus: ResMut<ChickenMenus>,
-    query: Query<&Chicken>,
+    query: Query<(&Chicken, &Children)>,
+    mut with_egui_icons: Query<(&Handle<Image>, &mut HasEguiIcon)>,
     mut egui_contexts: EguiContexts,
     windows: Query<&Window, With<PrimaryWindow>>,
 ) {
+    for (entity, _ ) in menus.chickens.iter_mut() {
+        if let Ok((_, children)) = query.get(*entity) {
+            for child in children.iter() {
+                if let Ok((image_handle, mut has_egui_icon)) = with_egui_icons.get_mut(*child) {
+                    if has_egui_icon.0.is_none() {
+                        has_egui_icon.0 = Some(egui_contexts.add_image(image_handle.clone_weak()));
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
     let ctx = egui_contexts.ctx_mut();
     let mut style = (*ctx.style()).clone();
     style.visuals.widgets.noninteractive.bg_fill = egui::Color32::from_rgba_unmultiplied(200, 200, 200, 200);
@@ -90,7 +107,14 @@ fn display_menus(
     let mut hovering_over = false;
 
     for (entity, WindowState {open, just_opened} ) in menus.chickens.iter_mut() {
-        if let Ok(chicken) = query.get(*entity) {
+        if let Ok((chicken, children)) = query.get(*entity) {
+            let mut egui_icon = None;
+            for child in children.iter() {
+                if let Ok((_, has_egui_icon)) = with_egui_icons.get_mut(*child) {
+                    egui_icon = has_egui_icon.0;
+                    break;
+                }
+            }
             let frame = egui::Frame::default()
                 .rounding(5.0)
                 .outer_margin(2.0)
@@ -112,6 +136,12 @@ fn display_menus(
                 }
             }
             if let Some(inner_response) = window.show(ctx, |ui| {
+                if let Some(egui_icon) = egui_icon {
+                    ui.add(egui::widgets::Image::new(egui::load::SizedTexture::new(
+                        egui_icon,
+                        [32.0, 32.0],
+                    )));
+                }
                 for (_quirk, quirk_desc) in chicken.quirks.iter() {
                     ui.label(quirk_desc);
                 }

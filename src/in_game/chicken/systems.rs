@@ -1,6 +1,7 @@
 use std::borrow::BorrowMut;
 
 use super::components::*;
+use super::info_menu::HasEguiIcon;
 use super::resources::ChickenAtlas;
 use super::resources::ChickenParams;
 use crate::in_game::animation::components::Animation;
@@ -106,6 +107,7 @@ pub fn spawn_chicken(
         let head = commands.spawn((
             parts.head,
             ChickenPart,
+            HasEguiIcon::default(),
             Animation::new_chicken(anim_resource.frame_period,BodyPart::Head)))
         .id();
 
