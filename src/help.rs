@@ -1,4 +1,4 @@
-pub static HELP_TEXT: &str = r#"Foxes have infilitrated your chicken coop!
+pub static HELP_TEXT: &str = r#"Foxes have infiltrated your chicken coop!
 They have disguised themselves as chickens, and are trying to blend in.
 Fortunately you know every little quirk of your chickens and the foxes don't.
 By RIGHT CLICKING a chicken you can bring up a menu that shows all of its quirks.
