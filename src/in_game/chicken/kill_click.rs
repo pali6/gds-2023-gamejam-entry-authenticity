@@ -1,7 +1,10 @@
 use bevy::prelude::*;
-use crate::{in_game::animation::{components::*, resources::AnimationResource}, utilities::play_sfx, timed_sounds::{play_sound_in, TimedSounds}};
+use crate::{in_game::{animation::{components::*, resources::AnimationResource}, timed_fox_death::{TimedFoxDeath, queue_timed_fox}}, utilities::play_sfx, timed_sounds::{play_sound_in, TimedSounds}};
 
 use super::{click::ChickenClickEvent, components::Chicken};
+
+#[derive(Component)]
+pub struct DeadChicken;
 
 pub fn click_kill(
     mut commands: Commands,
@@ -9,7 +12,8 @@ pub fn click_kill(
     mut chickens: Query<(&mut Chicken, &mut Transform)>,
     mut timed_sounds: ResMut<TimedSounds>,
     asset_server: Res<AssetServer>,
-    animation_resource: Res<AnimationResource>
+    animation_resource: Res<AnimationResource>,
+    mut queued_timed_fox: ResMut<TimedFoxDeath>,
 ) {
     for event in events.read() {
         if event.mouse_button.just_released(MouseButton::Left) {
@@ -17,14 +21,11 @@ pub fn click_kill(
             if let Ok((chicken, transform)) = chickens.get_mut(entity) {
                 println!("Killing chicken {}", chicken.name);
                 play_sfx("sounds/shoot.ogg".to_string(), &mut commands, &asset_server, 1.0);
-                let is_fox = chicken.is_fox;
-                play_sound_in(1.0, if is_fox { "sounds/fox_death.ogg" } else { "sounds/death_bwok.ogg" }, 1.0, &mut timed_sounds);
+                play_sound_in(0.7, if chicken.is_fox { "sounds/fox_death.ogg" } else { "sounds/death_bwok.ogg" }, 1.0, &mut timed_sounds);
                 commands.entity(entity).despawn_recursive();
 
                 let pos = transform.translation;
-                let smoke_period: f32 = 0.08;
-                let smoke_indeces = AnimationResource::SMOKE_INDICES;
-                let smoke_fade = smoke_period * smoke_indeces.len() as f32;
+                let smoke_period: f32 = 1.25 / 9.0;
                 let mut smoke_transform = Transform::from_xyz(pos.x, pos.y, 10.0);
                 smoke_transform.scale = Vec3::new(2.0, 2.0, 2.0);
 
@@ -37,32 +38,24 @@ pub fn click_kill(
                     },
                     Animation::new(smoke_period, AnimationResource::SMOKE_INDICES, false),
                     FadeAwayTween::new(
-                        smoke_fade,
+                        1.0,
+                        0.3,
                         EasingFunction::Smooth,
                         true
                     )
                 ));
 
-                if chicken.is_fox {
+                let entity = commands.spawn((
+                    SpriteBundle{
+                        texture: asset_server.load("sprites/chicken-dead.png"),
+                        transform: Transform::from_xyz(pos.x, pos.y, pos.z),
+                        ..default()
+                    },
+                    DeadChicken,
+                )).id();
 
-                    commands.spawn((
-                        SpriteBundle{
-                            texture: asset_server.load("sprites/fox-dead-pali-black.png"),
-                            transform: Transform::from_xyz(pos.x, pos.y, pos.z),
-                            ..default()
-                        },
-                        FadeAwayTween::new(smoke_fade * 4.0, EasingFunction::Smooth, true)
-                    ));
-                    
-                } else {
-                    commands.spawn((
-                        SpriteBundle{
-                            texture: asset_server.load("sprites/chicken-dead.png"),
-                            transform: Transform::from_xyz(pos.x, pos.y, pos.z),
-                            ..default()
-                        },
-                        FadeAwayTween::new(2.0, EasingFunction::Smooth, true)
-                    ));
+                if chicken.is_fox {
+                    queue_timed_fox(0.4, entity, &mut queued_timed_fox);
                 }
             }
         }

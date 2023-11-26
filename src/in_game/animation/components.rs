@@ -168,6 +168,7 @@ impl ScaleTween {
 
 #[derive(Component)]
 pub struct FadeAwayTween {
+    pub delay: f32,
     pub duration: f32,
     pub easing: EasingFunction,
     pub time: f32,
@@ -175,8 +176,9 @@ pub struct FadeAwayTween {
 }
 
 impl FadeAwayTween {
-    pub fn new(duration: f32, easing: EasingFunction, delete_on_completion: bool) -> Self {
+    pub fn new(delay: f32, duration: f32, easing: EasingFunction, delete_on_completion: bool) -> Self {
         Self {
+            delay: delay,
             duration: duration,
             easing: easing,
             time: 0.0,
