@@ -54,8 +54,8 @@ impl Behavior {
 
         let can_angry = !chicken.quirk_check(Quirk::NeverAngry, world_params);
         let can_bored = !chicken.quirk_check(Quirk::NeverBored, world_params);
-        let can_smile = !chicken.quirk_check(Quirk::NeverHappy, world_params);
         let can_evil =  chicken.quirk_check(Quirk::SometimesMischivous, world_params);
+        let can_smile = !chicken.quirk_check(Quirk::NeverHappy, world_params) && !can_evil;
         let can_scared = !chicken.quirk_check(Quirk::NeverScared, world_params);
         let can_excited = !chicken.quirk_check(Quirk::NeverExcited, world_params);
 
