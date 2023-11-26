@@ -44,11 +44,12 @@ fn process_chicken_hunt(
     time: Res<Time>,
     asset_server: Res<AssetServer>,
     mut queued_death_count: ResMut<DelayedDeathCount>,
+    world_params: ResMut<crate::world::WorldParams>
 ) {
     hunt.hunt_timer.tick(time.delta());
     if hunt.hunt_timer.just_finished() {
         let non_fox_chickens = chickens.iter().filter(|(_, chicken, _)| !chicken.is_fox).collect_vec();
-        if non_fox_chickens.is_empty() {
+        if non_fox_chickens.is_empty() || world_params.foxes_alive <= 0 {
             return;
         }
         let (entity, _, transform) = non_fox_chickens.choose(&mut rand::thread_rng()).unwrap();
