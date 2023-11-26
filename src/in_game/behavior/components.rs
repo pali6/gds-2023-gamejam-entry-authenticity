@@ -1,7 +1,7 @@
-use bevy::{prelude::*, ecs::world};
-use rand::{seq::SliceRandom, Rng};
+use bevy::prelude::*;
+use rand::{Rng, seq::SliceRandom};
 
-use crate::{utilities::{Dir, get_random_coords_padding}, in_game::{chicken::{components::Chicken, self, quirk::Quirk}, animation::{components::{Animation, ScaleTween, EasingFunction}, resources::AnimationResource}}, world::WorldParams};
+use crate::{utilities::{Dir, get_random_coords_padding}, in_game::{chicken::{components::Chicken, quirk::Quirk}, animation::{components::{Animation, ScaleTween, EasingFunction}, resources::AnimationResource}}, world::WorldParams};
 
 #[derive(Copy, Clone)]
 pub enum BehaviorState {

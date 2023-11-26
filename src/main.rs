@@ -1,4 +1,5 @@
 mod camera;
+mod cursor;
 mod in_game;
 mod main_menu;
 mod one_shot;
@@ -64,6 +65,7 @@ fn main() {
             camera::CameraPlugin {
                 scaling_mode: camera::CameraScalingMode::FitBoth,
             },
+            cursor::CursorPlugin {},
         ))
         // Systems -> Every frame
         .add_systems(Update, (exit_game, toggle_app_state))
