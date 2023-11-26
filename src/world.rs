@@ -61,6 +61,6 @@ pub const HARD: DifficultyPreset = DifficultyPreset {
     chicken_count: 20,
     chicken_required: 10,
     chicken_hunt_interval: 45.0,
-    quirk_deception_chance: 0.5,
+    quirk_deception_chance: 0.50,
     quirks_per_chicken: 3,
 };
