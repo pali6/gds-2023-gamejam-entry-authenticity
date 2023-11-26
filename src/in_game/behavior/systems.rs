@@ -56,7 +56,7 @@ pub fn update_chicken_behaviours(
             _ => {}
         };
 
-        let move_dir = transform.translation - initial_pos;
+        let move_dir = behavior.current_dir;
 
         for child in children.iter() {
             if let Ok(mut part_trans) = chicken_parts.get_mut(*child) {
