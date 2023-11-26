@@ -167,8 +167,6 @@ impl Behavior {
             let t_eased = EasingFunction::Smooth.ease(t);
 
             transform.translation = start + (target - start) * t_eased;
-            println!("{:?}", target);
-            println!("{}", t);
 
             let current_dir = (target - start).normalize();
 
