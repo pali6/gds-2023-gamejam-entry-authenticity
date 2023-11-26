@@ -16,6 +16,7 @@ use bevy::prelude::*;
 use bevy_egui::EguiPlugin;
 use bevy_embedded_assets::EmbeddedAssetPlugin;
 
+use game_over::GameOverPlugin;
 use in_game::pause_menu::PauseMenuPlugin;
 use in_game::InGamePlugin;
 use main_menu::MainMenuPlugin;
@@ -65,6 +66,7 @@ fn main() {
             // Made by me
             InGamePlugin,
             MainMenuPlugin,
+            GameOverPlugin,
             PauseMenuPlugin,
             timed_sounds::TimedSoundsPlugin,
             ambience::AmbiencePlugin,

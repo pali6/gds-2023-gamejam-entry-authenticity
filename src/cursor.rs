@@ -15,11 +15,8 @@ impl Plugin for CursorPlugin {
             .add_systems(Startup, change_window_cursor_icon)
             .add_systems(Startup, setup_cursor)
             .add_systems(Update, move_cursor)
-            
-            .add_systems(OnEnter(AppState::MainMenu), activate_menu_cusor)
-            .add_systems(OnExit(AppState::MainMenu), activate_game_cursor)
-            .add_systems(OnEnter(InGameState::Paused), activate_menu_cusor)
-            .add_systems(OnExit(InGameState::Paused), activate_game_cursor)
+            .add_systems(OnEnter(AppState::InGame), activate_game_cursor)
+            .add_systems(OnExit(AppState::InGame), activate_menu_cursor)
             ;
     }
 }
@@ -27,7 +24,7 @@ impl Plugin for CursorPlugin {
 #[derive(Component)]
 pub struct GameCursor { }
 
-fn activate_menu_cusor(
+fn activate_menu_cursor(
     mut windows: Query<&mut Window>,
     mut cursor_query: Query<&mut Visibility, With<GameCursor>>
 ) {
