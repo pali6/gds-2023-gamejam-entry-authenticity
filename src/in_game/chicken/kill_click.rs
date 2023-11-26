@@ -21,8 +21,8 @@ pub fn click_kill(
             let entity = event.chicken;
             if let Ok((chicken, transform)) = chickens.get_mut(entity) {
                 println!("Killing chicken {}", chicken.name);
-                play_sfx("sounds/shoot.ogg".to_string(), &mut commands, &asset_server, 0.1);
-                play_sound_in(0.7, if chicken.is_fox { "sounds/fox_death.ogg" } else { "sounds/death_bwok.ogg" }, 0.1, &mut timed_sounds);
+                play_sfx("sounds/shoot.ogg".to_string(), &mut commands, &asset_server, 0.07);
+                play_sound_in(0.7, if chicken.is_fox { "sounds/fox_death.ogg" } else { "sounds/death_bwok.ogg" }, 0.07, &mut timed_sounds);
                 commands.entity(entity).despawn_recursive();
 
                 let pos = transform.translation;

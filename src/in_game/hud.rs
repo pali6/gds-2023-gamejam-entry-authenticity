@@ -18,7 +18,7 @@ impl Plugin for HudPlugin {
         app
             .init_resource::<HudResources>()
             .add_systems(Startup, load_hud_resources)
-            .add_systems(PostUpdate, (ui_hud,)
+            .add_systems(Update, (ui_hud,)
                 .run_if(in_state(AppState::InGame))
             );
     }
