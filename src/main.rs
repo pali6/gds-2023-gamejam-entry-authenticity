@@ -36,6 +36,7 @@ fn main() {
             chicken_count: 20,
             fox_count: 2,
             nest_count: 5,
+            nest_locations: Vec::new()
         })
         // Modulate your game into plugins
         .add_plugins((

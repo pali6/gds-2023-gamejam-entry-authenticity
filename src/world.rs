@@ -10,4 +10,5 @@ pub struct WorldParams {
     pub chicken_count: usize,
     pub fox_count: usize,
     pub nest_count: usize,
+    pub nest_locations: Vec<(f32, f32)>
 }

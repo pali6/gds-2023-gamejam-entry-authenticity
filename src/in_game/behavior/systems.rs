@@ -56,7 +56,14 @@ pub fn update_chicken_behaviours(
                 }
             }
 
-            _ => {}
+            BehaviorState::Sitting => {
+                behavior.update_sitting(&time, &world_params, entity, &mut commands, &anim_resource, chicken, &mut transform);
+                for &child in children.iter() {
+                    if let Ok(mut anim) = animation_query.get_mut(child) {
+                        anim.set_state(AnimState::Sitting);
+                    }
+                }
+            }
         };
 
         let move_dir = behavior.current_dir;

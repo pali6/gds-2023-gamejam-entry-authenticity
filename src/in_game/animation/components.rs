@@ -7,7 +7,8 @@ pub enum AnimState {
     Running,
     Eating,
     Chilling_Rotating_Head,
-    Chilling2
+    Chilling2,
+    Sitting
 }
 
 #[derive(Component)]
@@ -31,7 +32,7 @@ impl Animation {
             AnimState::Eating => ChickenAnimation::HEAD_EATING,
             AnimState::Chilling_Rotating_Head => ChickenAnimation::HEAD_ROTATING,
             AnimState::Chilling2 => ChickenAnimation::HEAD_PREENING,
-            _ => ChickenAnimation::HEAD_IDLE
+            AnimState::Sitting => ChickenAnimation::HEAD_PREENING
         }
     }
 
@@ -42,7 +43,7 @@ impl Animation {
             AnimState::Eating => ChickenAnimation::BODY_IDLE,
             AnimState::Chilling_Rotating_Head => ChickenAnimation::BODY_IDLE,
             AnimState::Chilling2 => ChickenAnimation::BODY_IDLE,
-            _ => ChickenAnimation::BODY_IDLE
+            AnimState::Sitting => ChickenAnimation::BODY_SIT
         }
     }
 
@@ -53,7 +54,7 @@ impl Animation {
             AnimState::Eating => ChickenAnimation::TAIL_IDLE,
             AnimState::Chilling_Rotating_Head => ChickenAnimation::TAIL_WAG,
             AnimState::Chilling2 => ChickenAnimation::TAIL_IDLE,
-            _ => ChickenAnimation::TAIL_IDLE
+            AnimState::Sitting => ChickenAnimation::TAIL_IDLE
         }
     }
 
@@ -64,7 +65,7 @@ impl Animation {
             AnimState::Eating => ChickenAnimation::WING_IDLE,
             AnimState::Chilling_Rotating_Head => ChickenAnimation::WING_IDLE,
             AnimState::Chilling2 => ChickenAnimation::WING_IDLE,
-            _ => ChickenAnimation::HEAD_IDLE
+            AnimState::Sitting => ChickenAnimation::HEAD_IDLE
         }
     }
 
