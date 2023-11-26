@@ -1,16 +1,13 @@
 use super::components::*;
-use crate::in_game::animation::resources::AnimationResource;
-use crate::in_game::inworld_object::InWorldObject;
 use crate::utilities::*;
 use bevy::prelude::*;
 
 pub fn spawn_player(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    world_params: Res<crate::world::WorldParams>,
-    animation_resource: Res<AnimationResource>
+    world_params: Res<crate::world::WorldParams>
 ) {
-    let (spawn_x, spawn_y) = get_random_coords_padding(world_params.width, world_params.height, 50.0, 50.0);
+    let (spawn_x, spawn_y) = (world_params.width / 2.0, world_params.height  + 200.0);
 
     commands.spawn((
         // Sprite bundle contains most of the things
@@ -20,7 +17,6 @@ pub fn spawn_player(
             texture: asset_server.load("sprites/Pizza.png"),
             ..default()
         },
-        InWorldObject,
         // Basically tag the sprite as the player
         Player,
     ));
