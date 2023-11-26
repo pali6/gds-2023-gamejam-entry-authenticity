@@ -274,7 +274,7 @@ impl Behavior {
         };
     }
 
-    pub fn get_location(state: BehaviorState, world_params: &Res<WorldParams>) -> (f32, f32) {
+    pub fn get_location(state: BehaviorState, world_params: &Res<WorldParams>, chicken: &Chicken) -> (f32, f32) {
         match state {
             BehaviorState::Eating => (
                 world_params.wheat_location.x + rand::thread_rng().gen_range(-200.0 .. 200.0),
@@ -294,9 +294,19 @@ impl Behavior {
             },
 
             BehaviorState::Waiting => {
+                if chicken.quirk_check(Quirk::Loner) {
+                    let mut x: f32 = rand::thread_rng().gen_range(-100.0 .. 100.0);
+                    let mut y: f32 = rand::thread_rng().gen_range(-100.0 .. 100.0);
+                    
+                    if x < 0.0 { x += world_params.width - 20.0; } else { x += 20.0 }
+                    if y < 0.0 { y += world_params.height - 20.0; } else { y += 20.0 }
+    
+                    return (x, y);
+                }
+
                 get_random_coords_padding(
                     world_params.width, world_params.height,
-                    50.0, 50.0)
+                    100.0, 100.0)
             },
 
             _ => {
@@ -333,7 +343,7 @@ impl Behavior {
         let next_state = states[rand::random::<usize>() % states.len()];
         self.state = BehaviorState::Moving;
         self.next_state = Some(next_state);
-        let (x, y) = Self::get_location(next_state, world_params);
+        let (x, y) = Self::get_location(next_state, world_params, chicken);
         self.init_movement(transform.translation, Vec3::new(x, y, 0.0), chicken);
     }
 }
