@@ -57,7 +57,8 @@ pub fn ui_main_menu(
             ui.label(
                 egui::RichText::new(crate::help::HELP_TEXT)
                     .color(egui::Color32::from_rgb(255, 255, 255))
-                    .size(14.0),
+                    .size(14.0)
+                    .strong(),
             );
             ui.allocate_ui_with_layout(
                 egui::Vec2::new(500.0, 0.0),
