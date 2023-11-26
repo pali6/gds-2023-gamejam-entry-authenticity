@@ -52,7 +52,7 @@ pub const MEDIUM: DifficultyPreset = DifficultyPreset {
     chicken_count: 15,
     chicken_required: 8,
     chicken_hunt_interval: 60.0,
-    quirk_deception_chance: 0.75,
+    quirk_deception_chance: 0.25,
     quirks_per_chicken: 2,
 };
 
