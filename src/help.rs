@@ -4,5 +4,5 @@ Fortunately you know every little quirk about your chickens and the foxes don't.
 By RIGHT CLICKING a chicken you can bring up a menu that will tell you about the chicken's quirks.
 If you find a chicken that is not aut-HEN-tic, you can LEFT CLICK it to kill it.
 But be careful, if you kill too many chickens, you will lose the game. If you kill all the foxes, you win the game.
-And as long as there is at least one fox alive, chickens will die under mysterious circumstances based on difficulty every 60/60/45 seconds.
+And as long as there is at least one fox alive, chickens will die under mysterious circumstances based on difficulty every 90/75/60 seconds.
 Good luck!"#;

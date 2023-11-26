@@ -7,7 +7,7 @@ mod click;
 mod debug;
 mod hover_glow;
 pub mod kill_click;
-mod chicken_hunt;
+pub mod chicken_hunt;
 
 use self::components::ChickenParts;
 
