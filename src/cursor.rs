@@ -3,6 +3,8 @@ use bevy::{
     window::CursorGrabMode,
 };
 
+use crate::{states::AppState, in_game::states::InGameState};
+
 pub const SHOOT_CURSOR: &'static str = "sprites/cursor-shoot.png";
 
 pub struct CursorPlugin { }
@@ -10,10 +12,14 @@ pub struct CursorPlugin { }
 impl Plugin for CursorPlugin {
     fn build(&self, app: &mut App) {
         app
-            //.add_systems(Startup, hide_window_cursor)
             .add_systems(Startup, change_window_cursor_icon)
             .add_systems(Startup, setup_cursor)
             .add_systems(Update, move_cursor)
+            
+            .add_systems(OnEnter(AppState::MainMenu), activate_menu_cusor)
+            .add_systems(OnExit(AppState::MainMenu), activate_game_cursor)
+            .add_systems(OnEnter(InGameState::Paused), activate_menu_cusor)
+            .add_systems(OnExit(InGameState::Paused), activate_game_cursor)
             ;
     }
 }
@@ -21,11 +27,26 @@ impl Plugin for CursorPlugin {
 #[derive(Component)]
 pub struct GameCursor { }
 
-fn hide_window_cursor(
+fn activate_menu_cusor(
     mut windows: Query<&mut Window>,
+    mut cursor_query: Query<&mut Visibility, With<GameCursor>>
+) {
+    let mut window: Mut<Window> = windows.single_mut();
+    window.cursor.visible = true;
+    if let Ok(mut cursor_visibility) = cursor_query.get_single_mut() {
+        *cursor_visibility = Visibility::Hidden;
+    }
+}
+
+fn activate_game_cursor(
+    mut windows: Query<&mut Window>,
+    mut cursor_query: Query<&mut Visibility, With<GameCursor>>
 ) {
     let mut window: Mut<Window> = windows.single_mut();
     window.cursor.visible = false;
+    if let Ok(mut cursor_visibility) = cursor_query.get_single_mut() {
+        *cursor_visibility = Visibility::Visible;
+    }
 }
 
 fn setup_cursor(
