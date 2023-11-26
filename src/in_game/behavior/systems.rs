@@ -14,8 +14,6 @@ pub fn update_chicken_behaviours(
     anim_resource: Res<AnimationResource>
 ) {
     for (entity , mut behavior, chicken, mut transform, children) in chicken_query.iter_mut() {
-        let initial_pos = transform.translation.clone();
-
         match behavior.state {
             BehaviorState::Moving => {
                 behavior.update_movement(&mut transform, chicken, &world_params, entity, &mut commands, &anim_resource, &time);
