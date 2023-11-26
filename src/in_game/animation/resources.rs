@@ -10,10 +10,13 @@ pub struct AnimationResource {
     pub hen_walking_up: Vec<Handle<Image>>,
     pub hen_walking_down: Vec<Handle<Image>>,
     pub rotating_pizza: Vec<Handle<Image>>,
-    pub bubble_atlas: Handle<TextureAtlas>
+    pub bubble_atlas: Handle<TextureAtlas>,
+    pub smoke_atlas: Handle<TextureAtlas>,
 }
 
 impl AnimationResource {
+    pub const SMOKE_INDICES: &'static [usize] = &[0, 1, 2, 3, 4, 5, 6, 7, 8];
+
     pub fn get_hen_walking(&self, direction: Option<Dir>) -> Vec<Handle<Image>> {
         let walking_direction = match direction {
             Some(dir) => dir,
@@ -39,7 +42,8 @@ impl Default for AnimationResource {
             hen_walking_up: Vec::new(),
             hen_walking_down: Vec::new(),
             rotating_pizza: Vec::new(),
-            bubble_atlas: Default::default()
+            bubble_atlas: Default::default(),
+            smoke_atlas: Default::default()
         }
     }
 }

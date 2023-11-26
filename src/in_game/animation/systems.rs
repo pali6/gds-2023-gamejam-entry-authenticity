@@ -21,6 +21,11 @@ pub fn load_animation_resources(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(22.0, 20.0), 18, 1, None, None);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
     animation_resource.bubble_atlas = texture_atlas_handle;
+
+    let texture_handle = asset_server.load("sprites/smoke-2-Sheet.png");
+    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(32.0, 32.0), 9, 1, Some(Vec2 { x: 1.0, y: 0.0 }), Some(Vec2{x: 0.5, y: 0.5}));
+    let texture_atlas_handle = texture_atlases.add(texture_atlas);
+    animation_resource.smoke_atlas = texture_atlas_handle;
 }
 
 pub fn update_animations(
@@ -75,6 +80,25 @@ pub fn update_scale_tween(
 pub fn update_fade_away_tween(
     mut commands: Commands,
     mut query: Query<(Entity, &mut FadeAwayTween, &mut Sprite)>,
+    time: Res<Time>
+) {
+    for (entity, mut f_tween, mut image) in query.iter_mut() {
+
+        f_tween.time += time.delta_seconds();
+        let t = f_tween.time / f_tween.duration;
+        let t_eased = f_tween.easing.ease(t);
+
+        image.color.set_a(1.0 - t_eased);
+
+        if t >= 1.0 {
+            commands.entity(entity).despawn();
+        }
+    }
+}
+
+pub fn update_fade_away_tween_atlas(
+    mut commands: Commands,
+    mut query: Query<(Entity, &mut FadeAwayTween, &mut TextureAtlasSprite)>,
     time: Res<Time>
 ) {
     for (entity, mut f_tween, mut image) in query.iter_mut() {
