@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use rand::Rng;
+use rand::{Rng, seq::SliceRandom};
 
 use crate::{utilities::{Dir, get_random_coords_padding}, in_game::{chicken::{components::Chicken, quirk::Quirk}, animation::{components::{Animation, ScaleTween, EasingFunction}, resources::AnimationResource}}, world::WorldParams};
 
