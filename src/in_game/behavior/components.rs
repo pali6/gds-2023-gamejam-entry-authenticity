@@ -168,14 +168,6 @@ impl Behavior {
 
             transform.translation = start + (target - start) * t_eased;
 
-            let current_dir = (target - start).normalize();
-
-            if current_dir.x > 0.1 {
-                transform.scale = Vec3::new(-1.0, 1.0, 1.0);
-            } else if current_dir.x < -0.1 {
-                transform.scale = Vec3::new(1.0, 1.0, 1.0);
-            }
-
             if t >= 1.0 {
                 self.start = self.target;
                 self.target = None;

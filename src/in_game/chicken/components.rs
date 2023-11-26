@@ -49,13 +49,15 @@ impl ChickenAnimation {
     pub const HEAD_ROTATING: &'static [usize] = &[13, 14, 16, 15];
 }
 
-#[derive(Component)]
 pub struct ChickenParts {
     pub head: SpriteSheetBundle,
     pub wing: SpriteSheetBundle,
     pub tail: SpriteSheetBundle,
     pub body: SpriteSheetBundle,
 }
+
+#[derive(Component)]
+pub struct ChickenPart;
 
 impl ChickenParts {
     pub fn new_idle(texture_atlas_handle: Handle<TextureAtlas>) -> Self {
