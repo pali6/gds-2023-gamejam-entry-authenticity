@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use crate::{in_game::{animation::{components::*, resources::AnimationResource}, timed_fox_death::{TimedFoxDeath, queue_timed_fox}}, utilities::play_sfx, timed_sounds::{play_sound_in, TimedSounds}};
+use crate::{in_game::{animation::{components::*, resources::AnimationResource}, timed_fox_death::{TimedFoxDeath, queue_timed_fox}, inworld_object::InWorldObject}, utilities::play_sfx, timed_sounds::{play_sound_in, TimedSounds}};
 
 use super::{click::ChickenClickEvent, components::Chicken};
 
@@ -52,6 +52,7 @@ pub fn click_kill(
                         ..default()
                     },
                     DeadChicken,
+                    InWorldObject,
                 )).id();
 
                 if chicken.is_fox {
