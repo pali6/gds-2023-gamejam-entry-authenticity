@@ -64,7 +64,7 @@ fn main() {
             camera::CameraPlugin {
                 scaling_mode: camera::CameraScalingMode::FitBoth,
             },
-            cursor::CursorPlugin,
+            cursor::CursorPlugin {},
         ))
         // Systems -> Every frame
         .add_systems(Update, (exit_game, toggle_app_state))

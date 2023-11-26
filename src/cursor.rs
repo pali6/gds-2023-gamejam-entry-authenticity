@@ -1,6 +1,6 @@
 use bevy::{
     prelude::*,
-    window::{CursorGrabMode, Cursor},
+    window::CursorGrabMode,
 };
 
 pub const SHOOT_CURSOR: &'static str = "sprites/cursor-shoot.png";
@@ -10,6 +10,7 @@ pub struct CursorPlugin { }
 impl Plugin for CursorPlugin {
     fn build(&self, app: &mut App) {
         app
+            .add_systems(Startup, hide_window_cursor)
             .add_systems(Startup, setup_cursor)
             .add_systems(Update, move_cursor);
     }
@@ -17,6 +18,12 @@ impl Plugin for CursorPlugin {
 
 #[derive(Component)]
 pub struct GameCursor { }
+
+fn hide_window_cursor(
+
+) {
+    
+}
 
 fn setup_cursor(
     mut windows: Query<&mut Window>,

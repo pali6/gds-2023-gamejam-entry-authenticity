@@ -1,4 +1,4 @@
-use rand::{seq::SliceRandom, Rng};
+use rand::seq::SliceRandom;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
 pub enum Quirk {
