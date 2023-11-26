@@ -54,7 +54,7 @@ fn process_chicken_hunt(
         }
         let (entity, _, transform) = non_fox_chickens.choose(&mut rand::thread_rng()).unwrap();
 
-        play_sfx("sounds/death_bwok.ogg".to_string(), &mut commands, &asset_server, 1.0);
+        play_sfx("sounds/death_bwok.ogg".to_string(), &mut commands, &asset_server, 0.1);
         let pos = transform.translation;
         commands.entity(*entity).despawn_recursive();
 

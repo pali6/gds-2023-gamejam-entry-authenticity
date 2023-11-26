@@ -22,7 +22,7 @@ fn spawn_ambience(
         AmbiencePlayer,
         AudioBundle {
             source: sfx,
-            settings: PlaybackSettings::LOOP.with_volume(bevy::audio::Volume::new_relative(1.0)),
+            settings: PlaybackSettings::LOOP.with_volume(bevy::audio::Volume::new_relative(0.3)),
             ..default()
         }
     ));

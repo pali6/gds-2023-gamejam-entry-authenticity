@@ -68,7 +68,7 @@ pub fn ui_game_over(
             );
 
             let gam_over_text = if win { "Your hens are now safe. GOOD JOB!" }
-            else { "You let too many of you hens die. YOU FAILIURE! "};
+            else { "YOU FAILED! Too many of your hens died. "};
             ui.label(
                 egui::RichText::new(gam_over_text)
                     .color(egui::Color32::from_rgb(255, 255, 255))
