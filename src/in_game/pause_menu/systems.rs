@@ -61,19 +61,23 @@ pub fn ui_pause_menu(
             if menu_button("Unpause", ui).clicked() {
                 ingame_next_state.set(InGameState::Running);
             }
-            if menu_button("Toggle Fullscreen", ui).clicked() {
-                let mut main_window = main_window.single_mut();
-                main_window.mode = match main_window.mode {
-                    bevy::window::WindowMode::Windowed => bevy::window::WindowMode::Fullscreen,
-                    bevy::window::WindowMode::Fullscreen => bevy::window::WindowMode::Windowed,
-                    _ => bevy::window::WindowMode::Windowed,
-                };
+            if !cfg!(target_arch = "wasm32") {
+                if menu_button("Toggle Fullscreen", ui).clicked() {
+                    let mut main_window = main_window.single_mut();
+                    main_window.mode = match main_window.mode {
+                        bevy::window::WindowMode::Windowed => bevy::window::WindowMode::Fullscreen,
+                        bevy::window::WindowMode::Fullscreen => bevy::window::WindowMode::Windowed,
+                        _ => bevy::window::WindowMode::Windowed,
+                    };
+                }
             }
             if menu_button("Main Menu", ui).clicked() {
                 app_next_state.set(AppState::MainMenu);
             }
-            if menu_button("Quit", ui).clicked() {
-                app_exit_event_writer.send(AppExit);
+            if !cfg!(target_arch = "wasm32") {
+                if menu_button("Quit", ui).clicked() {
+                    app_exit_event_writer.send(AppExit);
+                }
             }
         });
     });
