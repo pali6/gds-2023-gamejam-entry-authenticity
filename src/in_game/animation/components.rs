@@ -65,7 +65,7 @@ impl Animation {
             AnimState::Eating => ChickenAnimation::WING_IDLE,
             AnimState::Chilling_Rotating_Head => ChickenAnimation::WING_IDLE,
             AnimState::Chilling2 => ChickenAnimation::WING_IDLE,
-            AnimState::Sitting => ChickenAnimation::HEAD_IDLE
+            AnimState::Sitting => ChickenAnimation::WING_IDLE
         }
     }
 
