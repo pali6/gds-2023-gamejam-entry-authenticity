@@ -8,6 +8,7 @@ pub mod states;
 mod behavior;
 mod grass;
 mod nest;
+mod timed_fox_death;
 
 use crate::states::AppState;
 use animation::AnimationPlugin;
@@ -18,6 +19,7 @@ use player::PlayerPlugin;
 use states::*;
 use grass::GrassPlugin;
 use nest::NestPlugin;
+use timed_fox_death::TimedFoxDeathPlugin;
 
 use self::{behavior::BehaviorPlugin, static_object::StaticObjectsPlugin};
 
@@ -34,6 +36,7 @@ impl Plugin for InGamePlugin {
                 StaticObjectsPlugin,
                 GrassPlugin::new(3000),
                 NestPlugin,
+                TimedFoxDeathPlugin,
             ))
             .add_systems(Update, toggle_pause.run_if(in_state(AppState::InGame)))
             .add_systems(OnEnter(AppState::InGame), on_game_start)
