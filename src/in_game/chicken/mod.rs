@@ -7,6 +7,7 @@ mod click;
 mod debug;
 mod hover_glow;
 pub mod kill_click;
+mod chicken_hunt;
 
 use self::components::ChickenParts;
 
@@ -17,6 +18,7 @@ use info_menu::*;
 use click::*;
 use resources::*;
 use systems::*;
+use chicken_hunt::*;
 
 pub struct ChickenPlugin;
 
@@ -39,6 +41,7 @@ impl Plugin for ChickenPlugin {
                     .run_if(in_state(AppState::InGame).and_then(in_state(InGameState::Running))),
             )
             .add_plugins(InfoMenuPlugin)
-            .add_plugins(hover_glow::HoverGlowPlugin);
+            .add_plugins(hover_glow::HoverGlowPlugin)
+            .add_plugins(ChickenHuntPlugin);
     }
 }

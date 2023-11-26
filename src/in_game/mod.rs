@@ -43,6 +43,7 @@ impl Plugin for InGamePlugin {
                 TimedFoxDeathPlugin,
                 DelayedDeathCountPlugin,
                 HudPlugin,
+
             ))
             .add_systems(Update, toggle_pause.run_if(in_state(AppState::InGame)))
             .add_systems(OnEnter(AppState::InGame), on_game_start)
