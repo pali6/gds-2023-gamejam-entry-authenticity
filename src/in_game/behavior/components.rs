@@ -1,7 +1,7 @@
 use bevy::{prelude::*, ecs::world};
 use rand::{seq::SliceRandom, Rng};
 
-use crate::{utilities::{Dir, get_random_coords_padding}, in_game::{chicken::{components::Chicken, self}, animation::{components::{Animation, ScaleTween, EasingFunction}, resources::AnimationResource}}, world::WorldParams};
+use crate::{utilities::{Dir, get_random_coords_padding}, in_game::{chicken::{components::Chicken, self, quirk::Quirk}, animation::{components::{Animation, ScaleTween, EasingFunction}, resources::AnimationResource}}, world::WorldParams};
 
 #[derive(Copy, Clone)]
 pub enum BehaviorState {
@@ -23,6 +23,7 @@ pub struct Behavior {
     pub target: Option<Vec3>,
     pub wait_timer: Timer,
     pub wait_duration: f32,
+    pub current_dir: Vec3,
     start: Option<Vec3>,
     path: Vec<Vec3>,
     duration: f32,
@@ -84,7 +85,8 @@ impl Behavior {
             wait_timer: Timer::from_seconds(2.0, TimerMode::Once),
             duration: 0.0,
             time: 0.0,
-            path: Vec::new()
+            path: Vec::new(),
+            current_dir: Dir::Left.to_vector()
         }
     }
 
@@ -110,12 +112,14 @@ impl Behavior {
 
     pub fn init_movement(&mut self, from: Vec3, to: Vec3, chicken: &Chicken) {
         // L movement
-        let horizontal = Vec3::new(to.x, from.y, 0.0);
-        self.path.push(horizontal);
-        self.path.push(to);
+        if chicken.quirk_check(Quirk::NeverGoesDirectly) {
+            let horizontal = Vec3::new(to.x, from.y, 0.0);
+            self.path.push(horizontal);
+        }
 
-        let distance = to.x - from.x;
-        self.duration = distance / chicken.movement_speed;
+        self.path.push(to);
+        //let distance = to.x - from.x;
+        //self.duration = distance / speed;
         self.time = 0.0;
     }
 
@@ -181,8 +185,15 @@ impl Behavior {
             self.start = Some(transform.translation);
             let target = self.path.remove(0);
             self.target = Some(target);
-            self.duration = target.distance(transform.translation) / chicken.movement_speed;
+
+            let mut speed = chicken.movement_speed;
+            if chicken.quirk_check(Quirk::NeverGoesFast) {
+                speed *= 0.3;
+            }
+
+            self.duration = target.distance(transform.translation) / speed;
             self.time = 0.0;
+            self.current_dir = (target - transform.translation).normalize();
         }
     }
 
@@ -270,11 +281,11 @@ impl Behavior {
             return;
         }
 
-        let states = [
-            BehaviorState::Eating,
-            BehaviorState::Waiting,
-            BehaviorState::Hiding,
-        ];
+        let mut states = Vec::new();
+        states.push(BehaviorState::Waiting);
+        if !chicken.quirk_check(Quirk::NeverEats) { states.push(BehaviorState::Eating); }
+        if !chicken.quirk_check(Quirk::NeverSleeps) { states.push(BehaviorState::Hiding); }
+
         let next_state = states[rand::random::<usize>() % states.len()];
         self.state = BehaviorState::Moving;
         self.next_state = Some(next_state);

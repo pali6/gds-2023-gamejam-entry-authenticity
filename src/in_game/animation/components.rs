@@ -6,7 +6,7 @@ pub enum AnimState {
     Idle,
     Running,
     Eating,
-    Chilling1,
+    Chilling_Rotating_Head,
     Chilling2
 }
 
@@ -29,7 +29,7 @@ impl Animation {
             AnimState::Idle => ChickenAnimation::HEAD_IDLE,
             AnimState::Running => ChickenAnimation::HEAD_LOOK_LEFT,
             AnimState::Eating => ChickenAnimation::HEAD_EATING,
-            AnimState::Chilling1 => ChickenAnimation::HEAD_ROTATING,
+            AnimState::Chilling_Rotating_Head => ChickenAnimation::HEAD_ROTATING,
             AnimState::Chilling2 => ChickenAnimation::HEAD_PREENING,
             _ => ChickenAnimation::HEAD_IDLE
         }
@@ -40,7 +40,7 @@ impl Animation {
             AnimState::Idle => ChickenAnimation::BODY_IDLE,
             AnimState::Running => ChickenAnimation::BODY_RUN,
             AnimState::Eating => ChickenAnimation::BODY_IDLE,
-            AnimState::Chilling1 => ChickenAnimation::BODY_IDLE,
+            AnimState::Chilling_Rotating_Head => ChickenAnimation::BODY_IDLE,
             AnimState::Chilling2 => ChickenAnimation::BODY_IDLE,
             _ => ChickenAnimation::BODY_IDLE
         }
@@ -51,7 +51,7 @@ impl Animation {
             AnimState::Idle => ChickenAnimation::TAIL_IDLE,
             AnimState::Running => ChickenAnimation::TAIL_WAG,
             AnimState::Eating => ChickenAnimation::TAIL_IDLE,
-            AnimState::Chilling1 => ChickenAnimation::TAIL_WAG,
+            AnimState::Chilling_Rotating_Head => ChickenAnimation::TAIL_WAG,
             AnimState::Chilling2 => ChickenAnimation::TAIL_IDLE,
             _ => ChickenAnimation::TAIL_IDLE
         }
@@ -62,7 +62,7 @@ impl Animation {
             AnimState::Idle => ChickenAnimation::WING_IDLE,
             AnimState::Running => ChickenAnimation::WING_FLAP,
             AnimState::Eating => ChickenAnimation::WING_IDLE,
-            AnimState::Chilling1 => ChickenAnimation::WING_IDLE,
+            AnimState::Chilling_Rotating_Head => ChickenAnimation::WING_IDLE,
             AnimState::Chilling2 => ChickenAnimation::WING_IDLE,
             _ => ChickenAnimation::HEAD_IDLE
         }
@@ -123,16 +123,16 @@ pub enum EasingFunction {
 impl EasingFunction {
     pub fn ease(&self, x: f32) -> f32 {
         match self {
-            Self::Smooth => Self::easeSmooth(x),
-            Self::ElasticOut => Self::easeOutElastic(x)
+            Self::Smooth => Self::ease_smooth(x),
+            Self::ElasticOut => Self::ease_out_elastic(x)
         }
     }
 
-    pub fn easeSmooth(x: f32) -> f32 {
+    pub fn ease_smooth(x: f32) -> f32 {
         -((3.14 * x).cos() - 1.0) / 2.0
     }
 
-    pub fn easeOutElastic(x: f32) -> f32 {
+    pub fn ease_out_elastic(x: f32) -> f32 {
         let c4 = (2.0 * 3.14) / 3.0;
         
         return if x == 0.0 {
