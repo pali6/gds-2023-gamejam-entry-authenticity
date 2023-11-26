@@ -38,17 +38,18 @@ pub fn get_quirk_description(quirk: Quirk) -> String {
         Quirk::NeverEats => vec![
             "Never eats",
             "Doesn't eat",
-            "Is never hungry"
+            "Is never hungry",
+            "Is currently fasting",
+            "#fasting"
         ],
         Quirk::NeverSleeps => vec![
             "Never sleeps",
             "Doesn't sleep",
-            "Is never tired"
+            "Is never tired",
         ],
         Quirk::NeverGoesFast => vec![
-            "Doesn't rush anywhere",
             "Never speeds up",
-            "Is never in a hurry"
+            "Always walks slowly",
         ],
         Quirk::NeverGoesDirectly => vec![
             "Always takes the long way",
@@ -59,7 +60,8 @@ pub fn get_quirk_description(quirk: Quirk) -> String {
         ],
         Quirk::NeverHappy => vec![
             "Never smiles :(",
-            "Is never happy"
+            "Is never happy",
+            "Depressed"
         ],
         Quirk::NeverAngry => vec![
             "Never angry",
@@ -76,6 +78,7 @@ pub fn get_quirk_description(quirk: Quirk) -> String {
         Quirk::NeverSitsOnNest => vec![
             "Hates laying eggs",
             "Does not plan to have children",
+            "#childfree",
         ],
     }.choose(&mut rand::thread_rng()).unwrap().to_string()
 }
