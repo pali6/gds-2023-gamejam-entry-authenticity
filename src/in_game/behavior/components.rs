@@ -117,11 +117,9 @@ impl Behavior {
             self.path.push(horizontal);
         }
 
-
         self.path.push(to);
-
-        let distance = to.x - from.x;
-        self.duration = distance / chicken.movement_speed;
+        //let distance = to.x - from.x;
+        //self.duration = distance / speed;
         self.time = 0.0;
     }
 
@@ -187,7 +185,13 @@ impl Behavior {
             self.start = Some(transform.translation);
             let target = self.path.remove(0);
             self.target = Some(target);
-            self.duration = target.distance(transform.translation) / chicken.movement_speed;
+
+            let mut speed = chicken.movement_speed;
+            if chicken.quirk_check(Quirk::NeverGoesFast) {
+                speed *= 0.3;
+            }
+
+            self.duration = target.distance(transform.translation) / speed;
             self.time = 0.0;
             self.current_dir = (target - transform.translation).normalize();
         }
@@ -277,11 +281,11 @@ impl Behavior {
             return;
         }
 
-        let states = [
-            BehaviorState::Eating,
-            BehaviorState::Waiting,
-            BehaviorState::Hiding,
-        ];
+        let mut states = Vec::new();
+        states.push(BehaviorState::Waiting);
+        if !chicken.quirk_check(Quirk::NeverEats) { states.push(BehaviorState::Eating); }
+        if !chicken.quirk_check(Quirk::NeverSleeps) { states.push(BehaviorState::Hiding); }
+
         let next_state = states[rand::random::<usize>() % states.len()];
         self.state = BehaviorState::Moving;
         self.next_state = Some(next_state);

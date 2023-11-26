@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{in_game::{animation::{components::*, resources::AnimationResource}, chicken::components::{Chicken, ChickenPart}}, world::WorldParams};
+use crate::{in_game::{animation::{components::*, resources::AnimationResource}, chicken::{components::{Chicken, ChickenPart}, quirk::Quirk}}, world::WorldParams};
 
 use super::components::*;
 
@@ -30,7 +30,10 @@ pub fn update_chicken_behaviours(
                 behavior.update_waiting(&time, &world_params, entity, &mut commands, &anim_resource, chicken, &mut transform);
                 for &child in children.iter() {
                     if let Ok(mut anim) = animation_query.get_mut(child) {
-                        anim.set_state(AnimState::Chilling1);
+                        if chicken.quirk_check(Quirk::NeverLooksAtCamera)
+                            { anim.set_state(AnimState::Idle) }
+                        else 
+                            { anim.set_state(AnimState::Chilling_Rotating_Head); }
                     }
                 }
             }
