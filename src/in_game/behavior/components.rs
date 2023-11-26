@@ -20,9 +20,13 @@ pub struct Behavior {
     pub state: BehaviorState,
     pub next_state: Option<BehaviorState>,
     pub b_type: BehaviorType,
-    pub target: Vec3,
+    pub target: Option<Vec3>,
     pub wait_timer: Timer,
     pub wait_duration: f32,
+    start: Option<Vec3>,
+    path: Vec<Vec3>,
+    duration: f32,
+    time: f32
 }
 
 #[derive(Component)]
@@ -74,22 +78,26 @@ impl Behavior {
             state: BehaviorState::Waiting,
             next_state: None,
             b_type: b_type,
-            target: Vec3::ZERO,
+            target: None,
+            start: None,
             wait_duration: 4.0,
-            wait_timer: Timer::from_seconds(2.0, TimerMode::Once)
+            wait_timer: Timer::from_seconds(2.0, TimerMode::Once),
+            duration: 0.0,
+            time: 0.0,
+            path: Vec::new()
         }
     }
 
-    pub fn get_direction(&self, pos: Vec3) -> Option<Dir> {
+    pub fn get_direction(&self, pos: Vec3, target: Vec3) -> Option<Dir> {
         let radius: f32 = 20.0;
 
-        if pos.x < (self.target.x - radius) {
+        if pos.x < (target.x - radius) {
             return Some(Dir::Right);
-        } else if pos.x > (self.target.x + radius) {
+        } else if pos.x > (target.x + radius) {
             return Some(Dir::Left);
-        } else if pos.y < (self.target.y - radius) {
+        } else if pos.y < (target.y - radius) {
             return Some(Dir::Up);
-        } else if pos.y > (self.target.y + radius) {
+        } else if pos.y > (target.y + radius) {
             return Some(Dir::Down);
         } else {
             return None;
@@ -100,8 +108,15 @@ impl Behavior {
         self.wait_timer = Timer::from_seconds(duration, TimerMode::Once);
     }
 
-    pub fn init_movement(&mut self, x: f32, y:f32) {
-        self.target = Vec3::new(x, y, 0.0);
+    pub fn init_movement(&mut self, from: Vec3, to: Vec3, chicken: &Chicken) {
+        // L movement
+        let horizontal = Vec3::new(to.x, from.y, 0.0);
+        self.path.push(horizontal);
+        self.path.push(to);
+
+        let distance = to.x - from.x;
+        self.duration = distance / chicken.movement_speed;
+        self.time = 0.0;
     }
 
     pub fn init_eating(&mut self, duration: f32) {
@@ -117,12 +132,14 @@ impl Behavior {
         world_params: &Res<WorldParams>,
         chicken_entity: Entity,
         commands: &mut Commands,
-        anim_resource: &Res<AnimationResource>
+        anim_resource: &Res<AnimationResource>,
+        chicken: &Chicken,
+        transform: &mut Transform
     ) {
         self.wait_timer.tick(time.delta());
 
         if self.wait_timer.finished() {
-            self.state_transition(world_params, chicken_entity, commands, &anim_resource);
+            self.state_transition(world_params, chicken_entity, commands, &anim_resource, chicken, transform);
         }
     }
 
@@ -133,21 +150,49 @@ impl Behavior {
         world_params: &Res<WorldParams>,
         chicken_entity: Entity,
         commands: &mut Commands,
-        anim_resource: &Res<AnimationResource>
+        anim_resource: &Res<AnimationResource>,
+        time: &Res<Time>
     ) {
+        if self.target == None && self.path.is_empty() {
+            self.state_transition(world_params, chicken_entity, commands, anim_resource, chicken, transform);
+            return;
+        }
 
-        let dir_maybe = self.get_direction(transform.translation);
+        if self.start == None { self.start = Some(transform.translation) }
+        let start = self.start.unwrap();
 
-        if let Some(dir) = dir_maybe {
-            transform.translation += dir.to_vector() * chicken.movement_speed;
+        if let Some(target) = self.target {
+            self.time += time.delta_seconds();
+            let t = self.time / self.duration;
+            let t_eased = EasingFunction::Smooth.ease(t);
 
-            if dir.to_vector().x > 0.1 {
+            transform.translation = start + (target - start) * t_eased;
+            println!("{:?}", target);
+            println!("{}", t);
+
+            let current_dir = (target - start).normalize();
+
+            if current_dir.x > 0.1 {
                 transform.scale = Vec3::new(-1.0, 1.0, 1.0);
-            } else if dir.to_vector().x < -0.1 {
+            } else if current_dir.x < -0.1 {
                 transform.scale = Vec3::new(1.0, 1.0, 1.0);
             }
-        } else {
-            self.state_transition(world_params, chicken_entity, commands, &anim_resource);
+
+            if t >= 1.0 {
+                self.start = self.target;
+                self.target = None;
+                //self.time = 0.0;
+            }
+
+            return;
+        }
+
+        if self.target == None {
+            self.start = Some(transform.translation);
+            let target = self.path.remove(0);
+            self.target = Some(target);
+            self.duration = target.distance(transform.translation) / chicken.movement_speed;
+            self.time = 0.0;
         }
     }
 
@@ -156,12 +201,14 @@ impl Behavior {
         world_params: &Res<WorldParams>,
         chicken_entity: Entity,
         commands: &mut Commands,
-        anim_resource: &Res<AnimationResource>
+        anim_resource: &Res<AnimationResource>,
+        chicken: &Chicken,
+        transform: &mut Transform
     ) {
         self.wait_timer.tick(time.delta());
 
         if self.wait_timer.finished() {
-            self.state_transition(world_params, chicken_entity, commands, &anim_resource);
+            self.state_transition(world_params, chicken_entity, commands, &anim_resource, chicken,transform);
         }
     }
 
@@ -170,12 +217,14 @@ impl Behavior {
         world_params: &Res<WorldParams>,
         chicken_entity: Entity,
         commands: &mut Commands,
-        anim_resource: &Res<AnimationResource>
+        anim_resource: &Res<AnimationResource>,
+        chicken: &Chicken,
+        transform: &mut Transform
     ) {
         self.wait_timer.tick(time.delta());
 
         if self.wait_timer.finished() {
-            self.state_transition(world_params, chicken_entity, commands, &anim_resource);
+            self.state_transition(world_params, chicken_entity, commands, &anim_resource, chicken, transform);
         }
     }
 
@@ -218,7 +267,10 @@ impl Behavior {
         &mut self, world_params: &Res<WorldParams>,
         chicken_entity: Entity,
         commands: &mut Commands,
-        anim_resource: &Res<AnimationResource>) {
+        anim_resource: &Res<AnimationResource>,
+        chicken: &Chicken,
+        transform: &mut Transform
+    ) {
 
         if let Some(next_state) = self.next_state {
             self.state = next_state;
@@ -237,6 +289,6 @@ impl Behavior {
         self.state = BehaviorState::Moving;
         self.next_state = Some(next_state);
         let (x, y) = Self::get_location(next_state, world_params);
-        self.init_movement(x, y);
+        self.init_movement(transform.translation, Vec3::new(x, y, 0.0), chicken);
     }
 }

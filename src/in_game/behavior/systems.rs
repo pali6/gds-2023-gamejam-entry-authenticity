@@ -15,7 +15,7 @@ pub fn update_chicken_behaviours(
     for (entity ,mut behavior, chicken, mut transform, children) in chicken_query.iter_mut() {
         match behavior.state {
             BehaviorState::Moving => {
-                behavior.update_movement(&mut transform, chicken, &world_params, entity, &mut commands, &anim_resource);
+                behavior.update_movement(&mut transform, chicken, &world_params, entity, &mut commands, &anim_resource, &time);
                 for &child in children.iter() {
                     if let Ok(mut anim) = animation_query.get_mut(child) {
                         anim.set_state(AnimState::Running);
@@ -24,7 +24,7 @@ pub fn update_chicken_behaviours(
             }
 
             BehaviorState::Waiting => {
-                behavior.update_waiting(&time, &world_params, entity, &mut commands, &anim_resource);
+                behavior.update_waiting(&time, &world_params, entity, &mut commands, &anim_resource, chicken, &mut transform);
                 for &child in children.iter() {
                     if let Ok(mut anim) = animation_query.get_mut(child) {
                         anim.set_state(AnimState::Chilling1);
@@ -33,7 +33,7 @@ pub fn update_chicken_behaviours(
             }
 
             BehaviorState::Eating => {
-                behavior.update_eating(&time, &world_params, entity, &mut commands, &anim_resource);
+                behavior.update_eating(&time, &world_params, entity, &mut commands, &anim_resource, chicken, &mut transform);
                 for &child in children.iter() {
                     if let Ok(mut anim) = animation_query.get_mut(child) {
                         anim.set_state(AnimState::Eating);
@@ -42,7 +42,7 @@ pub fn update_chicken_behaviours(
             }
 
             BehaviorState::Hiding => {
-                behavior.update_hidnig(&time, &world_params, entity, &mut commands, &anim_resource);
+                behavior.update_hidnig(&time, &world_params, entity, &mut commands, &anim_resource, chicken, &mut transform);
                 for &child in children.iter() {
                     if let Ok(mut anim) = animation_query.get_mut(child) {
                         anim.set_state(AnimState::Chilling2);

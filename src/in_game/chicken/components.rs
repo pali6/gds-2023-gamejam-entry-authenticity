@@ -110,7 +110,7 @@ impl Chicken {
         Self {
             name,
             quirks: annotate_quirks(quirks),
-            movement_speed: 1.0,
+            movement_speed: 200.0,
             is_fox: false,
             quirk_deception_chance: 0.9,
         }

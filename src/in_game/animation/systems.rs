@@ -61,10 +61,7 @@ pub fn update_scale_tween(
         scale_tween.time += time.delta_seconds();
         let t = scale_tween.time / scale_tween.duration;
         
-        let t = match scale_tween.easing {
-            EasingFunction::ElasticOut => ScaleTween::easeOutElastic(t),
-            EasingFunction::Smooth => ScaleTween::easeSmooth(t)
-        };
+        let t = scale_tween.easing.ease(t);
 
         let scale = scale_tween.from + (scale_tween.to - scale_tween.from) * t;
         transform.scale = scale;

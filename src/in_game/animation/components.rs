@@ -120,6 +120,31 @@ pub enum EasingFunction {
     ElasticOut,
 }
 
+impl EasingFunction {
+    pub fn ease(&self, x: f32) -> f32 {
+        match self {
+            Self::Smooth => Self::easeSmooth(x),
+            Self::ElasticOut => Self::easeOutElastic(x)
+        }
+    }
+
+    pub fn easeSmooth(x: f32) -> f32 {
+        -((3.14 * x).cos() - 1.0) / 2.0
+    }
+
+    pub fn easeOutElastic(x: f32) -> f32 {
+        let c4 = (2.0 * 3.14) / 3.0;
+        
+        return if x == 0.0 {
+            0.0
+        } else if x == 1.0 {
+            1.0
+        } else {
+            2.0_f32.powf(-10.0 * x) * ((x*10.0 - 0.75) * c4).sin() + 1.0
+        };
+    }
+}
+
 #[derive(Component)]
 pub struct ScaleTween {
     pub from: Vec3,
@@ -138,21 +163,5 @@ impl ScaleTween {
             time: 0.0,
             easing: easing
         }
-    }
-
-    pub fn easeSmooth(x: f32) -> f32 {
-        -((3.14 * x).cos() - 1.0) / 2.0
-    }
-
-    pub fn easeOutElastic(x: f32) -> f32 {
-        let c4 = (2.0 * 3.14) / 3.0;
-        
-        return if x == 0.0 {
-            0.0
-        } else if x == 1.0 {
-            1.0
-        } else {
-            2.0_f32.powf(-10.0 * x) * ((x*10.0 - 0.75) * c4).sin() + 1.0
-        };
     }
 }

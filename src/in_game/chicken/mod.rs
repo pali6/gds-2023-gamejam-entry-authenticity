@@ -35,7 +35,7 @@ impl Plugin for ChickenPlugin {
             // .add_systems(Update, debug::debug_chicken_click)
             .add_systems(
                 Update,
-                (kill_click::click_kill, chicken_movement, chicken_hover)
+                (kill_click::click_kill, chicken_hover)
                     .run_if(in_state(AppState::InGame).and_then(in_state(InGameState::Running))),
             )
             .add_plugins(InfoMenuPlugin)
