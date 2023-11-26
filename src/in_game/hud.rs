@@ -29,7 +29,7 @@ fn load_hud_resources(
     asset_server: Res<AssetServer>,
 ) {
     hud_resources.fox_head = asset_server.load("sprites/fox-head-centered.png");
-    hud_resources.chicken_head = asset_server.load("sprites/chicken-1.png");
+    hud_resources.chicken_head = asset_server.load("sprites/chicken-head-centered.png");
 }
 
 fn ui_hud(
