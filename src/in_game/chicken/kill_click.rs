@@ -28,21 +28,22 @@ pub fn click_kill(
                 let mut smoke_transform = Transform::from_xyz(pos.x, pos.y, 10.0);
                 smoke_transform.scale = Vec3::new(2.0, 2.0, 2.0);
 
+                commands.spawn((
+                    SpriteSheetBundle {
+                        texture_atlas: animation_resource.smoke_atlas.clone(),
+                        sprite: TextureAtlasSprite::new(AnimationResource::SMOKE_INDICES[0]),
+                        transform: smoke_transform,
+                        ..default()
+                    },
+                    Animation::new(smoke_period, AnimationResource::SMOKE_INDICES, false),
+                    FadeAwayTween::new(
+                        smoke_fade,
+                        EasingFunction::Smooth,
+                        true
+                    )
+                ));
+
                 if chicken.is_fox {
-                    commands.spawn((
-                        SpriteSheetBundle {
-                            texture_atlas: animation_resource.smoke_atlas.clone(),
-                            sprite: TextureAtlasSprite::new(AnimationResource::SMOKE_INDICES[0]),
-                            transform: smoke_transform,
-                            ..default()
-                        },
-                        Animation::new(smoke_period, AnimationResource::SMOKE_INDICES, false),
-                        FadeAwayTween::new(
-                            smoke_fade,
-                            EasingFunction::Smooth,
-                            true
-                        )
-                    ));
 
                     commands.spawn((
                         SpriteBundle{
