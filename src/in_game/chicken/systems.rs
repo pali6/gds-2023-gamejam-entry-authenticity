@@ -69,6 +69,7 @@ pub fn spawn_chicken(
         
         let body = commands.spawn((
             parts.body,
+            ChickenPart,
             Animation::new_chicken(anim_resource.frame_period,BodyPart::Body)))
         .id();
 
@@ -79,6 +80,7 @@ pub fn spawn_chicken(
 
         let tail = commands.spawn((
             parts.tail,
+            ChickenPart,
             Animation::new_chicken(anim_resource.frame_period,BodyPart::Tail)))
         .id();
 
@@ -89,6 +91,7 @@ pub fn spawn_chicken(
 
         let wing = commands.spawn((
             parts.wing,
+            ChickenPart,
             Animation::new_chicken(anim_resource.frame_period,BodyPart::Wing)))
         .id();
 
@@ -99,6 +102,7 @@ pub fn spawn_chicken(
 
         let head = commands.spawn((
             parts.head,
+            ChickenPart,
             Animation::new_chicken(anim_resource.frame_period,BodyPart::Head)))
         .id();
 

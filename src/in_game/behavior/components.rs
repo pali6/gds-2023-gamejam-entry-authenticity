@@ -1,7 +1,7 @@
 use bevy::{prelude::*, ecs::world};
 use rand::{seq::SliceRandom, Rng};
 
-use crate::{utilities::{Dir, get_random_coords_padding}, in_game::{chicken::{components::Chicken, self}, animation::{components::{Animation, ScaleTween, EasingFunction}, resources::AnimationResource}}, world::WorldParams};
+use crate::{utilities::{Dir, get_random_coords_padding}, in_game::{chicken::{components::Chicken, self, quirk::Quirk}, animation::{components::{Animation, ScaleTween, EasingFunction}, resources::AnimationResource}}, world::WorldParams};
 
 #[derive(Copy, Clone)]
 pub enum BehaviorState {
@@ -23,6 +23,7 @@ pub struct Behavior {
     pub target: Option<Vec3>,
     pub wait_timer: Timer,
     pub wait_duration: f32,
+    pub current_dir: Vec3,
     start: Option<Vec3>,
     path: Vec<Vec3>,
     duration: f32,
@@ -84,7 +85,8 @@ impl Behavior {
             wait_timer: Timer::from_seconds(2.0, TimerMode::Once),
             duration: 0.0,
             time: 0.0,
-            path: Vec::new()
+            path: Vec::new(),
+            current_dir: Dir::Left.to_vector()
         }
     }
 
@@ -110,8 +112,12 @@ impl Behavior {
 
     pub fn init_movement(&mut self, from: Vec3, to: Vec3, chicken: &Chicken) {
         // L movement
-        let horizontal = Vec3::new(to.x, from.y, 0.0);
-        self.path.push(horizontal);
+        if chicken.quirk_check(Quirk::NeverGoesDirectly) {
+            let horizontal = Vec3::new(to.x, from.y, 0.0);
+            self.path.push(horizontal);
+        }
+
+
         self.path.push(to);
 
         let distance = to.x - from.x;
@@ -168,14 +174,6 @@ impl Behavior {
 
             transform.translation = start + (target - start) * t_eased;
 
-            let current_dir = (target - start).normalize();
-
-            if current_dir.x > 0.1 {
-                transform.scale = Vec3::new(-1.0, 1.0, 1.0);
-            } else if current_dir.x < -0.1 {
-                transform.scale = Vec3::new(1.0, 1.0, 1.0);
-            }
-
             if t >= 1.0 {
                 self.start = self.target;
                 self.target = None;
@@ -191,6 +189,7 @@ impl Behavior {
             self.target = Some(target);
             self.duration = target.distance(transform.translation) / chicken.movement_speed;
             self.time = 0.0;
+            self.current_dir = (target - transform.translation).normalize();
         }
     }
 

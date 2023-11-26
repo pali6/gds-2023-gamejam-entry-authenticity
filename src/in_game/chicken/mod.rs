@@ -1,6 +1,6 @@
 pub mod components;
 mod info_menu;
-mod quirk;
+pub mod quirk;
 pub mod resources;
 mod systems;
 mod click;
