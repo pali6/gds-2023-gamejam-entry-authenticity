@@ -19,7 +19,7 @@ impl Plugin for NestPlugin {
 fn spawn_nests(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    world_params: Res<crate::world::WorldParams>,
+    mut world_params: ResMut<crate::world::WorldParams>,
 ) {
     let nest_texture_handle = asset_server.load("sprites/nest.png");
     let mut used_coords = Vec::new();
@@ -36,6 +36,7 @@ fn spawn_nests(
             }
         };
 
+        world_params.nest_locations.push((spawn_x, spawn_y));
         commands.spawn((
             SpriteBundle {
                 texture: nest_texture_handle.clone(),

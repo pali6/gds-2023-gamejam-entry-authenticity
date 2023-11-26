@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use crate::{in_game::{animation::{components::*, resources::AnimationResource}, timed_fox_death::{TimedFoxDeath, queue_timed_fox}, inworld_object::InWorldObject}, utilities::play_sfx, timed_sounds::{play_sound_in, TimedSounds}};
+use crate::{in_game::{animation::{components::*, resources::AnimationResource}, timed_fox_death::{TimedFoxDeath, queue_timed_fox}, inworld_object::InWorldObject, delayed_death_count::{queue_delayed_death_count, DelayedDeathCount, DeathType}}, utilities::play_sfx, timed_sounds::{play_sound_in, TimedSounds}};
 
 use super::{click::ChickenClickEvent, components::Chicken};
 
@@ -14,6 +14,7 @@ pub fn click_kill(
     asset_server: Res<AssetServer>,
     animation_resource: Res<AnimationResource>,
     mut queued_timed_fox: ResMut<TimedFoxDeath>,
+    mut queued_death_count: ResMut<DelayedDeathCount>
 ) {
     for event in events.read() {
         if event.mouse_button.just_released(MouseButton::Left) {
@@ -58,6 +59,8 @@ pub fn click_kill(
                 if chicken.is_fox {
                     queue_timed_fox(0.4, entity, &mut queued_timed_fox);
                 }
+
+                queue_delayed_death_count(1.0, if chicken.is_fox { DeathType::Fox } else { DeathType::Chicken }, &mut queued_death_count);
             }
         }
     }

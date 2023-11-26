@@ -17,13 +17,16 @@ use rand::seq::SliceRandom;
 
 pub fn spawn_chickens(
     mut commands: Commands,
-    world_params: Res<WorldParams>,
+    mut world_params: ResMut<WorldParams>,
     mut chicken_params: ResMut<ChickenParams>,
 ) {
+    let total_count = world_params.chicken_count + world_params.fox_count;
     chicken_params.n_foxes_to_spawn = world_params.fox_count;
-    for _ in 0..world_params.chicken_count {
+    for _ in 0..total_count {
         commands.run_once(spawn_chicken);
     }
+    world_params.chicken_alive = world_params.chicken_count;
+    world_params.foxes_alive = world_params.fox_count;
 }
 
 pub fn spawn_chicken(
