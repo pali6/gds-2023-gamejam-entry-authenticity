@@ -58,16 +58,18 @@ pub fn ui_main_menu(
             if menu_button("Start Game", ui).clicked() {
                 app_next_state.set(AppState::InGame);
             }
-            if menu_button("Toggle Fullscreen", ui).clicked() {
-                let mut main_window = main_window.single_mut();
-                main_window.mode = match main_window.mode {
-                    bevy::window::WindowMode::Windowed => bevy::window::WindowMode::Fullscreen,
-                    bevy::window::WindowMode::Fullscreen => bevy::window::WindowMode::Windowed,
-                    _ => bevy::window::WindowMode::Windowed,
-                };
-            }
-            if menu_button("Quit", ui).clicked() {
-                app_exit_event_writer.send(AppExit);
+            if !cfg!(target_arch = "wasm32") {
+                if menu_button("Toggle Fullscreen", ui).clicked() {
+                    let mut main_window = main_window.single_mut();
+                    main_window.mode = match main_window.mode {
+                        bevy::window::WindowMode::Windowed => bevy::window::WindowMode::Fullscreen,
+                        bevy::window::WindowMode::Fullscreen => bevy::window::WindowMode::Windowed,
+                        _ => bevy::window::WindowMode::Windowed,
+                    };
+                }
+                if menu_button("Quit", ui).clicked() {
+                    app_exit_event_writer.send(AppExit);
+                }
             }
         });
     });
