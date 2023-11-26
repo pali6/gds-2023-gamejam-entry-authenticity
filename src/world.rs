@@ -38,28 +38,34 @@ pub struct DifficultyPreset {
     quirks_per_chicken: usize,
 }
 
+// Game length should be 5 minutes for fox to win
+// 10 total ~ 10% chance to hit fox
 pub const EASY: DifficultyPreset = DifficultyPreset {
     fox_count: 1,
-    chicken_count: 10,
+    chicken_count: 9,
     chicken_required: 6,
     chicken_hunt_interval: 90.0,
-    quirk_deception_chance: 0.33,
+    quirk_deception_chance: 0.10,
     quirks_per_chicken: 1,
 };
 
+// Game length should be 5 minutes for fox to win
+// 15 total ~ 7.5% chance to hit fox
 pub const MEDIUM: DifficultyPreset = DifficultyPreset {
     fox_count: 2,
-    chicken_count: 15,
-    chicken_required: 10,
+    chicken_count: 13,
+    chicken_required: 9,
     chicken_hunt_interval: 75.0,
-    quirk_deception_chance: 0.33,
+    quirk_deception_chance: 0.30,
     quirks_per_chicken: 2,
 };
 
+// Game length should be 5 minutes for fox to win
+// 20 total ~ 6.6% chance to hit fox
 pub const HARD: DifficultyPreset = DifficultyPreset {
-    fox_count: 2,
-    chicken_count: 20,
-    chicken_required: 15,
+    fox_count: 3,
+    chicken_count: 17,
+    chicken_required: 12,
     chicken_hunt_interval: 60.0,
     quirk_deception_chance: 0.50,
     quirks_per_chicken: 3,
