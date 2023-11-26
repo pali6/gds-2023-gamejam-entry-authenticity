@@ -25,7 +25,7 @@ pub fn click_kill(
                 commands.entity(entity).despawn_recursive();
 
                 let pos = transform.translation;
-                let smoke_period: f32 = 1.25 / 9.0;
+                let smoke_period: f32 = 1.3 / 9.0;
                 let mut smoke_transform = Transform::from_xyz(pos.x, pos.y, 10.0);
                 smoke_transform.scale = Vec3::new(2.0, 2.0, 2.0);
 
