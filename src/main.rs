@@ -44,7 +44,8 @@ fn main() {
             chicken_alive: 0,
             foxes_alive: 0,
             nest_locations: Vec::new(),
-            chicken_murder_interval: 30.0,
+            chicken_hunt_interval: 30.0,
+            quirk_deception_chance: 0.5,
         })
         // Modulate your game into plugins
         .add_plugins((

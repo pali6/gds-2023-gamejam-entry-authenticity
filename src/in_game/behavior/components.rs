@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, ecs::world};
 use rand::{Rng, seq::SliceRandom};
 
 use crate::{utilities::{Dir, get_random_coords_padding}, in_game::{chicken::{components::Chicken, quirk::Quirk}, animation::{components::{Animation, ScaleTween, EasingFunction}, resources::AnimationResource}}, world::WorldParams};
@@ -35,6 +35,7 @@ pub struct Behavior {
 pub struct SpeechBubble {
     pub destroy_timer: Timer,
 }
+#[allow(dead_code)]
 impl SpeechBubble {
     pub const THINKING: &'static [usize] = &[8, 9, 10, 11, 0];
     pub const EXTATIC: &'static [usize] = &[8, 9, 10, 11, 1];
@@ -47,22 +48,22 @@ impl SpeechBubble {
 }
 
 impl Behavior {
-    fn spawn_speech_bubble(&self, father: Entity, commands: &mut Commands, anim_resource : &Res<AnimationResource>, chicken: &Chicken) {
+    fn spawn_speech_bubble(&self, father: Entity, commands: &mut Commands, anim_resource : &Res<AnimationResource>, chicken: &Chicken, world_params: &Res<WorldParams>) {
         let mut transform = Transform::from_xyz(0.0, 32.0, 7.0);
         transform.scale = Vec3::new(1.0, 1.0, 1.0);
         let anim_period = 0.09;
 
-        let can_angry = !chicken.quirk_check(Quirk::NeverAngry);
-        let can_bored = !chicken.quirk_check(Quirk::NeverBored);
-        let can_smile = !chicken.quirk_check(Quirk::NeverHappy);
-        let can_evil =  chicken.quirk_check(Quirk::SometimesMischivous);
-        let can_scared = !chicken.quirk_check(Quirk::NeverScared);
-        let can_excited = !chicken.quirk_check(Quirk::NeverExcited);
+        let can_angry = !chicken.quirk_check(Quirk::NeverAngry, world_params);
+        let can_bored = !chicken.quirk_check(Quirk::NeverBored, world_params);
+        let can_evil =  chicken.quirk_check(Quirk::SometimesMischivous, world_params);
+        let can_smile = !chicken.quirk_check(Quirk::NeverHappy, world_params) && !can_evil;
+        let can_scared = !chicken.quirk_check(Quirk::NeverScared, world_params);
+        let can_excited = !chicken.quirk_check(Quirk::NeverExcited, world_params);
 
         let mut bubbles = Vec::new();
         if can_angry { bubbles.push(SpeechBubble::ANGRY); }
         if can_bored { bubbles.push(SpeechBubble::BORED); }
-        if can_smile { bubbles.push(SpeechBubble::EXTATIC); }
+        // if can_smile { bubbles.push(SpeechBubble::EXTATIC); }
         if can_smile { bubbles.push(SpeechBubble::HAPPY); }
         if can_evil && can_smile { bubbles.push(SpeechBubble::EVIL); }
         if can_excited { bubbles.push(SpeechBubble::EXCLAMATION); }
@@ -123,9 +124,9 @@ impl Behavior {
         self.wait_timer = Timer::from_seconds(duration, TimerMode::Once);
     }
 
-    pub fn init_movement(&mut self, from: Vec3, to: Vec3, chicken: &Chicken) {
+    pub fn init_movement(&mut self, from: Vec3, to: Vec3, chicken: &Chicken, world_params: &Res<WorldParams>) {
         // L movement
-        if chicken.quirk_check(Quirk::NeverGoesDirectly) {
+        if chicken.quirk_check(Quirk::NeverGoesDirectly, world_params) {
             let horizontal = Vec3::new(to.x, from.y, 0.0);
             self.path.push(horizontal);
         }
@@ -204,7 +205,7 @@ impl Behavior {
             self.target = Some(target);
 
             let mut speed = chicken.movement_speed;
-            if chicken.quirk_check(Quirk::NeverGoesFast) {
+            if chicken.quirk_check(Quirk::NeverGoesFast, world_params) {
                 speed *= 0.3;
             }
 
@@ -323,27 +324,27 @@ impl Behavior {
         commands: &mut Commands,
         anim_resource: &Res<AnimationResource>,
         chicken: &Chicken,
-        transform: &mut Transform
+        transform: &mut Transform,
     ) {
 
         if let Some(next_state) = self.next_state {
             self.state = next_state;
             self.next_state = None;
             self.to_state(self.state);
-            self.spawn_speech_bubble(chicken_entity, commands, &anim_resource, chicken);
+            self.spawn_speech_bubble(chicken_entity, commands, &anim_resource, chicken, world_params);
             return;
         }
 
         let mut states = Vec::new();
         states.push(BehaviorState::Waiting);
-        if !chicken.quirk_check(Quirk::NeverEats) { states.push(BehaviorState::Eating); }
-        if !chicken.quirk_check(Quirk::NeverSleeps) { states.push(BehaviorState::Hiding); }
-        if !chicken.quirk_check(Quirk::NeverSitsOnNest) { states.push(BehaviorState::Sitting); }
+        if !chicken.quirk_check(Quirk::NeverEats, world_params) { states.push(BehaviorState::Eating); }
+        if !chicken.quirk_check(Quirk::NeverSleeps, world_params) { states.push(BehaviorState::Hiding); }
+        if !chicken.quirk_check(Quirk::NeverSitsOnNest, world_params) { states.push(BehaviorState::Sitting); }
 
         let next_state = states[rand::random::<usize>() % states.len()];
         self.state = BehaviorState::Moving;
         self.next_state = Some(next_state);
-        let (x, y) = Self::get_location(next_state, world_params, chicken);
-        self.init_movement(transform.translation, Vec3::new(x, y, 0.0), chicken);
+        let (x, y) = Self::get_location(next_state, world_params);
+        self.init_movement(transform.translation, Vec3::new(x, y, 0.0), chicken, world_params);
     }
 }

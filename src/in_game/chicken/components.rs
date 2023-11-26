@@ -7,6 +7,8 @@ use bevy::transform::components::Transform;
 use rand::Rng;
 use rand::seq::SliceRandom;
 
+use crate::world::WorldParams;
+
 use super::quirk::{Quirk, annotate_quirks, get_n_random_quirks};
 use super::resources::{ChickenParams, ChickenAtlas, ChickenVariants};
 
@@ -104,7 +106,6 @@ pub struct Chicken {
     pub quirks: Vec<(Quirk, String)>,
     pub movement_speed: f32,
     pub is_fox: bool, // sussy impostor
-    pub quirk_deception_chance: f32, // only used for foxes
 }
 
 impl Chicken {
@@ -114,7 +115,6 @@ impl Chicken {
             quirks: annotate_quirks(quirks),
             movement_speed: 200.0,
             is_fox: false,
-            quirk_deception_chance: 0.9,
         }
     }
 
@@ -124,7 +124,7 @@ impl Chicken {
         Self::new(name, quirks)
     }
 
-    pub fn quirk_check(&self, quirk: Quirk) -> bool {
+    pub fn quirk_check(&self, quirk: Quirk, world_params: &WorldParams) -> bool {
         if !self.quirks.iter().any(|(q, _)| *q == quirk) {
             return false;
         }
@@ -133,7 +133,7 @@ impl Chicken {
         }
         let mut rng = rand::thread_rng();
         let roll = rng.gen_range(0.0..1.0);
-        if roll < self.quirk_deception_chance {
+        if roll < world_params.quirk_deception_chance {
             return true;
         }
         false

@@ -4,6 +4,7 @@ use bevy_egui::{egui, EguiContexts};
 
 use crate::ambience::{toggle_ambience, AmbiencePlayer};
 use crate::states::AppState;
+use crate::world::WorldParams;
 
 pub fn build_main_menu() {
     // TODO
@@ -27,6 +28,7 @@ pub fn ui_main_menu(
     mut main_window: Query<&mut Window, With<PrimaryWindow>>,
     mut app_exit_event_writer: EventWriter<AppExit>,
     ambience_players: Query<&mut AudioSink, With<AmbiencePlayer>>,
+    mut world_params: ResMut<WorldParams>,
 ) {
     let ctx = contexts.ctx_mut();
     let mut style = (*ctx.style()).clone();
@@ -57,9 +59,23 @@ pub fn ui_main_menu(
                     .color(egui::Color32::from_rgb(255, 255, 255))
                     .size(14.0),
             );
-            if menu_button("Start Game", ui).clicked() {
-                app_next_state.set(AppState::InGame);
-            }
+            ui.allocate_ui_with_layout(
+                egui::Vec2::new(500.0, 0.0),
+                egui::Layout::left_to_right(egui::Align::Center).with_cross_align(egui::Align::Center), 
+                |ui| {
+                    if menu_button("Start Easy", ui).clicked() {
+                        world_params.apply_difficulty_preset(&crate::world::EASY);
+                        app_next_state.set(AppState::InGame);
+                    }
+                    if menu_button("Start Medium", ui).clicked() {
+                        world_params.apply_difficulty_preset(&crate::world::MEDIUM);
+                        app_next_state.set(AppState::InGame);
+                    }
+                    if menu_button("Start Hard", ui).clicked() {
+                        world_params.apply_difficulty_preset(&crate::world::HARD);
+                        app_next_state.set(AppState::InGame);
+                    }
+            });
             if menu_button("Toggle Ambience", ui).clicked() {
                 toggle_ambience(ambience_players)
             }
