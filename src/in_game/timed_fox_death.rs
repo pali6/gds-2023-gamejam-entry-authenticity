@@ -28,9 +28,10 @@ pub fn process_timed_fox_deaths(
     for (timer, entity) in queued.queued.iter_mut() {
         timer.tick(time.delta());
         if timer.finished() {
-            let mut foo = dead_chickens.get_mut(*entity).unwrap();
-            *foo = asset_server.load("sprites/fox-dead-pali-black.png");
-            commands.entity(*entity).insert(FadeAwayTween::new(0.3, 1.0, EasingFunction::Smooth, true));
+            if let Ok(mut image) = dead_chickens.get_mut(*entity) {
+                *image = asset_server.load("sprites/fox-dead-pali-black.png");
+                commands.entity(*entity).insert(FadeAwayTween::new(0.3, 1.0, EasingFunction::Smooth, true));
+            }
         }
     }
     queued.queued.retain(|(timer, _)| !timer.finished());
